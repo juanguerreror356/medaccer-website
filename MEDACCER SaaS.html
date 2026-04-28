@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MEDACCER · SaaS completo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="src/theme.css" />
+<link rel="stylesheet" href="src/landing.css" />
+<link rel="stylesheet" href="src/panel.css" />
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="120" rx="24" fill="url(#g)"/>
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A6BBF"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs>
+    <text x="60" y="76" text-anchor="middle" font-family="serif" font-size="60" font-weight="700" fill="white">M</text>
+  </svg>
+</template>
+
+<style>
+  body { background: #f0eee9; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/landing.jsx"></script>
+<script type="text/babel" src="src/panel-1.jsx"></script>
+<script type="text/babel" src="src/panel-2.jsx"></script>
+<script type="text/babel" src="src/panel-3.jsx"></script>
+<script type="text/babel" src="src/panel-4.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState } = React;
+
+// Shell to render panel pages with sidebar + topbar
+function PanelShell({ active, title, children }) {
+  return (
+    <div className="app-shell">
+      <Sidebar active={active} />
+      <div>
+        <TopBar title={title} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas title="MEDACCER · SaaS para consultorios" subtitle="Landing pública + Panel del doctor + Onboarding + Mobile · 18 pantallas">
+
+      {/* ========== SECTION 1 · BRAND & LANDING ========== */}
+      <DCSection id="landing" title="Landing pública" subtitle="Hero, demo multi-escenario del bot, features, pricing, FAQ">
+        <DCArtboard id="landing-full" label="01 · Landing completa (scrollable)" width={1240} height={3400}>
+          <Landing />
+        </DCArtboard>
+        <DCArtboard id="blog-page" label="02 · Blog SEO + submisión de temas" width={1240} height={1400}>
+          <BlogPage />
+        </DCArtboard>
+        <DCPostIt>
+          Demo potenciado: 4 escenarios (agendar, urgencia, precio, post-op).
+          Blog con formulario "sugiere un tema".
+          Cero menciones de stack técnico.
+        </DCPostIt>
+      </DCSection>
+
+      {/* ========== SECTION 2 · AUTH & ONBOARDING ========== */}
+      <DCSection id="auth" title="Signup + Onboarding" subtitle="De landing a bot operando en 48h — 6 pasos guiados">
+        <DCArtboard id="signup" label="02 · Crear cuenta" width={1440} height={860}>
+          <Signup />
+        </DCArtboard>
+        <DCArtboard id="ob" label="03 · Onboarding paso 3/6 (Conectar Calendar)" width={1440} height={860}>
+          <Onboarding step={2} />
+        </DCArtboard>
+        <DCPostIt>
+          El onboarding es la mitad del producto.
+          Barra lateral oscura con los 6 pasos.
+          Conexión OAuth con Google y WhatsApp.
+          Config opinada: duración, buffer, horario — con defaults inteligentes.
+        </DCPostIt>
+      </DCSection>
+
+      {/* ========== SECTION 3 · DASHBOARD ========== */}
+      <DCSection id="dash" title="Dashboard" subtitle="Versión final unificada + 3 variantes exploradas">
+        <DCArtboard id="dash-final" label="04 · Dashboard final (unificado)" width={1440} height={1100}>
+          <PanelShell active="dashboard" title="Dashboard">
+            <DashboardFinal />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="dash-a" label="04A · Clínico moderno" width={1440} height={860}>
+          <PanelShell active="dashboard" title="Dashboard">
+            <Dashboard />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="dash-b" label="04B · Editorial hero" width={1440} height={860}>
+          <PanelShell active="dashboard" title="Dashboard">
+            <DashboardB />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="dash-c" label="04C · Dark premium" width={1440} height={860}>
+          <PanelShell active="dashboard" title="Dashboard">
+            <DashboardC />
+          </PanelShell>
+        </DCArtboard>
+        <DCPostIt>
+          Final = base A + Insight card de B + siguiente cita destacada.
+          Variantes quedan por si quieres comparar.
+        </DCPostIt>
+      </DCSection>
+
+      {/* ========== SECTION 4 · OPERACIÓN DIARIA ========== */}
+      <DCSection id="ops" title="Operación diaria" subtitle="Agenda visual, bandeja de WhatsApp, CRM ligero de pacientes">
+        <DCArtboard id="agenda" label="05 · Agenda / Calendar" width={1440} height={900}>
+          <PanelShell active="agenda" title="Agenda">
+            <Agenda />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="conv" label="06 · Bandeja de conversaciones (bot + intervención)" width={1440} height={900}>
+          <PanelShell active="conversaciones" title="Conversaciones">
+            <Conversations />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="pts" label="07 · Pacientes (CRM ligero)" width={1440} height={860}>
+          <PanelShell active="pacientes" title="Pacientes">
+            <Patients />
+          </PanelShell>
+        </DCArtboard>
+        <DCPostIt>
+          La bandeja es clave: el doctor ve lo que hace el bot en tiempo real y puede tomar control en 1 click.
+          Fondo tipo WhatsApp (familiar). Badge "Bot activo" siempre visible.
+        </DCPostIt>
+      </DCSection>
+
+      {/* ========== SECTION 5 · IA Y CUMPLIMIENTO ========== */}
+      <DCSection id="ia" title="IA y cumplimiento" subtitle="Editor del bot, notas por voz, RDA Resolución 1888, automatizaciones">
+        <DCArtboard id="bot" label="08 · Editor del bot + preview en vivo" width={1440} height={1100}>
+          <PanelShell active="bot" title="Editor del bot">
+            <BotEditor />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="voice" label="09 · Notas clínicas por voz" width={1440} height={1100}>
+          <PanelShell active="notas" title="Notas por voz">
+            <VoiceNotes />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="rda" label="10 · RDA · Resolución 1888" width={1440} height={1180}>
+          <PanelShell active="rda" title="RDA">
+            <RDA />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="auto" label="11 · Biblioteca de automatizaciones" width={1440} height={900}>
+          <PanelShell active="automaciones" title="Automatizaciones">
+            <Automations />
+          </PanelShell>
+        </DCArtboard>
+        <DCPostIt>
+          Motor de automatizaciones 100% interno → doctor solo ve toggles.
+          Notas por voz: 30s de dictado → nota estructurada + RDA listo.
+        </DCPostIt>
+      </DCSection>
+
+      {/* ========== SECTION 5.5 · CRECIMIENTO ========== */}
+      <DCSection id="crecimiento" title="Crecimiento" subtitle="Marketing segmentado + Reseñas Google automáticas">
+        <DCArtboard id="marketing" label="12 · Marketing (campañas segmentadas)" width={1440} height={1000}>
+          <PanelShell active="marketing" title="Marketing">
+            <Marketing />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="reviews" label="13 · Reseñas Google" width={1440} height={1000}>
+          <PanelShell active="resenas" title="Reseñas">
+            <Reviews />
+          </PanelShell>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ========== SECTION 6 · CUENTA ========== */}
+      <DCSection id="cuenta" title="Cuenta del SaaS" subtitle="Billing, integraciones externas opcionales">
+        <DCArtboard id="bill" label="11 · Facturación del SaaS" width={1440} height={860}>
+          <PanelShell active="facturacion" title="Facturación">
+            <Billing />
+          </PanelShell>
+        </DCArtboard>
+        <DCArtboard id="int" label="12 · Integraciones" width={1440} height={860}>
+          <PanelShell active="integraciones" title="Integraciones">
+            <Integraciones />
+          </PanelShell>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ========== SECTION 7 · MOBILE ========== */}
+      <DCSection id="mobile" title="App móvil del doctor" subtitle="Entre pacientes: ver próxima cita, firmar RDA, dictar notas">
+        <DCArtboard id="m1" label="13 · Home móvil" width={600} height={860}>
+          <MobilePanel />
+        </DCArtboard>
+        <DCPostIt>
+          PWA (sin app store).
+          Hero card con próxima cita + cuenta regresiva.
+          Dictado de notas con 1 tap (tab "Dictar").
+        </DCPostIt>
+      </DCSection>
+
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
