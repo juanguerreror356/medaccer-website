@@ -2063,9 +2063,9 @@ function Landing() {
           <div>
             <h4>Legal</h4>
             <ul>
-              <li><a href="uploads/terminos.html" target="_blank" rel="noopener">Términos</a></li>
-              <li><a href="uploads/privacidad.html" target="_blank" rel="noopener">Privacidad</a></li>
-              <li><a href="uploads/ley-1581.html" target="_blank" rel="noopener">Ley 1581</a></li>
+              <li><a href="terminos.html">Términos</a></li>
+              <li><a href="privacidad.html">Privacidad</a></li>
+              <li><a href="ley-1581.html">Ley 1581</a></li>
             </ul>
           </div>
         </div>
