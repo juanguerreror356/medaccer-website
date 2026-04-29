@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /uploads/
+Disallow: /src/
+Disallow: /docs/
+Disallow: /.claude/
+
+Sitemap: https://medaccer.com/sitemap.xml
