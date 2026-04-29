@@ -136,113 +136,100 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
   onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ Babel cargado — compilando JSX…')"
   onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ Babel FALLÓ al cargar')"></script>
 
-<script type="text/babel" src="src/icons.jsx?v=45"></script>
-<script type="text/babel" src="src/illustrations/ProblemVisual.jsx?v=1"></script>
-<script type="text/babel" src="src/illustrations/EcosystemDiagram.jsx?v=1"></script>
-<script type="text/babel" src="src/landing.jsx?v=45"></script>
-<script type="text/babel" src="src/blog.jsx?v=45"></script>
-<script type="text/babel" src="src/checkout.jsx?v=45"></script>
-<script type="text/babel" src="src/panel-1.jsx?v=45"></script>
-<script type="text/babel" src="src/panel-2.jsx?v=45"></script>
-<script type="text/babel" src="src/panel-3.jsx?v=45"></script>
-<script type="text/babel" src="src/panel-4.jsx?v=45"></script>
-<script type="text/babel" src="src/app.jsx?v=45"></script>
+<script>
+// Cargador manual de archivos JSX — muestra qué archivo falla
+(async function() {
+  var status = document.getElementById('__debug-status');
+  var errors = document.getElementById('__debug-errors');
 
-<script type="text/babel" data-presets="react">
-(function(){
-  function TweaksPanel() {
-    const [open, setOpen] = React.useState(false);
-    const [available, setAvailable] = React.useState(false);
-    const [vals, setVals] = React.useState(window.__medaccerTweaks);
-
-    React.useEffect(() => {
-      const h = (e) => {
-        if (e.data?.type === '__activate_edit_mode') setAvailable(true);
-        if (e.data?.type === '__deactivate_edit_mode') { setAvailable(false); setOpen(false); }
-      };
-      window.addEventListener('message', h);
-      window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-      return () => window.removeEventListener('message', h);
-    }, []);
-
-    const update = (k, v) => {
-      const next = { ...vals, [k]: v };
-      setVals(next);
-      document.body.dataset[k === 'theme' ? 'theme' : k === 'density' ? 'density' : 'accent'] = v;
-      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
-    };
-
-    if (!available) return null;
-    return (
-      <>
-        <button className="tweaks-fab" onClick={() => setOpen(!open)} title="Tweaks">
-          <Icons.Sparkles size={20} stroke="white" />
-        </button>
-        {open && (
-          <div className="tweaks-panel">
-            <div className="tweaks-title">Tweaks <button onClick={() => setOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--ink-500)', fontSize: 16 }}>×</button></div>
-            <div className="tweak-row">
-              <span>Tema</span>
-              <div className="tweak-segmented">
-                <button className={vals.theme === 'light' ? 'on' : ''} onClick={() => update('theme', 'light')}>Claro</button>
-                <button className={vals.theme === 'dark' ? 'on' : ''} onClick={() => update('theme', 'dark')}>Oscuro</button>
-              </div>
-            </div>
-            <div className="tweak-row">
-              <span>Densidad</span>
-              <div className="tweak-segmented">
-                <button className={vals.density === 'cozy' ? 'on' : ''} onClick={() => update('density', 'cozy')}>Compacta</button>
-                <button className={vals.density === 'comfy' ? 'on' : ''} onClick={() => update('density', 'comfy')}>Cómoda</button>
-                <button className={vals.density === 'spacious' ? 'on' : ''} onClick={() => update('density', 'spacious')}>Amplia</button>
-              </div>
-            </div>
-          </div>
-        )}
-      </>
-    );
+  async function loadJSX(url, name) {
+    if (status) status.textContent = '⟳ Compilando ' + name + '…';
+    var r = await fetch(url);
+    if (!r.ok) throw new Error(name + ' → HTTP ' + r.status);
+    var code = await r.text();
+    var compiled = Babel.transform(code, { presets: ['react'], filename: name }).code;
+    // eslint-disable-next-line no-eval
+    (0, eval)(compiled);
   }
 
-  // Error Boundary — atrapa errores en cualquier componente hijo
-  class ErrorBoundary extends React.Component {
-    constructor(p) { super(p); this.state = { error: null }; }
-    static getDerivedStateFromError(e) { return { error: e }; }
-    componentDidCatch(error, info) {
-      var status = document.getElementById('__debug-status');
-      var errors = document.getElementById('__debug-errors');
-      var dbg = document.getElementById('__debug');
-      if (dbg) dbg.style.display = 'block';
-      if (status) status.textContent = '✗ Error en componente React';
-      if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + error.name + ':</b> ' + error.message + '<br/><small style="color:#94A0B2">' + (info.componentStack || '').split('\n').slice(1,4).join(' → ') + '</small></div>';
-    }
-    render() {
-      if (this.state.error) return null;
-      return this.props.children;
+  var files = [
+    ['src/icons.jsx?v=45',                      'icons.jsx'],
+    ['src/illustrations/ProblemVisual.jsx?v=1',  'ProblemVisual.jsx'],
+    ['src/illustrations/EcosystemDiagram.jsx?v=1','EcosystemDiagram.jsx'],
+    ['src/landing.jsx?v=45',                     'landing.jsx'],
+    ['src/blog.jsx?v=45',                        'blog.jsx'],
+    ['src/checkout.jsx?v=45',                    'checkout.jsx'],
+    ['src/panel-1.jsx?v=45',                     'panel-1.jsx'],
+    ['src/panel-2.jsx?v=45',                     'panel-2.jsx'],
+    ['src/panel-3.jsx?v=45',                     'panel-3.jsx'],
+    ['src/panel-4.jsx?v=45',                     'panel-4.jsx'],
+    ['src/app.jsx?v=45',                         'app.jsx'],
+  ];
+
+  for (var i = 0; i < files.length; i++) {
+    try {
+      await loadJSX(files[i][0], files[i][1]);
+    } catch(e) {
+      if (status) status.textContent = '✗ Error en ' + files[i][1];
+      if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + files[i][1] + ':</b> ' + e.message + '</div>';
+      return; // para en el primer error
     }
   }
 
-  function Root() {
-    React.useEffect(() => {
-      // Ocultar debug overlay cuando React renderiza exitosamente
-      var dbg = document.getElementById('__debug');
-      if (dbg) dbg.style.display = 'none';
-    }, []);
-    return (
-      <ErrorBoundary>
-        <MedaccerApp />
-        <TweaksPanel />
-      </ErrorBoundary>
-    );
-  }
+  if (status) status.textContent = '✓ Todos los archivos OK — renderizando React…';
 
+  // Renderizar
   try {
-    ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+    var renderCode = Babel.transform([
+      '"use strict";',
+      'class ErrorBoundary extends React.Component {',
+      '  constructor(p){super(p);this.state={error:null};}',
+      '  static getDerivedStateFromError(e){return {error:e};}',
+      '  componentDidCatch(error,info){',
+      '    var s=document.getElementById("__debug-status");',
+      '    var d=document.getElementById("__debug");',
+      '    var er=document.getElementById("__debug-errors");',
+      '    if(d)d.style.display="block";',
+      '    if(s)s.textContent="✗ Error en componente: "+error.name;',
+      '    if(er)er.innerHTML+="<div style=\'padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px\'><b>"+error.name+":</b> "+error.message+"</div>";',
+      '  }',
+      '  render(){return this.state.error?null:this.props.children;}',
+      '}',
+      'function TweaksPanel(){',
+      '  const[open,setOpen]=React.useState(false);',
+      '  const[available,setAvailable]=React.useState(false);',
+      '  const[vals,setVals]=React.useState(window.__medaccerTweaks);',
+      '  React.useEffect(()=>{',
+      '    const h=(e)=>{',
+      '      if(e.data&&e.data.type==="__activate_edit_mode")setAvailable(true);',
+      '      if(e.data&&e.data.type==="__deactivate_edit_mode"){setAvailable(false);setOpen(false);}',
+      '    };',
+      '    window.addEventListener("message",h);',
+      '    window.parent.postMessage({type:"__edit_mode_available"},"*");',
+      '    return()=>window.removeEventListener("message",h);',
+      '  },[]);',
+      '  if(!available)return null;',
+      '  return null;',
+      '}',
+      'function Root(){',
+      '  React.useEffect(()=>{',
+      '    var dbg=document.getElementById("__debug");',
+      '    if(dbg)dbg.style.display="none";',
+      '  },[]);',
+      '  return React.createElement(ErrorBoundary,null,',
+      '    React.createElement(MedaccerApp,null),',
+      '    React.createElement(TweaksPanel,null)',
+      '  );',
+      '}',
+      'ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Root,null));',
+    ].join('\n'), { presets: ['react'] }).code;
+    (0, eval)(renderCode);
   } catch(e) {
-    var status = document.getElementById('__debug-status');
-    var errors = document.getElementById('__debug-errors');
-    if (status) status.textContent = '✗ React falló al iniciar';
-    if (errors) errors.innerHTML += '<div style="padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Error crítico:</b> ' + e.message + '</div>';
+    if (status) status.textContent = '✗ Error al renderizar: ' + e.message;
+    if (errors) errors.innerHTML += '<div style="padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Render error:</b> ' + e.message + '</div>';
   }
 })();
 </script>
+
 </body>
 </html>
