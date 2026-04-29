@@ -1,4 +1,4 @@
-/* global React, Icons */
+/* global React, Icons, ProblemVisual, EcosystemDiagram */
 
 // ============================================================
 // ESPECIALIDADES — data compartida (toda la landing se personaliza)
@@ -1733,6 +1733,9 @@ function Landing() {
         <div className="section-label">El contexto</div>
         <h2 className="section-title">Los consultorios independientes pierden <em>horas cada día</em> respondiendo WhatsApp manualmente.</h2>
         <p className="section-sub">No es por falta de atención — es que 1 persona no puede contestar mensajes, agendar citas, confirmar asistencias y atender pacientes al mismo tiempo. MEDACCER libera ese tiempo con una IA que entiende tu agenda y tu especialidad.</p>
+        <div style={{ margin: '48px 0 56px' }}>
+          <ProblemVisual />
+        </div>
         <div className="stats-strip">
           <div>
             <div className="stat-num">95%</div>
@@ -1774,6 +1777,9 @@ function Landing() {
         <div className="section-label">Integraciones</div>
         <h2 className="section-title">Conecta MEDACCER con lo que <em>ya usas.</em></h2>
         <p className="section-sub">12+ integraciones nativas (no hacks, no scraping). WhatsApp Business oficial de Meta, Google OAuth, n8n para lo que no exista.</p>
+        <div style={{ margin: '48px 0 40px' }}>
+          <EcosystemDiagram />
+        </div>
         <IntegrationsSection onNav={(id) => setModal('int:' + id)} />
         <div style={{ textAlign: 'center', marginTop: 32 }}>
           <button className="btn btn-outline btn-lg" onClick={() => setModal('int-all')}>
