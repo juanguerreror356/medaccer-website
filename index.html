@@ -91,142 +91,115 @@
 </template>
 </head>
 <body>
-<!-- Debug overlay — FUERA del #root para que React no lo borre -->
-<div id="__debug" style="font-family:monospace;padding:32px;background:#0B1220;color:#E2E7EE;min-height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;overflow:auto">
-  <div style="font-size:22px;font-weight:700;color:#3B9EFF;margin-bottom:16px">MEDACCER — Cargando…</div>
-  <div id="__debug-status" style="font-size:13px;color:#94A0B2">Iniciando scripts…</div>
-  <div id="__debug-errors" style="margin-top:20px;font-size:12px;color:#FCA5A5"></div>
+<!-- Panel debug fijo — esquina inferior derecha, NUNCA desaparece -->
+<div id="__dbg" style="position:fixed;bottom:16px;right:16px;z-index:99999;width:320px;background:#0F1726;border:1px solid rgba(59,158,255,0.3);border-radius:12px;font-family:monospace;font-size:12px;color:#E2E7EE;box-shadow:0 8px 32px rgba(0,0,0,0.5);overflow:hidden">
+  <div style="background:#1A2540;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+    <span style="color:#3B9EFF;font-weight:700">⚙ MEDACCER Debug</span>
+    <button onclick="document.getElementById('__dbg').style.display='none'" style="background:none;border:none;color:#6B7688;cursor:pointer;font-size:14px;padding:0 4px">×</button>
+  </div>
+  <div id="__dbg-list" style="padding:8px 12px;max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
+    <div style="color:#6B7688">⟳ Iniciando…</div>
+  </div>
 </div>
 <div id="root"></div>
 
 <script>
-// Error catcher global — muestra errores en pantalla antes de que React arranque
-window.__errors = [];
-window.onerror = function(msg, src, line, col, err) {
-  window.__errors.push({ msg, src: (src||'').split('/').pop(), line });
-  var el = document.getElementById('__debug-errors');
-  if (el) el.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + (src||'').split('/').pop() + ':' + line + '</b> — ' + msg + '</div>';
+window.__dbgLog = function(msg, ok) {
+  var list = document.getElementById('__dbg-list');
+  if (!list) return;
+  var d = document.createElement('div');
+  d.style.cssText = 'padding:4px 6px;border-radius:4px;line-height:1.4;';
+  d.style.background = ok === true ? 'rgba(16,185,129,0.08)' : ok === false ? 'rgba(239,68,68,0.12)' : 'transparent';
+  d.style.color = ok === true ? '#6EE7B7' : ok === false ? '#FCA5A5' : '#94A0B2';
+  d.style.borderLeft = ok === true ? '2px solid #10B981' : ok === false ? '2px solid #EF4444' : '2px solid transparent';
+  d.innerHTML = msg;
+  list.appendChild(d);
+  list.scrollTop = list.scrollHeight;
+};
+window.onerror = function(msg, src, line) {
+  window.__dbgLog('✗ JS error: ' + (src||'').split('/').pop() + ':' + line + ' — ' + msg, false);
 };
 window.addEventListener('unhandledrejection', function(e) {
-  window.__errors.push({ msg: String(e.reason) });
-  var el = document.getElementById('__debug-errors');
-  if (el) el.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Promise error:</b> ' + String(e.reason) + '</div>';
+  window.__dbgLog('✗ Promise: ' + String(e.reason), false);
 });
-
-window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
-  "theme": "dark",
-  "density": "spacious",
-  "accent": "blue"
-}/*EDITMODE-END*/;
-(function(){
-  const t = window.__medaccerTweaks;
-  document.body.dataset.theme = t.theme;
-  document.body.dataset.density = t.density;
-  document.body.dataset.accent = t.accent;
-})();
+window.__medaccerTweaks = /*EDITMODE-BEGIN*/{"theme":"dark","density":"spacious","accent":"blue"}/*EDITMODE-END*/;
+(function(){var t=window.__medaccerTweaks;document.body.dataset.theme=t.theme;document.body.dataset.density=t.density;document.body.dataset.accent=t.accent;})();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"
-  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ React cargado')"
-  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ React FALLÓ al cargar')"></script>
+  onload="window.__dbgLog('✓ React 18 cargado',true)"
+  onerror="window.__dbgLog('✗ React FALLÓ',false)"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"
-  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ ReactDOM cargado')"
-  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ ReactDOM FALLÓ al cargar')"></script>
+  onload="window.__dbgLog('✓ ReactDOM cargado',true)"
+  onerror="window.__dbgLog('✗ ReactDOM FALLÓ',false)"></script>
 <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.10/babel.min.js" crossorigin="anonymous"
-  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ Babel cargado — compilando JSX…')"
-  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ Babel FALLÓ al cargar')"></script>
+  onload="window.__dbgLog('✓ Babel cargado',true)"
+  onerror="window.__dbgLog('✗ Babel FALLÓ',false)"></script>
 
 <script>
-// Cargador manual de archivos JSX — muestra qué archivo falla
 (async function() {
-  var status = document.getElementById('__debug-status');
-  var errors = document.getElementById('__debug-errors');
-
   async function loadJSX(url, name) {
-    if (status) status.textContent = '⟳ Compilando ' + name + '…';
+    window.__dbgLog('⟳ ' + name + '…', null);
     var r = await fetch(url);
-    if (!r.ok) throw new Error(name + ' → HTTP ' + r.status);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     var code = await r.text();
     var compiled = Babel.transform(code, { presets: ['react'], filename: name }).code;
-    // eslint-disable-next-line no-eval
     (0, eval)(compiled);
+    // actualiza el último item a ✓
+    var list = document.getElementById('__dbg-list');
+    var last = list && list.lastChild;
+    if (last) { last.textContent = '✓ ' + name; last.style.color='#6EE7B7'; last.style.background='rgba(16,185,129,0.08)'; last.style.borderLeft='2px solid #10B981'; }
   }
 
   var files = [
-    ['src/icons.jsx?v=45',                      'icons.jsx'],
-    ['src/illustrations/ProblemVisual.jsx?v=1',  'ProblemVisual.jsx'],
+    ['src/icons.jsx?v=45',                       'icons.jsx'],
+    ['src/illustrations/ProblemVisual.jsx?v=1',   'ProblemVisual.jsx'],
     ['src/illustrations/EcosystemDiagram.jsx?v=1','EcosystemDiagram.jsx'],
-    ['src/landing.jsx?v=45',                     'landing.jsx'],
-    ['src/blog.jsx?v=45',                        'blog.jsx'],
-    ['src/checkout.jsx?v=45',                    'checkout.jsx'],
-    ['src/panel-1.jsx?v=45',                     'panel-1.jsx'],
-    ['src/panel-2.jsx?v=45',                     'panel-2.jsx'],
-    ['src/panel-3.jsx?v=45',                     'panel-3.jsx'],
-    ['src/panel-4.jsx?v=45',                     'panel-4.jsx'],
-    ['src/app.jsx?v=45',                         'app.jsx'],
+    ['src/landing.jsx?v=45',                      'landing.jsx'],
+    ['src/blog.jsx?v=45',                         'blog.jsx'],
+    ['src/checkout.jsx?v=45',                     'checkout.jsx'],
+    ['src/panel-1.jsx?v=45',                      'panel-1.jsx'],
+    ['src/panel-2.jsx?v=45',                      'panel-2.jsx'],
+    ['src/panel-3.jsx?v=45',                      'panel-3.jsx'],
+    ['src/panel-4.jsx?v=45',                      'panel-4.jsx'],
+    ['src/app.jsx?v=45',                          'app.jsx'],
   ];
 
   for (var i = 0; i < files.length; i++) {
     try {
       await loadJSX(files[i][0], files[i][1]);
     } catch(e) {
-      if (status) status.textContent = '✗ Error en ' + files[i][1];
-      if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + files[i][1] + ':</b> ' + e.message + '</div>';
-      return; // para en el primer error
+      window.__dbgLog('✗ ' + files[i][1] + ': ' + e.message, false);
+      return;
     }
   }
 
-  if (status) status.textContent = '✓ Todos los archivos OK — renderizando React…';
+  window.__dbgLog('✓ Todos OK — renderizando…', true);
 
-  // Renderizar
+  // Render con ErrorBoundary
   try {
-    var renderCode = Babel.transform([
-      '"use strict";',
-      'class ErrorBoundary extends React.Component {',
-      '  constructor(p){super(p);this.state={error:null};}',
-      '  static getDerivedStateFromError(e){return {error:e};}',
-      '  componentDidCatch(error,info){',
-      '    var s=document.getElementById("__debug-status");',
-      '    var d=document.getElementById("__debug");',
-      '    var er=document.getElementById("__debug-errors");',
-      '    if(d)d.style.display="block";',
-      '    if(s)s.textContent="✗ Error en componente: "+error.name;',
-      '    if(er)er.innerHTML+="<div style=\'padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px\'><b>"+error.name+":</b> "+error.message+"</div>";',
-      '  }',
-      '  render(){return this.state.error?null:this.props.children;}',
+    var Root = function() {
+      return React.createElement(MedaccerApp, null);
+    };
+    var ErrB = React.Component;
+    var renderCode = [
+      'class ErrBoundary extends React.Component{',
+      'constructor(p){super(p);this.state={err:null};}',
+      'static getDerivedStateFromError(e){return{err:e};}',
+      'componentDidCatch(err,info){',
+      '  window.__dbgLog("✗ Componente: "+err.name+": "+err.message,false);',
       '}',
-      'function TweaksPanel(){',
-      '  const[open,setOpen]=React.useState(false);',
-      '  const[available,setAvailable]=React.useState(false);',
-      '  const[vals,setVals]=React.useState(window.__medaccerTweaks);',
-      '  React.useEffect(()=>{',
-      '    const h=(e)=>{',
-      '      if(e.data&&e.data.type==="__activate_edit_mode")setAvailable(true);',
-      '      if(e.data&&e.data.type==="__deactivate_edit_mode"){setAvailable(false);setOpen(false);}',
-      '    };',
-      '    window.addEventListener("message",h);',
-      '    window.parent.postMessage({type:"__edit_mode_available"},"*");',
-      '    return()=>window.removeEventListener("message",h);',
-      '  },[]);',
-      '  if(!available)return null;',
-      '  return null;',
+      'render(){return this.state.err?null:this.props.children;}',
       '}',
-      'function Root(){',
-      '  React.useEffect(()=>{',
-      '    var dbg=document.getElementById("__debug");',
-      '    if(dbg)dbg.style.display="none";',
-      '  },[]);',
-      '  return React.createElement(ErrorBoundary,null,',
-      '    React.createElement(MedaccerApp,null),',
-      '    React.createElement(TweaksPanel,null)',
-      '  );',
+      'function AppRoot(){',
+      '  return React.createElement(ErrBoundary,null,React.createElement(MedaccerApp,null));',
       '}',
-      'ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Root,null));',
-    ].join('\n'), { presets: ['react'] }).code;
+      'ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(AppRoot,null));',
+      'window.__dbgLog("✓ React renderizó sin errores síncronos",true);',
+    ].join('');
     (0, eval)(renderCode);
   } catch(e) {
-    if (status) status.textContent = '✗ Error al renderizar: ' + e.message;
-    if (errors) errors.innerHTML += '<div style="padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Render error:</b> ' + e.message + '</div>';
+    window.__dbgLog('✗ Render: ' + e.message, false);
   }
 })();
 </script>
