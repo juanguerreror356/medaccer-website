@@ -91,10 +91,29 @@
 </template>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+  <!-- Fallback visible si React no carga -->
+  <div id="__debug" style="font-family:monospace;padding:32px;background:#0B1220;color:#E2E7EE;min-height:100vh">
+    <div style="font-size:22px;font-weight:700;color:#3B9EFF;margin-bottom:16px">MEDACCER — Cargando…</div>
+    <div id="__debug-status" style="font-size:13px;color:#94A0B2">Iniciando scripts…</div>
+    <div id="__debug-errors" style="margin-top:20px;font-size:12px;color:#FCA5A5"></div>
+  </div>
+</div>
 
 <script>
-// Tweaks defaults persisted via EDITMODE markers
+// Error catcher global — muestra errores en pantalla antes de que React arranque
+window.__errors = [];
+window.onerror = function(msg, src, line, col, err) {
+  window.__errors.push({ msg, src: (src||'').split('/').pop(), line });
+  var el = document.getElementById('__debug-errors');
+  if (el) el.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + (src||'').split('/').pop() + ':' + line + '</b> — ' + msg + '</div>';
+};
+window.addEventListener('unhandledrejection', function(e) {
+  window.__errors.push({ msg: String(e.reason) });
+  var el = document.getElementById('__debug-errors');
+  if (el) el.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Promise error:</b> ' + String(e.reason) + '</div>';
+});
+
 window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
   "theme": "dark",
   "density": "spacious",
@@ -108,9 +127,15 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
 })();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.10/babel.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"
+  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ React cargado')"
+  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ React FALLÓ al cargar')"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"
+  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ ReactDOM cargado')"
+  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ ReactDOM FALLÓ al cargar')"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.10/babel.min.js" crossorigin="anonymous"
+  onload="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✓ Babel cargado — compilando JSX…')"
+  onerror="document.getElementById('__debug-status')&&(document.getElementById('__debug-status').textContent='✗ Babel FALLÓ al cargar')"></script>
 
 <script type="text/babel" src="src/icons.jsx?v=45"></script>
 <script type="text/babel" src="src/illustrations/ProblemVisual.jsx?v=1"></script>
@@ -187,7 +212,17 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
     );
   }
 
-  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+  try {
+    var rootEl = document.getElementById('root');
+    var dbg = document.getElementById('__debug');
+    if (dbg) dbg.remove(); // limpia el fallback debug si React arranca bien
+    ReactDOM.createRoot(rootEl).render(<Root />);
+  } catch(e) {
+    var status = document.getElementById('__debug-status');
+    var errors = document.getElementById('__debug-errors');
+    if (status) status.textContent = '✗ React falló al renderizar';
+    if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Render error:</b> ' + e.message + '</div>';
+  }
 })();
 </script>
 </body>
