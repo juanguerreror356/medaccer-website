@@ -1,154 +1,87 @@
 /* global React */
 function EcosystemDiagram() {
+  const nodes = [
+    { label: 'Paciente', sub: 'WhatsApp', icon: '👤', color: '#25D366', bg: '#F0FFF4', side: 'left' },
+    { label: 'MEDACCER', sub: 'IA · 24/7', icon: 'M', color: '#2563EB', bg: 'linear-gradient(135deg,#2563EB,#06B6D4)', center: true },
+    { label: 'Google Cal', sub: 'Tu agenda real', icon: '📅', color: '#1A56DB', bg: '#EEF2FF', side: 'right-top' },
+    { label: 'Dashboard', sub: 'KPIs en vivo', icon: '📊', color: '#06B6D4', bg: '#ECFEFF', side: 'right-mid' },
+    { label: 'WhatsApp API', sub: 'Respuestas auto', icon: '💬', color: '#25D366', bg: '#F0FFF4', side: 'right-bot' },
+    { label: 'Médico', sub: 'Libre para atender', icon: '⚕️', color: '#8B5CF6', bg: '#F5F3FF', side: 'doctor' },
+  ];
+
   return (
-    <svg
-      viewBox="0 0 800 280"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-      style={{ width: '100%', maxWidth: 800, display: 'block', margin: '0 auto' }}
-    >
-      <defs>
-        <linearGradient id="eco-teal" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#2563EB" />
-          <stop offset="100%" stopColor="#06B6D4" />
-        </linearGradient>
-        <linearGradient id="eco-green" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#06B6D4" />
-          <stop offset="100%" stopColor="#10B981" />
-        </linearGradient>
-        <marker id="eco-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="url(#eco-teal)" opacity="0.8" />
-        </marker>
-        <marker id="eco-arrow-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L0,6 L8,3 z" fill="url(#eco-green)" opacity="0.8" />
-        </marker>
-        <filter id="eco-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-      </defs>
+    <div style={{ maxWidth: 760, margin: '0 auto', fontFamily: 'Geist, sans-serif' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 200px', gap: 0, alignItems: 'center', minHeight: 320 }}>
 
-      {/* ── PATIENT (left) ── */}
-      <g>
-        <rect x="20" y="100" width="110" height="80" rx="12" fill="#1E293B" stroke="#334155" strokeWidth="1.5" />
-        {/* Person icon */}
-        <circle cx="75" cy="122" r="12" fill="#25D366" opacity="0.2" />
-        <circle cx="75" cy="119" r="6" fill="#25D366" opacity="0.8" />
-        <path d="M63 138 Q75 130 87 138" stroke="#25D366" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8" />
-        <text x="75" y="156" textAnchor="middle" fontSize="11" fontFamily="Geist, sans-serif" fill="#CBD5E1" fontWeight="600">Paciente</text>
-        <text x="75" y="170" textAnchor="middle" fontSize="9" fontFamily="Geist, sans-serif" fill="#64748B">WhatsApp</text>
-      </g>
+        {/* LEFT — Paciente */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 72, height: 72, borderRadius: 20, background: '#F0FFF4', border: '1px solid #C6F6D5', display: 'grid', placeItems: 'center', fontSize: 28, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+            👤
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#1A202C' }}>Paciente</div>
+            <div style={{ fontSize: 11, color: '#718096' }}>WhatsApp</div>
+          </div>
+        </div>
 
-      {/* Arrow: Patient → MEDACCER */}
-      <path d="M132 140 L198 140" stroke="url(#eco-teal)" strokeWidth="2" markerEnd="url(#eco-arrow)" strokeDasharray="5 3" opacity="0.8" />
-      <text x="165" y="132" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#94A3B8">mensaje</text>
+        {/* CENTER — flow lines + MEDACCER node */}
+        <div style={{ position: 'relative', height: 320 }}>
+          <svg viewBox="0 0 400 320" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+            <defs>
+              <linearGradient id="ed-g1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#2563EB" />
+                <stop offset="100%" stopColor="#06B6D4" />
+              </linearGradient>
+              <marker id="ed-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                <polyline points="0,0 7,3.5 0,7" fill="none" stroke="url(#ed-g1)" strokeWidth="1.2" />
+              </marker>
+            </defs>
 
-      {/* ── MEDACCER AI (center) ── */}
-      <g filter="url(#eco-glow)">
-        <rect x="200" y="60" width="160" height="160" rx="16" fill="#0F1E3C" stroke="url(#eco-teal)" strokeWidth="2" />
-        {/* Glow */}
-        <rect x="200" y="60" width="160" height="160" rx="16" fill="none" stroke="#2563EB" strokeWidth="8" opacity="0.06" />
-      </g>
+            {/* Left arrow — patient to center */}
+            <line x1="10" y1="160" x2="150" y2="160" stroke="url(#ed-g1)" strokeWidth="2" strokeDasharray="5 3" markerEnd="url(#ed-arr)" />
+            <text x="80" y="152" textAnchor="middle" fontSize="10" fill="#A0AEC0" fontFamily="Geist,sans-serif">mensaje</text>
 
-      {/* MEDACCER brain icon */}
-      <circle cx="280" cy="108" r="22" fill="url(#eco-teal)" opacity="0.15" />
-      <circle cx="280" cy="108" r="14" fill="url(#eco-teal)" opacity="0.3" />
-      {/* AI neural lines */}
-      <circle cx="274" cy="104" r="2.5" fill="#06B6D4" />
-      <circle cx="286" cy="104" r="2.5" fill="#06B6D4" />
-      <circle cx="280" cy="114" r="2.5" fill="#06B6D4" />
-      <line x1="274" y1="104" x2="286" y2="104" stroke="#06B6D4" strokeWidth="1" opacity="0.6" />
-      <line x1="274" y1="104" x2="280" y2="114" stroke="#06B6D4" strokeWidth="1" opacity="0.6" />
-      <line x1="286" y1="104" x2="280" y2="114" stroke="#06B6D4" strokeWidth="1" opacity="0.6" />
+            {/* Response arrow */}
+            <line x1="150" y1="172" x2="10" y2="172" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 3" markerEnd="url(#ed-arr)" />
+            <text x="80" y="186" textAnchor="middle" fontSize="10" fill="#A0AEC0" fontFamily="Geist,sans-serif">respuesta</text>
 
-      <text x="280" y="142" textAnchor="middle" fontSize="13" fontFamily="Geist, sans-serif" fill="white" fontWeight="700">MEDACCER</text>
-      <text x="280" y="157" textAnchor="middle" fontSize="10" fontFamily="Geist, sans-serif" fill="#93C5FD">IA · Gemini 2.5 Flash</text>
+            {/* Right arrows to services */}
+            <line x1="250" y1="148" x2="380" y2="72" stroke="url(#ed-g1)" strokeWidth="1.8" strokeDasharray="5 3" markerEnd="url(#ed-arr)" />
+            <line x1="250" y1="160" x2="380" y2="160" stroke="url(#ed-g1)" strokeWidth="1.8" strokeDasharray="5 3" markerEnd="url(#ed-arr)" />
+            <line x1="250" y1="172" x2="380" y2="248" stroke="url(#ed-g1)" strokeWidth="1.8" strokeDasharray="5 3" markerEnd="url(#ed-arr)" />
 
-      {/* Features list */}
-      <text x="215" y="178" fontSize="8.5" fontFamily="Geist, sans-serif" fill="#10B981">✓ Agendamiento 24/7</text>
-      <text x="215" y="191" fontSize="8.5" fontFamily="Geist, sans-serif" fill="#10B981">✓ Triage de urgencias</text>
-      <text x="215" y="204" fontSize="8.5" fontFamily="Geist, sans-serif" fill="#10B981">✓ Notas clínicas RDA</text>
+            {/* MEDACCER center node */}
+            <rect x="155" y="108" width="95" height="104" rx="18" fill="url(#ed-g1)" />
+            <text x="202" y="148" textAnchor="middle" fontSize="22" fontWeight="700" fill="white" fontFamily="Geist,sans-serif">M</text>
+            <text x="202" y="166" textAnchor="middle" fontSize="11" fontWeight="700" fill="white" fontFamily="Geist,sans-serif">MEDACCER</text>
+            <text x="202" y="180" textAnchor="middle" fontSize="9" fill="rgba(255,255,255,0.8)" fontFamily="Geist,sans-serif">IA · 24/7</text>
+            {/* Green dot */}
+            <circle cx="234" cy="118" r="5" fill="#10B981" />
+          </svg>
+        </div>
 
-      {/* Arrow: Patient response ← MEDACCER */}
-      <path d="M200 152 L134 152" stroke="url(#eco-teal)" strokeWidth="2" markerEnd="url(#eco-arrow)" opacity="0.5" />
-      <text x="167" y="164" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#94A3B8">respuesta</text>
+        {/* RIGHT — 3 services */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {[
+            { icon: '📅', label: 'Google Cal', sub: 'Tu agenda real', color: '#1A56DB', bg: '#EEF2FF' },
+            { icon: '📊', label: 'Dashboard', sub: 'KPIs + RDA', color: '#06B6D4', bg: '#ECFEFF' },
+            { icon: '💬', label: 'WhatsApp', sub: 'Respuestas auto', color: '#25D366', bg: '#F0FFF4' },
+          ].map((s, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: s.bg, borderRadius: 12, padding: '10px 14px', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+              <span style={{ fontSize: 20 }}>{s.icon}</span>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#1A202C' }}>{s.label}</div>
+                <div style={{ fontSize: 10, color: '#718096' }}>{s.sub}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      {/* Arrow: MEDACCER → Google Calendar */}
-      <path d="M360 110 L426 110" stroke="url(#eco-teal)" strokeWidth="2" markerEnd="url(#eco-arrow)" strokeDasharray="5 3" opacity="0.8" />
-      <text x="393" y="102" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#94A3B8">agenda cita</text>
-
-      {/* Arrow: MEDACCER → Dashboard */}
-      <path d="M360 170 L426 170" stroke="url(#eco-green)" strokeWidth="2" markerEnd="url(#eco-arrow-green)" strokeDasharray="5 3" opacity="0.8" />
-      <text x="393" y="162" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#94A3B8">KPIs + RDA</text>
-
-      {/* ── RIGHT COLUMN ── */}
-
-      {/* Google Calendar */}
-      <g>
-        <rect x="428" y="70" width="110" height="76" rx="12" fill="#1E293B" stroke="#334155" strokeWidth="1.5" />
-        {/* Calendar icon */}
-        <rect x="456" y="84" width="54" height="42" rx="4" fill="#1A56DB" opacity="0.3" />
-        <rect x="456" y="84" width="54" height="12" rx="4" fill="#1A56DB" opacity="0.7" />
-        <text x="483" y="94" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="white" fontWeight="600">Google Cal</text>
-        <line x1="462" y1="102" x2="504" y2="102" stroke="#1E3A5F" strokeWidth="1" />
-        <circle cx="466" cy="110" r="3" fill="#10B981" />
-        <circle cx="476" cy="110" r="3" fill="#EF4444" />
-        <circle cx="486" cy="110" r="3" fill="#10B981" />
-        <circle cx="496" cy="110" r="3" fill="#F59E0B" />
-        <text x="483" y="136" textAnchor="middle" fontSize="9" fontFamily="Geist, sans-serif" fill="#64748B">Tu agenda real</text>
-      </g>
-
-      {/* WhatsApp reminders arrow */}
-      <path d="M483 146 L483 180 L428 180" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.5" />
-      <text x="490" y="166" fontSize="8" fontFamily="Geist, sans-serif" fill="#94A3B8">recordatorio</text>
-
-      {/* Dashboard */}
-      <g>
-        <rect x="428" y="154" width="110" height="76" rx="12" fill="#1E293B" stroke="#334155" strokeWidth="1.5" />
-        <text x="483" y="172" textAnchor="middle" fontSize="9" fontFamily="Geist, sans-serif" fill="#CBD5E1" fontWeight="600">Dashboard</text>
-        {/* Mini bar chart */}
-        <rect x="442" y="185" width="8" height="18" rx="2" fill="#2563EB" opacity="0.7" />
-        <rect x="454" y="178" width="8" height="25" rx="2" fill="#2563EB" opacity="0.85" />
-        <rect x="466" y="181" width="8" height="22" rx="2" fill="#06B6D4" opacity="0.7" />
-        <rect x="478" y="175" width="8" height="28" rx="2" fill="#06B6D4" opacity="0.9" />
-        <rect x="490" y="183" width="8" height="20" rx="2" fill="#10B981" opacity="0.7" />
-        <rect x="502" y="176" width="8" height="27" rx="2" fill="#10B981" opacity="0.9" />
-        <text x="483" y="220" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#64748B">Ocupación + RDA</text>
-      </g>
-
-      {/* ── WhatsApp Business arrow ── */}
-      <line x1="538" y1="108" x2="600" y2="108" stroke="url(#eco-green)" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.5" />
-
-      {/* WhatsApp Business */}
-      <g>
-        <rect x="602" y="70" width="110" height="76" rx="12" fill="#1E293B" stroke="#25D366" strokeWidth="1.5" opacity="0.7" />
-        <circle cx="657" cy="102" r="18" fill="#25D366" opacity="0.15" />
-        <circle cx="657" cy="102" r="11" fill="#25D366" opacity="0.8" />
-        <path d="M657 93 L657 102 L663 105" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        <text x="657" y="128" textAnchor="middle" fontSize="9" fontFamily="Geist, sans-serif" fill="#CBD5E1" fontWeight="600">WhatsApp</text>
-        <text x="657" y="139" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#64748B">Business API</text>
-      </g>
-
-      {/* Doctor icon */}
-      <g>
-        <rect x="602" y="154" width="110" height="76" rx="12" fill="#1E293B" stroke="#334155" strokeWidth="1.5" />
-        <circle cx="657" cy="176" r="11" fill="#2563EB" opacity="0.3" />
-        <circle cx="657" cy="173" r="5.5" fill="#93C5FD" opacity="0.9" />
-        <path d="M647 190 Q657 184 667 190" stroke="#93C5FD" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.9" />
-        {/* Stethoscope */}
-        <path d="M651 193 Q648 200 654 203 Q660 206 662 200" stroke="#06B6D4" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-        <circle cx="662" cy="200" r="2.5" fill="#06B6D4" />
-        <text x="657" y="218" textAnchor="middle" fontSize="9" fontFamily="Geist, sans-serif" fill="#CBD5E1" fontWeight="600">Médico</text>
-        <text x="657" y="229" textAnchor="middle" fontSize="8" fontFamily="Geist, sans-serif" fill="#64748B">Libre para atender</text>
-      </g>
-
-      <line x1="538" y1="170" x2="600" y2="170" stroke="url(#eco-green)" strokeWidth="1.5" strokeDasharray="4 3" opacity="0.5" />
-
-      {/* ── BOTTOM LABEL ── */}
-      <text x="400" y="268" textAnchor="middle" fontSize="11" fontFamily="Geist, sans-serif" fill="#475569" letterSpacing="0.04em">
+      {/* Bottom label */}
+      <div style={{ textAlign: 'center', marginTop: 8, fontSize: 12, color: '#A0AEC0', letterSpacing: '0.04em' }}>
         Todo conectado · Sin cambiar software · Sin migrar datos
-      </text>
-    </svg>
+      </div>
+    </div>
   );
 }

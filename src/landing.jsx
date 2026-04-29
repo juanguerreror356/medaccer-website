@@ -542,16 +542,21 @@ const DEMO_TABS = [
   { id: 'resena',      label: 'Reseña Google', icon: 'Star',     emoji: '⭐' },
 ];
 
-function ChatDemoPro({ specialty, compact = false }) {
+function ChatDemoPro({ specialty, compact = false, started = false }) {
   const [scenario, setScenario] = React.useState('agendar');
   const [messages, setMessages] = React.useState([]);
   const [step, setStep] = React.useState(0);
-  const [playing, setPlaying] = React.useState(true);
+  const [playing, setPlaying] = React.useState(false);
   const [speed, setSpeed] = React.useState(1);
   const scrollRef = React.useRef(null);
 
   const scripts = React.useMemo(() => buildScripts(specialty), [specialty]);
   const script = scripts[scenario] || scripts.agendar;
+
+  // Start playing when parent signals demo started
+  React.useEffect(() => {
+    if (started) setPlaying(true);
+  }, [started]);
 
   // reset when scenario or specialty changes
   React.useEffect(() => {
@@ -610,8 +615,18 @@ function ChatDemoPro({ specialty, compact = false }) {
 
   return (
     <div className={`demo-pro-wrap ${compact ? 'compact' : ''}`}>
-      {/* Phone — tap deshabilitado; solo controles cambian de escenario */}
-      <div className="chat-demo-phone">
+      <div className="chat-demo-phone" style={{ position: 'relative' }}>
+        {/* Play overlay — shown until a specialty is selected */}
+        {!started && (
+          <div className="demo-play-overlay" onClick={() => setPlaying(true)}>
+            <div className="demo-play-btn" style={{ borderColor: accent, color: accent }}>
+              <Icons.Play size={28} stroke={accent} />
+            </div>
+            <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-600)', textAlign: 'center', lineHeight: 1.4 }}>
+              Elige tu especialidad<br/>para iniciar el demo
+            </p>
+          </div>
+        )}
         <div className="chat-demo-inner">
           <div className="chat-demo-header" style={{ background: `linear-gradient(135deg, ${accent}, ${accent}dd)` }}>
             <button style={{ background:'none', border:'none', color:'white', cursor:'pointer', padding:4 }}><Icons.ChevronLeft size={18} stroke="white" /></button>
@@ -1573,6 +1588,15 @@ function Landing() {
   const [openFaq, setOpenFaq] = React.useState(0);
   const [specialty, setSpecialty] = React.useState(SPECIALTIES[0]);
   const [modal, setModal] = React.useState(null); // 'res1888' | 'google' | null
+  const [demoStarted, setDemoStarted] = React.useState(false);
+
+  // Consume any pending modal request from other pages (e.g. blog → res1888)
+  React.useEffect(() => {
+    if (window.__pendingModal) {
+      setModal(window.__pendingModal);
+      window.__pendingModal = null;
+    }
+  }, []);
 
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1605,7 +1629,45 @@ function Landing() {
           <div className="hero-glow"></div>
           <div className="hero-glow2"></div>
         </div>
-        <div className="hero-grid-layout">
+
+        {/* PASO 1 — Selector de especialidad: lo primero que ve el doctor */}
+        <div className="spec-selector-hero" id="especialidades">
+          <div className="spec-selector-intro">
+            <div className="section-label" style={{ color: specialty.color, transition: 'color .4s ease' }}>
+              <span className="dot-live" style={{ background: specialty.color, display: 'inline-block', marginRight: 6 }}></span>
+              Paso 1 — Elige tu especialidad
+            </div>
+            <h2 className="spec-selector-title">
+              ¿Cuál es tu especialidad?
+            </h2>
+            <p className="spec-selector-subtitle">
+              El demo se personaliza al instante con tu vocabulario, tus precios y tus flujos reales.
+            </p>
+          </div>
+          <div className="spec-selector-big">
+            {SPECIALTIES.map(s => {
+              const SIC = Icons[s.icon] || Icons.Stethoscope;
+              const isActive = specialty.id === s.id;
+              return (
+                <button
+                  key={s.id}
+                  className={`spec-card-big ${isActive ? 'active' : ''}`}
+                  onClick={() => { setSpecialty(s); setDemoStarted(true); scrollTo('demo'); }}
+                  style={isActive ? { borderColor: s.color, background: `${s.color}0d`, boxShadow: `0 0 0 1px ${s.color}` } : {}}
+                >
+                  <div className="spec-card-icon" style={{ background: isActive ? s.color : `${s.color}15`, color: isActive ? 'white' : s.color }}>
+                    <SIC size={20} stroke={isActive ? 'white' : s.color} />
+                  </div>
+                  <div className="spec-card-title">{s.label}</div>
+                  <div className="spec-card-tag" style={{ color: s.color }}>{s.example}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* PASO 2 — Hero personalizado + demo */}
+        <div className="hero-grid-layout" style={{ marginTop: 64 }}>
           <div>
             <div className="hero-eyebrow">
               <span className="dot-live"></span>
@@ -1620,7 +1682,7 @@ function Landing() {
 
             <div className="hero-ctas">
               <button className="btn btn-primary btn-lg" onClick={() => window.location.hash = 'signup'}>Empezar ahora <Icons.ArrowRight size={16} stroke="white" /></button>
-              <button className="btn btn-outline btn-lg" onClick={() => scrollTo('demo')}><Icons.Play size={14} /> Ver demo (60 s)</button>
+              <button className="btn btn-outline btn-lg" onClick={() => { setDemoStarted(true); scrollTo('demo'); }}><Icons.Play size={14} /> Ver demo en vivo</button>
             </div>
             <div className="hero-trust">
               <div><Icons.Check size={14} stroke="#10B981" /> Sin tarjeta de crédito</div>
@@ -1629,45 +1691,7 @@ function Landing() {
             </div>
           </div>
           <div className="chat-demo-wrap" id="demo">
-            <ChatDemoPro specialty={specialty} />
-          </div>
-        </div>
-
-        {/* SELECTOR DE ESPECIALIDADES — justo después del hero, prominente */}
-        <div className="spec-selector-hero" id="especialidades" style={{ marginTop: 80 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 48, alignItems: 'end', marginBottom: 28 }} className="spec-selector-head">
-            <div>
-              <div className="section-label" style={{ color: specialty.color, transition: 'color .4s ease', marginBottom: 10 }}>
-                <span className="dot-live" style={{ background: specialty.color, display: 'inline-block', marginRight: 6 }}></span>
-                Elige tu especialidad
-              </div>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 38, fontWeight: 400, lineHeight: 1.18, letterSpacing: '-0.02em', margin: 0, padding: 0, color: 'var(--ink-900)' }}>
-                El demo de arriba se adapta a tu <em style={{ fontStyle: 'italic', color: specialty.color, transition: 'color .4s ease' }}>consultorio real</em>.
-              </h3>
-            </div>
-            <div style={{ fontSize: 14, color: 'var(--ink-600)', lineHeight: 1.55, paddingBottom: 6 }}>
-              Cambia el vocabulario médico, los precios sugeridos, los flujos de triage y los recordatorios — todo en un clic, sin configurar nada.
-            </div>
-          </div>
-          <div className="spec-selector-big">
-            {SPECIALTIES.map(s => {
-              const SIC = Icons[s.icon] || Icons.Stethoscope;
-              const isActive = specialty.id === s.id;
-              return (
-                <button
-                  key={s.id}
-                  className={`spec-card-big ${isActive ? 'active' : ''}`}
-                  onClick={() => { setSpecialty(s); scrollTo('demo'); }}
-                  style={isActive ? { borderColor: s.color, background: `${s.color}0d`, boxShadow: `0 0 0 1px ${s.color}` } : {}}
-                >
-                  <div className="spec-card-icon" style={{ background: isActive ? s.color : `${s.color}15`, color: isActive ? 'white' : s.color }}>
-                    <SIC size={20} stroke={isActive ? 'white' : s.color} />
-                  </div>
-                  <div className="spec-card-title">{s.label}</div>
-                  <div className="spec-card-tag" style={{ color: s.color }}>{s.example}</div>
-                </button>
-              );
-            })}
+            <ChatDemoPro specialty={specialty} started={demoStarted} />
           </div>
         </div>
 
@@ -1776,15 +1800,29 @@ function Landing() {
       <section className="section" id="integraciones">
         <div className="section-label">Integraciones</div>
         <h2 className="section-title">Conecta MEDACCER con lo que <em>ya usas.</em></h2>
-        <p className="section-sub">12+ integraciones nativas (no hacks, no scraping). WhatsApp Business oficial de Meta, Google OAuth, n8n para lo que no exista.</p>
+        <p className="section-sub">Se conecta con las apps que ya usas. Sin migrar datos, sin cambiar de número, sin contratar un técnico.</p>
         <div style={{ margin: '48px 0 40px' }}>
           <EcosystemDiagram />
         </div>
-        <IntegrationsSection onNav={(id) => setModal('int:' + id)} />
-        <div style={{ textAlign: 'center', marginTop: 32 }}>
-          <button className="btn btn-outline btn-lg" onClick={() => setModal('int-all')}>
-            Ver cómo integrar cada una <Icons.ArrowRight size={16} />
-          </button>
+        <div className="integrations-simple-grid">
+          {[
+            { icon: '💬', name: 'WhatsApp', desc: 'Tu número actual, sin cambiarlo' },
+            { icon: '📅', name: 'Google Calendar', desc: 'Ve tu agenda en tiempo real' },
+            { icon: '💳', name: 'Pagos online', desc: 'Cobra por link desde el chat' },
+            { icon: '📧', name: 'Email', desc: 'Recordatorios y confirmaciones' },
+            { icon: '📱', name: 'SMS de respaldo', desc: 'Cuando no responden WhatsApp' },
+            { icon: '🏥', name: 'MinSalud RDA', desc: 'Cumple Resolución 1888 automático' },
+            { icon: '⭐', name: 'Reseñas Google', desc: 'Pide reseñas a pacientes felices' },
+            { icon: '🔗', name: 'Tus apps actuales', desc: 'Conectamos lo que necesites' },
+          ].map((intg, i) => (
+            <div key={i} className="integration-simple-card">
+              <span className="integration-simple-icon">{intg.icon}</span>
+              <div>
+                <div className="integration-simple-name">{intg.name}</div>
+                <div className="integration-simple-desc">{intg.desc}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -1900,12 +1938,12 @@ function Landing() {
 
         <div className="pricing-grid">
           {[
-            { name: 'Inicio', price: '350.000', setup: 'Setup: 500.000 COP (único pago)',
-              features: ['Bot WhatsApp 24/7 con IA', 'Agendamiento automático', 'Recordatorios y confirmaciones', 'Hasta 500 pacientes activos', 'Reporte semanal básico', 'Soporte por WhatsApp'], cta: 'Empezar' },
-            { name: 'Profesional', price: '800.000', featured: true, setup: 'Setup: 1.000.000 COP (único pago)',
-              features: ['Todo lo del plan Inicio', 'Seguimiento de presupuestos', 'Lista de espera inteligente', 'Gestor de reseñas Google', 'Marketing automatizado', 'Notas clínicas con IA', 'Pacientes ilimitados'], cta: 'Más popular' },
-            { name: 'Premium', price: '2.000.000', setup: 'Setup: 2.000.000 COP (único pago)',
-              features: ['Todo lo del plan Profesional', 'Generador RDA (Resol. 1888)', 'Triage inteligente', 'Dashboard rentabilidad', 'Seguimiento post‑op 24/7', 'Integraciones a medida con tu CRM', 'Soporte prioritario 1‑on‑1'], cta: 'Contactar ventas' },
+            { name: 'Starter', price: '129.000', setup: 'Sin costo de setup durante beta',
+              features: ['Bot WhatsApp 24/7 con IA', 'Agendamiento automático', 'Recordatorios y confirmaciones', 'Hasta 200 citas / mes', 'Reporte semanal básico', 'Soporte por WhatsApp'], cta: 'Empezar gratis' },
+            { name: 'Pro', price: '229.000', featured: true, setup: 'Sin costo de setup durante beta',
+              features: ['Todo lo de Starter', 'Hasta 3 profesionales', 'Notas clínicas con IA', 'Citas ilimitadas', 'Lista de espera inteligente', 'Campañas de marketing', 'Gestor de reseñas Google'], cta: 'Más popular' },
+            { name: 'Clínica', price: '349.000', setup: 'Sin costo de setup durante beta',
+              features: ['Todo lo de Pro', 'Hasta 10 profesionales', 'Generador RDA automático', 'Triage inteligente', 'Dashboard de rentabilidad', 'Bot con tu marca (white‑label)', 'Soporte 1‑on‑1 prioritario'], cta: 'Contactar' },
           ].map((p, i) => (
             <div key={i} className={`price-card ${p.featured ? 'featured' : ''}`}>
               {p.featured && <div className="price-card-badge">Más elegido</div>}
@@ -1931,56 +1969,19 @@ function Landing() {
       {/* TESTIMONIOS */}
       <section className="section" id="testimonios">
         <div className="section-label">Testimonios</div>
-        <h2 className="section-title">Lo que dicen los <em>primeros consultorios.</em></h2>
-        <p className="section-sub">Profesionales independientes que ya no responden WhatsApp manualmente.</p>
-        <div className="testimonials-grid">
-          {[
-            {
-              quote: 'Antes perdía casi 2 horas diarias contestando el mismo tipo de mensajes: horarios, precios, confirmaciones. Ahora el bot lo hace solo y mis pacientes dicen que la respuesta es más rápida que antes.',
-              name: 'Dra. Carolina Mejía',
-              role: 'Odontóloga · Bogotá',
-              metric: '−28 mensajes/día',
-              color: '#06B6D4',
-              initials: 'CM',
-              photo: null,
-            },
-            {
-              quote: 'Lo que más me sorprendió fue la nota clínica. Dicto 30 segundos de voz y sale la RDA completa. Eso antes me tomaba 10 minutos después de cada paciente.',
-              name: 'Dr. Andrés Salcedo',
-              role: 'Medicina General · Medellín',
-              metric: '−10 min por consulta',
-              color: '#2563EB',
-              initials: 'AS',
-              photo: null,
-            },
-            {
-              quote: 'Mis pacientes de psicología son muy específicos con la privacidad. El bot les informa del tratamiento de datos desde el primer mensaje y eso les da tranquilidad. Setup fue en un día.',
-              name: 'Psi. Valentina Torres',
-              role: 'Psicóloga · Cali',
-              metric: '+31% confirmaciones',
-              color: '#8B5CF6',
-              initials: 'VT',
-              photo: null,
-            },
-          ].map((t, i) => (
-            <div key={i} className="testimonial-card">
-              <div className="testimonial-stars">{'★★★★★'}</div>
-              <p className="testimonial-quote">"{t.quote}"</p>
-              <div className="testimonial-footer">
-                <div className="testimonial-avatar" style={{ background: `${t.color}20`, color: t.color, border: `1.5px solid ${t.color}40` }}>
-                  {t.photo
-                    ? <img src={t.photo} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                    : <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: 15 }}>{t.initials}</span>
-                  }
-                </div>
-                <div>
-                  <div className="testimonial-name">{t.name}</div>
-                  <div className="testimonial-role">{t.role}</div>
-                </div>
-                <div className="testimonial-metric" style={{ background: `${t.color}12`, color: t.color }}>{t.metric}</div>
-              </div>
-            </div>
-          ))}
+        <h2 className="section-title">Esperando a los <em>primeros 50.</em></h2>
+        <p className="section-sub">Somos un producto nuevo y honesto. Todavía no tenemos testimonios — los primeros consultorios los están escribiendo. Si entras ahora, el tuyo puede ser el primero.</p>
+        <div className="testimonials-waiting">
+          <div className="tw-icon">
+            <Icons.MessageSquare size={32} stroke="#2563EB" />
+          </div>
+          <div className="tw-text">
+            <div className="tw-label">Cohorte fundadora activa</div>
+            <p className="tw-desc">Los primeros 50 consultorios en MEDACCER tendrán soporte 1:1 directo con el equipo fundador. Sus historias reales serán las primeras en aparecer aquí.</p>
+          </div>
+          <button className="btn btn-primary btn-lg" onClick={() => window.location.hash = 'signup'}>
+            Sé el primero <Icons.ArrowRight size={16} stroke="white" />
+          </button>
         </div>
       </section>
 
@@ -2056,7 +2057,7 @@ function Landing() {
             <ul>
               <li><a href="#blog">Blog</a></li>
               <li><a href="#res1888" onClick={(e) => { e.preventDefault(); setModal('res1888'); }}>Guía Resolución 1888</a></li>
-              <li><a href="mailto:hola@medaccer.com">Contacto</a></li>
+              <li><a href="mailto:medaccer@gmail.com">Contacto</a></li>
             </ul>
           </div>
           <div>
@@ -2071,7 +2072,7 @@ function Landing() {
         <div className="footer-bottom">
           <div>© 2026 MEDACCER SAS. Todos los derechos reservados.</div>
           <div style={{ display: 'flex', gap: 16 }}>
-            <a href="mailto:hola@medaccer.com" style={{ color: 'inherit', textDecoration: 'none' }}>hola@medaccer.com</a>
+            <a href="mailto:medaccer@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>medaccer@gmail.com</a>
           </div>
         </div>
       </footer>

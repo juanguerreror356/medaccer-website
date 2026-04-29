@@ -131,7 +131,7 @@ function BlogPage() {
             <a href="#landing">Cómo funciona</a>
             <a href="#landing">Precios</a>
             <a href="#blog" style={{ color: 'var(--m-blue)', fontWeight: 600 }}>Blog</a>
-            <a href="#landing">Resolución 1888</a>
+            <a href="#landing" onClick={() => { window.__pendingModal = 'res1888'; }}>Resolución 1888</a>
           </div>
           <button className="btn btn-ghost" onClick={() => window.location.hash = 'login'}>Iniciar sesión</button>
           <button className="btn btn-primary" onClick={() => window.location.hash = 'signup'}>Empezar prueba gratis <Icons.ArrowRight size={16} stroke="white" /></button>
