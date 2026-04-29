@@ -91,14 +91,13 @@
 </template>
 </head>
 <body>
-<div id="root">
-  <!-- Fallback visible si React no carga -->
-  <div id="__debug" style="font-family:monospace;padding:32px;background:#0B1220;color:#E2E7EE;min-height:100vh">
-    <div style="font-size:22px;font-weight:700;color:#3B9EFF;margin-bottom:16px">MEDACCER — Cargando…</div>
-    <div id="__debug-status" style="font-size:13px;color:#94A0B2">Iniciando scripts…</div>
-    <div id="__debug-errors" style="margin-top:20px;font-size:12px;color:#FCA5A5"></div>
-  </div>
+<!-- Debug overlay — FUERA del #root para que React no lo borre -->
+<div id="__debug" style="font-family:monospace;padding:32px;background:#0B1220;color:#E2E7EE;min-height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;overflow:auto">
+  <div style="font-size:22px;font-weight:700;color:#3B9EFF;margin-bottom:16px">MEDACCER — Cargando…</div>
+  <div id="__debug-status" style="font-size:13px;color:#94A0B2">Iniciando scripts…</div>
+  <div id="__debug-errors" style="margin-top:20px;font-size:12px;color:#FCA5A5"></div>
 </div>
+<div id="root"></div>
 
 <script>
 // Error catcher global — muestra errores en pantalla antes de que React arranque
@@ -203,25 +202,45 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{
     );
   }
 
+  // Error Boundary — atrapa errores en cualquier componente hijo
+  class ErrorBoundary extends React.Component {
+    constructor(p) { super(p); this.state = { error: null }; }
+    static getDerivedStateFromError(e) { return { error: e }; }
+    componentDidCatch(error, info) {
+      var status = document.getElementById('__debug-status');
+      var errors = document.getElementById('__debug-errors');
+      var dbg = document.getElementById('__debug');
+      if (dbg) dbg.style.display = 'block';
+      if (status) status.textContent = '✗ Error en componente React';
+      if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>' + error.name + ':</b> ' + error.message + '<br/><small style="color:#94A0B2">' + (info.componentStack || '').split('\n').slice(1,4).join(' → ') + '</small></div>';
+    }
+    render() {
+      if (this.state.error) return null;
+      return this.props.children;
+    }
+  }
+
   function Root() {
+    React.useEffect(() => {
+      // Ocultar debug overlay cuando React renderiza exitosamente
+      var dbg = document.getElementById('__debug');
+      if (dbg) dbg.style.display = 'none';
+    }, []);
     return (
-      <>
+      <ErrorBoundary>
         <MedaccerApp />
         <TweaksPanel />
-      </>
+      </ErrorBoundary>
     );
   }
 
   try {
-    var rootEl = document.getElementById('root');
-    var dbg = document.getElementById('__debug');
-    if (dbg) dbg.remove(); // limpia el fallback debug si React arranca bien
-    ReactDOM.createRoot(rootEl).render(<Root />);
+    ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
   } catch(e) {
     var status = document.getElementById('__debug-status');
     var errors = document.getElementById('__debug-errors');
-    if (status) status.textContent = '✗ React falló al renderizar';
-    if (errors) errors.innerHTML += '<div style="margin-bottom:8px;padding:8px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Render error:</b> ' + e.message + '</div>';
+    if (status) status.textContent = '✗ React falló al iniciar';
+    if (errors) errors.innerHTML += '<div style="padding:12px;background:rgba(239,68,68,0.1);border-left:3px solid #EF4444;border-radius:4px"><b>Error crítico:</b> ' + e.message + '</div>';
   }
 })();
 </script>
