@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hub Medaccer · Todos los recursos</title>
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #14141d; --surface-2: #1a1a25; --border: #2a2a38;
+    --text: #f0f0f5; --text-dim: #9090a0; --text-muted: #6b6b7a;
+    --accent: #ffd93d; --blue: #60a5fa; --green: #4ade80; --red: #f87171; --purple: #a78bfa;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(1200px 600px at 80% -100px, rgba(255,217,61,0.04), transparent 60%),
+                      radial-gradient(800px 400px at -100px 30%, rgba(96,165,250,0.04), transparent 60%);
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 64px 32px 120px; }
+  /* Hero */
+  .hero { margin-bottom: 64px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 16px; font-weight: 600;
+  }
+  h1 {
+    font-family: var(--serif); font-size: 64px; font-weight: 400; line-height: 1.05;
+    letter-spacing: -0.015em; margin-bottom: 18px;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .lead { font-size: 19px; color: var(--text-dim); max-width: 720px; line-height: 1.5; }
+  .lead strong { color: var(--text); font-weight: 600; }
+
+  /* Status bar */
+  .status {
+    display: flex; gap: 24px; align-items: center; margin-top: 32px;
+    padding: 18px 22px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .status .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 12px rgba(74,222,128,0.6); flex-shrink: 0;
+  }
+  .status .text {
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+  }
+  .status .text strong { color: var(--text); }
+
+  /* Section */
+  .section { margin-bottom: 64px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 22px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: 0.1em; font-weight: 700; text-transform: uppercase;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: 28px; font-weight: 400; flex: 1;
+    letter-spacing: -0.01em;
+  }
+  .section-meta {
+    font-family: var(--mono); font-size: 12px; color: var(--text-muted);
+  }
+
+  /* Cards grid */
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+  .grid.three { grid-template-columns: repeat(3, 1fr); }
+
+  /* Fiscal status grid */
+  .fiscal-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 880px) { .fiscal-grid { grid-template-columns: 1fr; } }
+  .fiscal-card {
+    padding: 18px 20px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; border-left-width: 3px;
+  }
+  .fiscal-card.done { border-left-color: var(--green); }
+  .fiscal-card.progress { border-left-color: var(--accent); }
+  .fiscal-card.pending { border-left-color: var(--blue); }
+  .fiscal-card.info { border-left-color: var(--purple); }
+  .fiscal-card .fiscal-status {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; margin-bottom: 8px; font-weight: 600;
+  }
+  .fiscal-card.done .fiscal-status { color: var(--green); }
+  .fiscal-card.progress .fiscal-status { color: var(--accent); }
+  .fiscal-card.pending .fiscal-status { color: var(--blue); }
+  .fiscal-card.info .fiscal-status { color: var(--purple); }
+  .fiscal-card h4 {
+    font-size: 15px; font-weight: 600; margin-bottom: 6px;
+    color: var(--text); letter-spacing: -0.005em;
+  }
+  .fiscal-card p {
+    font-size: 13px; color: var(--text-dim); line-height: 1.5; margin: 0;
+  }
+
+  .card {
+    display: block; padding: 24px 26px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px;
+    text-decoration: none; color: var(--text);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .card:hover {
+    background: var(--surface-2); border-color: rgba(255,217,61,0.3);
+    transform: translateY(-2px);
+  }
+  .card .icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,217,61,0.1); color: var(--accent);
+    margin-bottom: 16px; font-size: 20px;
+  }
+  .card.blue .icon { background: rgba(96,165,250,0.1); color: var(--blue); }
+  .card.green .icon { background: rgba(74,222,128,0.1); color: var(--green); }
+  .card.red .icon { background: rgba(248,113,113,0.1); color: var(--red); }
+  .card.purple .icon { background: rgba(167,139,250,0.1); color: var(--purple); }
+
+  .card h3 {
+    font-size: 17px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.005em;
+  }
+  .card p {
+    font-size: 14px; color: var(--text-dim); line-height: 1.5;
+  }
+  .card .meta {
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .card .meta .arrow { color: var(--accent); font-size: 14px; transition: transform 0.2s; }
+  .card:hover .meta .arrow { transform: translateX(4px); }
+
+  .card.featured {
+    background: linear-gradient(135deg, rgba(255,217,61,0.08), rgba(96,165,250,0.05));
+    border-color: rgba(255,217,61,0.25);
+  }
+  .card.featured::before {
+    content: "★ Empezá acá"; position: absolute; top: 16px; right: 16px;
+    font-family: var(--mono); font-size: 10px; color: var(--accent);
+    background: rgba(255,217,61,0.1); padding: 4px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  /* Code block / file list */
+  .file-list {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 8px;
+  }
+  .file-list .row {
+    display: grid; grid-template-columns: 24px 1fr auto auto;
+    gap: 14px; align-items: center; padding: 10px 14px;
+    border-radius: 8px; font-family: var(--mono); font-size: 13px;
+    color: var(--text-dim); transition: background 0.15s;
+  }
+  .file-list .row:hover { background: var(--surface-2); }
+  .file-list .row .ic { color: var(--text-muted); }
+  .file-list .row .name { color: var(--text); font-weight: 500; }
+  .file-list .row .desc { color: var(--text-muted); font-family: var(--sans); font-size: 12px; }
+  .file-list .row .size { color: var(--text-muted); font-size: 11px; }
+
+  /* Workflow */
+  .flow {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    margin: 24px 0;
+  }
+  .flow-step {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 16px 14px; border-radius: 10px; text-align: center; position: relative;
+  }
+  .flow-step .num {
+    font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight: 700;
+  }
+  .flow-step .lbl {
+    font-size: 13px; font-weight: 600; margin-top: 6px; color: var(--text);
+  }
+  .flow-step .meta {
+    font-size: 11px; color: var(--text-muted); margin-top: 4px;
+    font-family: var(--mono);
+  }
+  .flow-step:not(:last-child)::after {
+    content: "→"; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 14px; z-index: 1;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 13px; text-align: center;
+  }
+  .footer .brand {
+    font-family: var(--serif); font-style: italic; font-size: 22px;
+    color: var(--text); margin-bottom: 8px;
+  }
+
+  @media (max-width: 800px) {
+    .grid, .grid.three { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; gap: 8px; }
+    .flow-step:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -10px; transform: translateX(50%); }
+    h1 { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">Medaccer · Hub de recursos</div>
+    <h1>Todo lo que necesitás para arrancar,<br><em>en un solo lugar</em>.</h1>
+    <p class="lead">
+      Diseño, código, planes operativos y guías legales. <strong>Empezás por el RUT y el checklist semanal,
+      después seguís con código.</strong> Las decisiones técnicas y comerciales ya están tomadas.
+    </p>
+
+    <div class="status">
+      <div class="dot"></div>
+      <div class="text">
+        <strong>Decisiones tomadas:</strong> dominio <code style="color:var(--accent)">medaccer.com</code> ·
+        repo privado en org <code style="color:var(--accent)">Medaccer</code> ·
+        Persona Natural + Régimen Simple ·
+        Davivank para suscripciones ·
+        eSIM Claro/Movistar para WhatsApp Business
+      </div>
+    </div>
+  </header>
+
+  <!-- ESTADO FISCAL -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">FISCAL</span>
+      <h2 class="section-title">Estado fiscal · DIAN</h2>
+      <span class="section-meta">Actualizado hoy</span>
+    </div>
+
+    <div class="fiscal-grid">
+      <div class="fiscal-card done">
+        <div class="fiscal-status">✓ Hecho</div>
+        <h4>RUT actualizado</h4>
+        <p>NIT 1.000.161.517-7 · CIIU 6201/6202/6311/6209 · Persona Natural</p>
+      </div>
+
+      <div class="fiscal-card done">
+        <div class="fiscal-status">✓ Hecho</div>
+        <h4>Firma electrónica</h4>
+        <p>Certificado DIAN activo · Lista para firmar facturas y declaraciones</p>
+      </div>
+
+      <div class="fiscal-card progress">
+        <div class="fiscal-status">⏳ En proceso</div>
+        <h4>Habilitación facturación electrónica</h4>
+        <p>Software gratuito DIAN asociado · Falta completar set de pruebas (~10 facturas ficticias) y habilitar producción</p>
+      </div>
+
+      <div class="fiscal-card pending">
+        <div class="fiscal-status">📅 Enero 2027</div>
+        <h4>Régimen Simple (SIMPLE)</h4>
+        <p>Solicitud entre 1-31 enero 2027 → aplica desde enero 2027 con tasa 1.8%. Hasta entonces: régimen ordinario (código 05).</p>
+      </div>
+
+      <div class="fiscal-card pending">
+        <div class="fiscal-status">📅 Pendiente</div>
+        <h4>Resolución de numeración</h4>
+        <p>Pedir rango 1-5000 en MUISCA (Numeración de Facturación) cuando termines el set de pruebas.</p>
+      </div>
+
+      <div class="fiscal-card info">
+        <div class="fiscal-status">💡 Recordatorio</div>
+        <h4>Llevar libro de ingresos/gastos 2026</h4>
+        <p>Hasta enero 2027 estás en régimen ordinario. Excel simple con: fecha · concepto · ingreso · gasto deducible · factura/recibo. Te lo armo cuando quieras.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 0. EMPEZÁ ACÁ -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">00</span>
+      <h2 class="section-title">Esta semana</h2>
+      <span class="section-meta">5 acciones · ~6h totales</span>
+    </div>
+
+    <div class="grid">
+      <a href="docs/guia-rut.html" class="card featured">
+        <div class="icon">📄</div>
+        <h3>Tramitar RUT en 48h</h3>
+        <p>Paso a paso para inscribirte como Persona Natural en la DIAN online. Sin filas, gratis, en 30 minutos. Antes que cualquier cosa de Meta o Wompi.</p>
+        <div class="meta"><span>Día 1 · 30 min</span><span class="arrow">→</span></div>
+      </a>
+
+      <a href="docs/checklist-12-semanas.html" class="card featured">
+        <div class="icon">✓</div>
+        <h3>Checklist 12 semanas imprimible</h3>
+        <p>Plan operativo trimestral: legal + código + ventas. Del registro RUT hasta los primeros 10 doctores pagando. Clickeable, persiste tu progreso, imprimible.</p>
+        <div class="meta"><span>~500h · 12 semanas</span><span class="arrow">→</span></div>
+      </a>
+
+      <a href="docs/HANDOFF-MAESTRO.html" class="card featured" style="grid-column: 1 / -1; border-color: var(--accent);">
+        <div class="icon">🎯</div>
+        <h3>📌 Handoff maestro · Pegar en chat nuevo</h3>
+        <p>Documento único con TODO el paso a paso (fácil → difícil): dominio, GitHub, Vercel, Supabase, WhatsApp, Wompi, SEO, animaciones, cómo subirme fotos, cómo acortar landing. Incluye prompt para pegar en chat nuevo y no gastar tokens.</p>
+        <div class="meta"><span>17 secciones · ~25 min lectura</span><span class="arrow">→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 1. PRODUCTO -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Producto en vivo</h2>
+      <span class="section-meta">Demo navegable</span>
+    </div>
+
+    <div class="grid">
+      <a href="MEDACCER SaaS.html" class="card blue">
+        <div class="icon">🌐</div>
+        <h3>Landing + CRM + Onboarding</h3>
+        <p>Landing pública, signup con planes, checkout demo, onboarding de 5 pasos, dashboard CRM con conversaciones, agenda y pacientes. Todo navegable.</p>
+        <div class="meta"><span>Demo: <code>demo / demo</code></span><span class="arrow">→</span></div>
+      </a>
+
+      <a href="docs/guia-tecnica.html" class="card purple">
+        <div class="icon">📚</div>
+        <h3>Guía técnica completa</h3>
+        <p>Arquitectura, schemas SQL por especialidad, prompts del agente, código de webhooks WhatsApp, RDA FHIR, CI/CD, monitoring, runbooks operacionales, glosario.</p>
+        <div class="meta"><span>HTML navegable</span><span class="arrow">→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 2. CÓDIGO BASE -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Código base — listo para clonar</h2>
+      <span class="section-meta">Next.js 15 · Supabase · Gemini</span>
+    </div>
+
+    <div class="file-list">
+      <div class="row">
+        <span class="ic">📦</span>
+        <span class="name"><a href="codigo-base/README.md" style="color:inherit;text-decoration:none">codigo-base/</a></span>
+        <span class="desc">Folder completo con estructura del repo</span>
+        <span class="size">root</span>
+      </div>
+      <div class="row">
+        <span class="ic">📄</span>
+        <span class="name"><a href="codigo-base/package.json" style="color:inherit;text-decoration:none">package.json</a></span>
+        <span class="desc">Dependencias: Next 15, Supabase, AI SDK, Tailwind</span>
+        <span class="size">deps</span>
+      </div>
+      <div class="row">
+        <span class="ic">🗄️</span>
+        <span class="name"><a href="codigo-base/migrations/001_init.sql" style="color:inherit;text-decoration:none">migrations/001_init.sql</a></span>
+        <span class="desc">Multi-tenant: orgs, members, RLS helpers</span>
+        <span class="size">~6 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🗄️</span>
+        <span class="name"><a href="codigo-base/migrations/002_clinical.sql" style="color:inherit;text-decoration:none">migrations/002_clinical.sql</a></span>
+        <span class="desc">Pacientes, citas, encuentros, documentos</span>
+        <span class="size">~9 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🗄️</span>
+        <span class="name"><a href="codigo-base/migrations/003_messaging.sql" style="color:inherit;text-decoration:none">migrations/003_messaging.sql</a></span>
+        <span class="desc">Conversaciones WA, mensajes, AI runs</span>
+        <span class="size">~7 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🗄️</span>
+        <span class="name"><a href="codigo-base/migrations/004_billing.sql" style="color:inherit;text-decoration:none">migrations/004_billing.sql</a></span>
+        <span class="desc">Suscripciones Wompi, facturas DIAN, planes</span>
+        <span class="size">~6 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🗄️</span>
+        <span class="name"><a href="codigo-base/migrations/005_audit.sql" style="color:inherit;text-decoration:none">migrations/005_audit.sql</a></span>
+        <span class="desc">Audit log Ley 1581 + triggers automáticos</span>
+        <span class="size">~6 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🤖</span>
+        <span class="name"><a href="codigo-base/lib/ai/system-prompts.ts" style="color:inherit;text-decoration:none">lib/ai/system-prompts.ts</a></span>
+        <span class="desc">Prompts por especialidad: pediatría, psico, derma, gineco...</span>
+        <span class="size">~15 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🛠️</span>
+        <span class="name"><a href="codigo-base/lib/ai/tools.ts" style="color:inherit;text-decoration:none">lib/ai/tools.ts</a></span>
+        <span class="desc">8 tools del agente: agendar, cancelar, escalar, consentimiento</span>
+        <span class="size">~11 KB</span>
+      </div>
+      <div class="row">
+        <span class="ic">🪝</span>
+        <span class="name"><a href="codigo-base/app/api/webhooks/whatsapp/route.ts" style="color:inherit;text-decoration:none">app/api/webhooks/whatsapp/route.ts</a></span>
+        <span class="desc">Webhook Meta: HMAC, idempotencia, audio→Whisper</span>
+        <span class="size">~9 KB</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FLUJO -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Tu flujo recomendado</h2>
+      <span class="section-meta">Orden de ataque · 12 semanas</span>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="num">01</div>
+        <div class="lbl">RUT DIAN</div>
+        <div class="meta">Día 1 · 30m</div>
+      </div>
+      <div class="flow-step">
+        <div class="num">02</div>
+        <div class="lbl">Stack cloud</div>
+        <div class="meta">Sem 1 · 1 día</div>
+      </div>
+      <div class="flow-step">
+        <div class="num">03</div>
+        <div class="lbl">Migrations + auth</div>
+        <div class="meta">Sem 2 · 2 días</div>
+      </div>
+      <div class="flow-step">
+        <div class="num">04</div>
+        <div class="lbl">CRM + WhatsApp + IA</div>
+        <div class="meta">Sem 3-7</div>
+      </div>
+      <div class="flow-step">
+        <div class="num">05</div>
+        <div class="lbl">10 doctores pagando</div>
+        <div class="meta">Sem 12</div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:14px;margin-top:8px;text-align:center">
+      Cada paso conecta con su sección del checklist. Seguilo en orden, no te saltees fases.
+    </p>
+  </section>
+
+  <!-- 4. REFERENCIA RÁPIDA -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Referencia rápida</h2>
+      <span class="section-meta">Lo que vas a olvidar y necesitar buscar</span>
+    </div>
+
+    <div class="grid three">
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">⚖️</div>
+        <h3>RUT &amp; Régimen Simple</h3>
+        <p>CIIU principal: <strong>6201</strong>. Secundarias: 6202, 6311, 6209. Marcá responsabilidades 05 + 52. Cambiá a SIMPLE en MUISCA después de inscribir. Tasa: 1.8% sobre ingresos hasta $59M COP/año.</p>
+        <div class="meta"><a href="docs/guia-rut.html" style="color:var(--accent)">Ver guía completa →</a></div>
+      </div>
+
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">💰</div>
+        <h3>Planes &amp; precios</h3>
+        <p><strong>Starter</strong> $129.000 · 1 doctor, 500 pacientes · <strong>Pro</strong> $249.000 · 3 doctores, 2000 pacientes · <strong>Equipo</strong> $349.000 · 10 doctores. Trial 14 días sin tarjeta.</p>
+        <div class="meta"><a href="codigo-base/migrations/004_billing.sql" style="color:var(--accent)">Ver plan_limits SQL →</a></div>
+      </div>
+
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">🤖</div>
+        <h3>Stack IA</h3>
+        <p><strong>Principal:</strong> Gemini 2.5 Flash (gratis hasta cierto límite) · <strong>Fallback:</strong> Groq Llama 3.3 70B · <strong>Audio:</strong> Groq Whisper Large v3. Latencia objetivo &lt;1.5s.</p>
+        <div class="meta"><a href="codigo-base/lib/ai/system-prompts.ts" style="color:var(--accent)">Ver prompts →</a></div>
+      </div>
+
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">🔐</div>
+        <h3>Cumplimiento</h3>
+        <p><strong>Ley 1581:</strong> consentimiento + audit log · <strong>Resolución 1995:</strong> historia clínica 5+ años · <strong>Resolución 1888:</strong> RDA / interoperabilidad FHIR (a futuro, mes 4+).</p>
+        <div class="meta"><a href="docs/guia-tecnica.html#rda" style="color:var(--accent)">Ver sección RDA →</a></div>
+      </div>
+
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">📞</div>
+        <h3>Líneas urgencias Colombia</h3>
+        <p><strong>123</strong> emergencias generales · <strong>106</strong> Bogotá salud mental · <strong>192 op4</strong> salud nacional. El agente IA escala automáticamente cuando detecta riesgo.</p>
+        <div class="meta"><a href="codigo-base/lib/ai/system-prompts.ts" style="color:var(--accent)">Ver lógica de escalación →</a></div>
+      </div>
+
+      <div class="card" style="cursor:default" onclick="return false">
+        <div class="icon">📊</div>
+        <h3>Meta trimestre</h3>
+        <p>10 doctores activos · $2.5M COP MRR · 1 caso de estudio robusto · NPS &gt;50 en pilotos. Si llegás a $5M MRR antes, empezá trámite SAS.</p>
+        <div class="meta"><a href="docs/checklist-12-semanas.html" style="color:var(--accent)">Ver checklist semana 12 →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PRÓXIMA ACCIÓN -->
+  <section class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h2 class="section-title">¿Qué hacés ahora mismo?</h2>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px">
+      <ol style="list-style:none;counter-reset:step;padding:0;margin:0">
+        <li style="counter-increment:step;display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px">1</span>
+          <div style="flex:1">
+            <strong style="display:block;color:var(--text);margin-bottom:4px">Abrí <a href="docs/guia-rut.html" style="color:var(--accent)">la guía RUT</a> y empezá el formulario en MUISCA</strong>
+            <span style="color:var(--text-dim);font-size:14px">30 minutos. Sin esto bloqueás Meta y Wompi.</span>
+          </div>
+        </li>
+        <li style="counter-increment:step;display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px">2</span>
+          <div style="flex:1">
+            <strong style="display:block;color:var(--text);margin-bottom:4px">Imprimí <a href="docs/checklist-12-semanas.html" style="color:var(--accent)">el checklist 12 semanas</a></strong>
+            <span style="color:var(--text-dim);font-size:14px">Pegalo arriba del escritorio. Tachás a medida que avanzás. El navegador también guarda tu progreso.</span>
+          </div>
+        </li>
+        <li style="counter-increment:step;display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px">3</span>
+          <div style="flex:1">
+            <strong style="display:block;color:var(--text);margin-bottom:4px">Comprá dominio <code style="color:var(--accent)">medaccer.com</code> (Cloudflare Registrar)</strong>
+            <span style="color:var(--text-dim);font-size:14px">~$10 USD/año, 5 minutos.</span>
+          </div>
+        </li>
+        <li style="counter-increment:step;display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border)">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px">4</span>
+          <div style="flex:1">
+            <strong style="display:block;color:var(--text);margin-bottom:4px">Creá organización <code style="color:var(--accent)">Medaccer</code> en GitHub + repo <code style="color:var(--accent)">medaccer-app</code></strong>
+            <span style="color:var(--text-dim);font-size:14px">Subí el folder <code style="color:var(--accent)">codigo-base/</code> de este proyecto al repo.</span>
+          </div>
+        </li>
+        <li style="counter-increment:step;display:flex;gap:18px;align-items:flex-start;padding:14px 0">
+          <span style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--bg);font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px">5</span>
+          <div style="flex:1">
+            <strong style="display:block;color:var(--text);margin-bottom:4px">Comprá eSIM Claro/Movistar para WhatsApp Business</strong>
+            <span style="color:var(--text-dim);font-size:14px">~$20.000 COP. Reservala SOLO para Medaccer, no la mezclés con tu WA personal.</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="brand">Medaccer</div>
+    <div>SaaS para consultorios médicos en Colombia · Hub generado para Juan Guerrero</div>
+    <div style="margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--text-muted)">
+      ÚLTIMO UPDATE · 5 RECURSOS · 12 SEMANAS · 1 OBJETIVO
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guía de conexión del stack · MediFlow</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #11111a;
+    --surface: #16161f;
+    --surface-2: #1d1d28;
+    --border: #2a2a38;
+    --text: #e8e8ee;
+    --text-dim: #9090a0;
+    --text-muted: #6b6b7a;
+    --accent: #ffd93d;
+    --accent-2: #4ade80;
+    --danger: #f87171;
+    --warn: #fbbf24;
+    --info: #60a5fa;
+    --code-bg: #0d0d14;
+    --code-border: #1f1f2c;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+  /* Sidebar */
+  aside {
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    padding: 32px 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .logo {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .logo-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+  nav .toc-section {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 24px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  nav ul { list-style: none; }
+  nav ul li a {
+    display: block;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  nav ul li a:hover {
+    background: var(--surface);
+    color: var(--text);
+  }
+  /* Main */
+  main {
+    padding: 56px 64px 120px;
+    max-width: 1100px;
+  }
+  h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 56px 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.015em;
+    scroll-margin-top: 24px;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 16px;
+    margin-right: 12px;
+    background: rgba(255, 217, 61, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    vertical-align: middle;
+  }
+  h3 {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 28px 0 10px;
+    color: var(--text);
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 18px 0 8px;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  p { margin-bottom: 14px; color: var(--text-dim); }
+  p strong, li strong { color: var(--text); font-weight: 600; }
+  em { color: var(--accent); font-style: normal; font-weight: 500; }
+  ul, ol { margin: 12px 0 18px 24px; color: var(--text-dim); }
+  li { margin-bottom: 6px; }
+  a { color: var(--info); }
+  /* Hero */
+  .hero {
+    margin-bottom: 24px;
+  }
+  .hero .lead {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 720px;
+    line-height: 1.55;
+  }
+  .meta-bar {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+  .meta-bar span strong { color: var(--accent); }
+  /* Code */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 14px 0 18px;
+    color: #d4d4dc;
+  }
+  pre .c { color: #6b6b7a; font-style: italic; }
+  pre .k { color: #c084fc; }
+  pre .s { color: #86efac; }
+  pre .n { color: #fbbf24; }
+  pre .v { color: #60a5fa; }
+  pre .err { color: var(--danger); }
+  pre .ok { color: var(--accent-2); }
+  code {
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 0.88em;
+    color: #fbbf24;
+  }
+  pre code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+  th {
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--text); }
+  /* Callouts */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(255, 217, 61, 0.06);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 18px 0;
+  }
+  .callout.info { border-left-color: var(--info); background: rgba(96, 165, 250, 0.06); }
+  .callout.warn { border-left-color: var(--warn); background: rgba(251, 191, 36, 0.06); }
+  .callout.danger { border-left-color: var(--danger); background: rgba(248, 113, 113, 0.06); }
+  .callout.ok { border-left-color: var(--accent-2); background: rgba(74, 222, 128, 0.06); }
+  .callout p { margin: 0; color: var(--text-dim); font-size: 14px; }
+  .callout .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .callout.info .label { color: var(--info); }
+  .callout.warn .label { color: var(--warn); }
+  .callout.danger .label { color: var(--danger); }
+  .callout.ok .label { color: var(--accent-2); }
+  /* Step list */
+  .steps {
+    list-style: none;
+    margin: 18px 0;
+    padding: 0;
+    counter-reset: step;
+  }
+  .steps > li {
+    counter-increment: step;
+    padding: 14px 16px 14px 56px;
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 16px;
+    top: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .steps > li > strong { display: block; color: var(--text); margin-bottom: 4px; font-size: 15px; }
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .card h4 {
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card .price {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent-2);
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 13px; margin: 0; }
+  /* Pill */
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--mono);
+    background: var(--surface-2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    margin: 0 4px 0 0;
+  }
+  .pill.green { background: rgba(74, 222, 128, 0.1); color: var(--accent-2); border-color: rgba(74, 222, 128, 0.3); }
+  .pill.yellow { background: rgba(255, 217, 61, 0.1); color: var(--accent); border-color: rgba(255, 217, 61, 0.3); }
+  .pill.red { background: rgba(248, 113, 113, 0.1); color: var(--danger); border-color: rgba(248, 113, 113, 0.3); }
+  .pill.blue { background: rgba(96, 165, 250, 0.1); color: var(--info); border-color: rgba(96, 165, 250, 0.3); }
+  /* Diagram */
+  .diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 18px 0;
+    color: var(--text-dim);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .diagram .accent { color: var(--accent); }
+  .diagram .ok { color: var(--accent-2); }
+  .diagram .info { color: var(--info); }
+  .diagram .warn { color: var(--warn); }
+  /* Footer */
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  /* Anchor offset for fixed nav */
+  h2[id], h3[id] { scroll-margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside>
+    <div class="logo">MediFlow</div>
+    <div class="logo-sub">Guía operativa de conexión · v1.0</div>
+
+    <nav>
+      <div class="toc-section">Decisión inicial</div>
+      <ul>
+        <li><a href="#monedas">01 · COP vs USD en pricing</a></li>
+        <li><a href="#stack-revisado">02 · Stack revisado y orden</a></li>
+        <li><a href="#prerequisitos">03 · Pre-requisitos personales</a></li>
+      </ul>
+      <div class="toc-section">Setup paso a paso</div>
+      <ul>
+        <li><a href="#github">04 · GitHub + repo</a></li>
+        <li><a href="#vercel">05 · Vercel + dominio</a></li>
+        <li><a href="#supabase">06 · Supabase (auth + DB + storage)</a></li>
+        <li><a href="#nextjs">07 · Next.js conectado a Supabase</a></li>
+        <li><a href="#shadcn">08 · shadcn/ui + Tailwind</a></li>
+        <li><a href="#whatsapp">09 · WhatsApp Cloud API</a></li>
+        <li><a href="#gemini">10 · Gemini API (Google AI)</a></li>
+        <li><a href="#groq">11 · Groq Whisper (audios)</a></li>
+        <li><a href="#n8n">12 · n8n self-hosted en Railway</a></li>
+        <li><a href="#wompi">13 · Wompi (pagos)</a></li>
+        <li><a href="#calendar">14 · Google Calendar API</a></li>
+        <li><a href="#resend">15 · Resend (emails)</a></li>
+        <li><a href="#sentry">16 · Sentry (errores)</a></li>
+      </ul>
+      <div class="toc-section">Operación</div>
+      <ul>
+        <li><a href="#flujo-completo">17 · Flujo end-to-end real</a></li>
+        <li><a href="#variables-entorno">18 · Variables de entorno (mapa)</a></li>
+        <li><a href="#orden-implementacion">19 · Orden de implementación (8 sem)</a></li>
+        <li><a href="#troubleshooting">20 · Errores comunes</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <h1>Guía operativa de conexión.</h1>
+      <p class="lead">
+        El stack mínimo para operar MediFlow con costo real de <strong style="color:var(--accent)">$8 USD/mes</strong> al inicio
+        — qué cuenta crear, en qué orden, qué clave generar, dónde pegarla, y cómo verificar que funciona.
+        Sin sobreingeniería, sin dependencias innecesarias.
+      </p>
+      <div class="meta-bar">
+        <span><strong>Stack:</strong> Next.js · Supabase · Gemini · WhatsApp Cloud · n8n</span>
+        <span><strong>Costo MVP:</strong> $8 USD/mes</span>
+        <span><strong>Tiempo setup:</strong> 6-10 horas total</span>
+        <span><strong>Persona requerida:</strong> 1 (vos)</span>
+      </div>
+    </div>
+
+    <!-- ========== 01 MONEDAS ========== -->
+    <h2 id="monedas"><span class="num">01</span>Pricing en COP vs USD: la decisión</h2>
+
+    <p>
+      Investigación del mercado SaaS colombiano (Alegra, Siigo, Loggro, ContaPyme, Cuenti, +20 herramientas analizadas):
+      <strong>el 100% de los SaaS que apuntan a PYMES y profesionales en Colombia muestran sus precios en COP</strong>,
+      no en USD. Esto no es opinión — es lo que el mercado eligió.
+    </p>
+
+    <h3>Lo que dice la evidencia</h3>
+    <table>
+      <thead>
+        <tr><th style="width:30%">Player</th><th>Cómo muestra el precio</th><th style="width:20%">Audiencia</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Alegra</strong> (líder facturación)</td><td>$17.900 / $59.900 / $179.900 COP/mes</td><td>PYMES + autónomos</td></tr>
+        <tr><td><strong>Siigo</strong></td><td>$145.993 / $191.327 / $207.869 COP/mes</td><td>PYMES contables</td></tr>
+        <tr><td><strong>ContaPyme</strong></td><td>Ofrece página COP <em>y</em> página USD por separado</td><td>PYMES Colombia + LATAM</td></tr>
+        <tr><td><strong>Cuenti</strong></td><td>"Los siguientes precios están en Pesos Colombianos"</td><td>Micro/PYME local</td></tr>
+        <tr><td><strong>Slack / Notion / HubSpot</strong></td><td>USD (con conversión opcional)</td><td>Empresas tech globales</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout ok">
+      <span class="label">Veredicto para MediFlow</span>
+      <p>
+        <strong>Pricing público en COP. Costos internos en USD.</strong> Tu cliente es un doctor colombiano
+        que cobra consultas en pesos, paga arriendo en pesos, y mentalmente compara contra Alegra ($59.900) o
+        un asistente humano ($1.800.000). Mostrar "$59 USD" agrega fricción de cálculo
+        (¿4.000? ¿4.200? ¿el dólar mañana?) y proyecta "extranjero, caro". Mostrar <strong>$249.000 COP/mes</strong>
+        es el lenguaje nativo.
+      </p>
+    </div>
+
+    <h3>Reglas concretas a aplicar en el landing y la guía</h3>
+    <ul>
+      <li><strong>Landing público:</strong> 100% COP. Sin USD a la vista en pricing, ahorros, ni ROI.
+        Ejemplo: "Recuperás <strong>$1.200.000 COP/mes</strong> en consultas que se cancelaban".</li>
+      <li><strong>Métricas de mercado/inversión:</strong> COP con paréntesis USD si el número es muy grande
+        (Ej: "Mercado total: <strong>$2.4 billones COP</strong> ($600M USD)").</li>
+      <li><strong>Costos de infra (interno):</strong> USD, porque las facturas reales llegan en USD
+        (Vercel, Supabase, Gemini cobran tarjeta en dólares). Vos lo convertís a COP para tu contabilidad.</li>
+      <li><strong>Dashboard admin tuyo:</strong> dual — MRR en COP (lo que cobrás) y costos en USD (lo que pagás),
+        con margen calculado en %.</li>
+      <li><strong>Facturación a clientes:</strong> COP exclusivamente. Pasás por Wompi (que liquida en COP a tu cuenta de banco colombiana).</li>
+    </ul>
+
+    <h3>Anclaje psicológico: contra qué comparar</h3>
+    <p>El doctor no compara MediFlow contra Calendly. Compara contra:</p>
+    <table>
+      <thead><tr><th>Alternativa</th><th>Costo mensual</th><th>Anclaje útil</th></tr></thead>
+      <tbody>
+        <tr><td>Recepcionista half-time</td><td>$900.000 – $1.300.000 COP</td><td>"Por menos del 20% de un asistente humano"</td></tr>
+        <tr><td>Recepcionista full-time</td><td>$1.800.000 – $2.500.000 COP</td><td>"Por el 10% de una secretaria"</td></tr>
+        <tr><td>Software clínico (Doctoralia, Agenda Pro)</td><td>$120.000 – $400.000 COP</td><td>Comparable directo. Ahí entra MediFlow $249.000.</td></tr>
+        <tr><td>1 sola consulta perdida por no-show</td><td>$120.000 – $300.000 COP</td><td>"Te paga el plan con 1 cita recuperada"</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== 02 STACK REVISADO ========== -->
+    <h2 id="stack-revisado"><span class="num">02</span>Stack revisado: lo que entra y lo que sobra</h2>
+
+    <p>
+      El stack que tenías era un stack de Series A ($700-1.400 USD/mes) montado encima de un MVP de 1 persona.
+      El stack revisado es un stack de bootstrapping <strong>centralizado en Supabase</strong>: una sola plataforma
+      hace auth, DB, storage, realtime y edge functions.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>✅ Vercel (Hobby)</h4>
+        <div class="price">$0/mes hasta 100 GB bandwidth</div>
+        <p>Hosting Next.js + variables de entorno + analytics. Free tier alcanza para 5-20 clientes piloto.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Supabase (Free → Pro)</h4>
+        <div class="price">$0 → $25 USD/mes</div>
+        <p>PostgreSQL + Auth + Storage 1GB + Realtime + Edge Functions. <strong>Reemplaza Clerk, S3, Redis y Doppler.</strong></p>
+      </div>
+      <div class="card">
+        <h4>✅ Google Gemini API</h4>
+        <div class="price">~$1-10 USD/mes</div>
+        <p>Gemini 1.5 Flash: $0.075 / 1M tokens input. <strong>10× más barato</strong> que Claude/GPT para volumen MVP.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Groq Whisper</h4>
+        <div class="price">$0 (free tier muy generoso)</div>
+        <p>Transcripción de audios de WhatsApp (síntomas hablados). 14.400 audios/día gratis.</p>
+      </div>
+      <div class="card">
+        <h4>✅ WhatsApp Cloud API</h4>
+        <div class="price">$1-15 USD/mes</div>
+        <p>Directo con Meta. Conversaciones iniciadas por usuario son gratis las primeras 1.000/mes.</p>
+      </div>
+      <div class="card">
+        <h4>✅ n8n self-hosted</h4>
+        <div class="price">$5 USD/mes en Railway</div>
+        <p>Orquestador visual de flujos: WhatsApp → Gemini → Calendar → DB. Reemplaza una capa custom de backend.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Wompi (pagos)</h4>
+        <div class="price">2.99% + $900 COP por transacción</div>
+        <p>Pasarela colombiana. Liquida en tu banco en 24-48h. PSE + tarjetas + Nequi + Bancolombia.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Resend</h4>
+        <div class="price">$0 (3.000 emails/mes free)</div>
+        <p>Confirmaciones, recordatorios, recibos. API moderna, integra con React Email para templates.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Google Calendar API</h4>
+        <div class="price">$0</div>
+        <p>OAuth con cuenta del doctor. El bot crea/mueve/cancela eventos en su calendario real.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Sentry</h4>
+        <div class="price">$0 (5K errores/mes free)</div>
+        <p>Captura errores en frontend + backend. Esencial cuando estás durmiendo y un cliente reporta un bug.</p>
+      </div>
+    </div>
+
+    <h3>Lo que NO va (todavía)</h3>
+    <table>
+      <thead><tr><th>Herramienta</th><th>Costo evitado</th><th>Por qué sobra ahora</th></tr></thead>
+      <tbody>
+        <tr><td>Clerk</td><td>$25-99 USD/mes</td><td>Supabase Auth hace JWT + OAuth + magic link. Gratis.</td></tr>
+        <tr><td>Upstash Redis</td><td>$10-50 USD/mes</td><td>Con &lt;50 clientes no hay carga que justifique cache distribuido.</td></tr>
+        <tr><td>Cloudflare R2 / S3</td><td>$15 USD/mes</td><td>Supabase Storage tiene 1GB gratis (suficiente para audios+fotos por mes).</td></tr>
+        <tr><td>Doppler</td><td>$24 USD/mes</td><td>Vercel Environment Variables + GitHub Secrets son gratis y suficientes.</td></tr>
+        <tr><td>ElevenLabs</td><td>$50 USD/mes</td><td>El voicebot es feature de v3. WhatsApp texto + voz nativa de Gemini bastan.</td></tr>
+        <tr><td>Axiom</td><td>$50 USD/mes</td><td>Vercel + Sentry tienen logs suficientes hasta 100 clientes.</td></tr>
+        <tr><td>PostHog</td><td>$50 USD/mes</td><td>Vercel Analytics gratis cubre lo básico hasta product-market fit.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="label">Cuándo SÍ agregar lo que sacamos</span>
+      <p>
+        <strong>Redis:</strong> cuando &gt; 50 clientes y los webhooks de WhatsApp empiecen a colear.<br>
+        <strong>S3/R2:</strong> cuando pases 1GB de storage (≈ mes 6-8 con 20 clínicas activas).<br>
+        <strong>PostHog:</strong> cuando quieras hacer cohortes de uso para upsell — post product-market fit.<br>
+        <strong>Cloudflare Pro/WAF:</strong> al primer ataque DDoS o cuando llegues a clientes enterprise.
+      </p>
+    </div>
+
+    <!-- ========== 03 PRE-REQUISITOS ========== -->
+    <h2 id="prerequisitos"><span class="num">03</span>Pre-requisitos personales antes de empezar</h2>
+
+    <p>Antes de tocar código, necesitás tener listo:</p>
+    <ol class="steps">
+      <li><strong>Tarjeta de crédito internacional</strong>
+        Para Vercel, Supabase Pro (después), Gemini, Sentry. Que tenga al menos $50 USD de cupo libre.
+        Bancolombia, Davivienda y Nu funcionan sin problema.
+      </li>
+      <li><strong>Cuenta de Google personal o de empresa</strong>
+        Para Gmail, Google Cloud (Gemini API + Calendar), y Google Workspace si más adelante querés correo @mediflow.co.
+      </li>
+      <li><strong>Cuenta de Meta Business + número de WhatsApp dedicado</strong>
+        El número que vas a usar para el bot <strong>no puede tener WhatsApp Personal activo en celular</strong>.
+        Recomendado: comprar una eSIM Claro/Movistar dedicada o usar un número virtual de Twilio si solo es para pruebas.
+      </li>
+      <li><strong>Dominio comprado</strong> (ej. <code>mediflow.co</code> o <code>mediflow.com.co</code>)
+        Namecheap, GoDaddy, o Cloudflare Registrar. <strong>$8-12 USD/año</strong>. <code>.co</code> es ideal porque refuerza el "100% colombiano".
+      </li>
+      <li><strong>Cuenta bancaria empresarial</strong> (idealmente Bancolombia o Davivienda)
+        Para que Wompi te liquide los cobros de los doctores. Si no la tenés todavía, podés usar tu cuenta personal
+        en piloto y migrar después de constituir la SAS.
+      </li>
+      <li><strong>RUT con código CIIU 6201/6202</strong>
+        Desarrollo de software / consultoría informática. Con eso podés facturar consultoría desde el día 1
+        antes de constituir SAS. SAS la formalizás cuando llegues a $5M COP/mes consolidados (mes 8-10).
+      </li>
+      <li><strong>Computador con Node.js 20+ y Git instalados</strong>
+        <code>node --version</code> debe responder <code>v20.x</code> o superior.
+        Si no, instalá desde nodejs.org o usá <code>nvm</code>.
+      </li>
+    </ol>
+
+    <!-- ========== 04 GITHUB ========== -->
+    <h2 id="github"><span class="num">04</span>GitHub + repositorio inicial</h2>
+
+    <h3>Por qué primero</h3>
+    <p>Vercel y n8n se alimentan de GitHub. Sin repo, no hay deploy automático. Y querés tener historial de cambios desde el commit 1, no desde el día que "todo ya estaba".</p>
+
+    <h3>Pasos</h3>
+    <ol class="steps">
+      <li><strong>Crear cuenta</strong> en <code>github.com</code> con tu email principal. Plan Free es suficiente para siempre (repos privados ilimitados).</li>
+      <li><strong>Crear organización</strong> "MediFlow" (o el nombre final). Esto te separa proyecto personal de proyecto empresarial. Settings → New organization → Free plan.</li>
+      <li><strong>Crear repo privado</strong> <code>mediflow-app</code>. Inicializar con <code>README.md</code>, <code>.gitignore</code> (Node) y license MIT (podés cambiarla después).</li>
+      <li><strong>Configurar SSH key</strong> en tu máquina:
+<pre><span class="c"># En tu terminal</span>
+ssh-keygen -t ed25519 -C "tu@email.com"
+<span class="c"># Enter para todo. Después:</span>
+cat ~/.ssh/id_ed25519.pub
+<span class="c"># Copiar la salida</span>
+<span class="c"># Pegar en: GitHub → Settings → SSH and GPG keys → New SSH key</span></pre>
+      </li>
+      <li><strong>Clonar el repo localmente</strong>:
+<pre>git clone git@github.com:mediflow/mediflow-app.git
+cd mediflow-app</pre>
+      </li>
+      <li><strong>Activar Branch Protection</strong> en <code>main</code>: Settings → Branches → Add rule.
+        Activar "Require a pull request before merging" — incluso siendo solo vos, te obliga a revisar tus propios cambios.</li>
+      <li><strong>Activar GitHub Actions</strong>: vendrá usado más adelante para correr tests automáticos en cada PR.</li>
+    </ol>
+
+    <div class="callout info">
+      <span class="label">Convención de commits</span>
+      <p>Usá <strong>Conventional Commits</strong> desde el inicio: <code>feat:</code>, <code>fix:</code>, <code>chore:</code>, <code>docs:</code>.
+      Eso te permite generar changelogs automáticos cuando empieces a tener clientes pagos que esperen release notes.</p>
+    </div>
+
+    <!-- ========== 05 VERCEL ========== -->
+    <h2 id="vercel"><span class="num">05</span>Vercel + dominio</h2>
+
+    <h3>Pasos</h3>
+    <ol class="steps">
+      <li><strong>Crear cuenta en Vercel</strong> con "Continue with GitHub" — esto vincula automáticamente las cuentas.</li>
+      <li><strong>Plan Hobby</strong> (gratis). Te da 100GB bandwidth/mes, 6.000 minutos build, dominios custom ilimitados.</li>
+      <li><strong>Conectar el repo</strong> <code>mediflow-app</code> a Vercel: New Project → Import Git Repository → seleccionar <code>mediflow-app</code>. Framework: Next.js (autodetectado). Deploy.</li>
+      <li><strong>Comprar dominio</strong> en Namecheap o Cloudflare Registrar. <code>mediflow.co</code> ronda los <strong>$30 USD/año</strong> (.co es más caro pero ese "punto-co" señaliza Colombia).</li>
+      <li><strong>Conectar dominio</strong>: Vercel → Project → Settings → Domains → Add. Pegar <code>mediflow.co</code>. Vercel te dará 2 registros DNS:
+<pre><span class="c"># En tu registrador (Namecheap/Cloudflare):</span>
+A     @       76.76.21.21
+CNAME www     cname.vercel-dns.com</pre>
+        Propaga en 5-30 minutos. SSL es automático (Let's Encrypt).
+      </li>
+      <li><strong>Configurar Environment Variables</strong> en Vercel: Settings → Environment Variables. Acá vas a pegar todas las API keys (las creamos en los pasos siguientes). Marcar "Production" + "Preview" + "Development".</li>
+    </ol>
+
+    <h3>Estructura inicial del proyecto Next.js</h3>
+<pre><span class="c"># Localmente, dentro de mediflow-app:</span>
+npx create-next-app@latest . --typescript --tailwind --app --no-src-dir
+<span class="c"># Responder:</span>
+<span class="c"># - ESLint? Yes</span>
+<span class="c"># - Turbopack? Yes (es más rápido)</span>
+<span class="c"># - Customize import alias? No</span>
+
+git add .
+git commit -m "feat: initial Next.js setup"
+git push origin main
+<span class="c"># Vercel deploya automáticamente en 60s</span></pre>
+
+    <p>Después del primer push, andá a <code>https://mediflow.co</code>. Debería ver la home default de Next.js. <span class="pill green">✓ Deploy funciona</span></p>
+
+    <!-- ========== 06 SUPABASE ========== -->
+    <h2 id="supabase"><span class="num">06</span>Supabase: el corazón del backend</h2>
+
+    <p>
+      Supabase es <strong>el reemplazo de 4 servicios en uno</strong>: Postgres + Auth + Storage + Realtime. Si entendés bien Supabase,
+      el resto del stack es plomería. Esta es la sección más larga porque es la más importante.
+    </p>
+
+    <h3>Crear el proyecto</h3>
+    <ol class="steps">
+      <li><strong>supabase.com</strong> → Sign up con GitHub.</li>
+      <li><strong>New Project</strong>. Nombre: <code>mediflow-prod</code>. Database password: generá uno fuerte y guardalo en un password manager (no lo vas a poder recuperar). Región: <strong>South America (São Paulo)</strong> — la más cercana a Colombia, latencia ~80ms desde Bogotá vs ~140ms desde us-east-1.</li>
+      <li><strong>Pricing tier:</strong> Free. Tenés 500MB DB, 1GB storage, 50.000 monthly active users de Auth. Suficiente hasta cliente 30-40.</li>
+      <li>Esperá 2 minutos a que se aprovisione. Vas a ver Project URL y anon/service_role keys en <strong>Settings → API</strong>.</li>
+    </ol>
+
+    <h3>Las 3 claves que necesitás</h3>
+    <table>
+      <thead><tr><th>Variable</th><th>Dónde se usa</th><th>Sensibilidad</th></tr></thead>
+      <tbody>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Frontend + backend</td><td>Pública (OK exponer)</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Frontend (browser)</td><td>Pública (RLS la protege)</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>Backend (server-side <strong>only</strong>)</td><td><strong>Secret crítico</strong> — bypass de RLS. Nunca al browser.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Schema mínimo del MVP</h3>
+    <p>SQL Editor → New query. Pegar y ejecutar:</p>
+<pre><span class="c">-- Tenants (clínicas / doctores que pagan suscripción)</span>
+<span class="k">CREATE TABLE</span> tenants (
+  id <span class="k">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  slug <span class="k">TEXT UNIQUE NOT NULL</span>, <span class="c">-- ej: "dr-camila"</span>
+  nombre <span class="k">TEXT NOT NULL</span>,
+  whatsapp_number <span class="k">TEXT</span>,
+  plan <span class="k">TEXT NOT NULL DEFAULT</span> <span class="s">'free'</span>, <span class="c">-- free | basico | pro</span>
+  estado <span class="k">TEXT NOT NULL DEFAULT</span> <span class="s">'piloto'</span>,
+  created_at <span class="k">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="c">-- Usuarios del tenant (doctor + asistentes)</span>
+<span class="k">CREATE TABLE</span> users (
+  id <span class="k">UUID PRIMARY KEY REFERENCES</span> auth.users(id) <span class="k">ON DELETE CASCADE</span>,
+  tenant_id <span class="k">UUID REFERENCES</span> tenants(id) <span class="k">ON DELETE CASCADE</span>,
+  rol <span class="k">TEXT NOT NULL</span>, <span class="c">-- super_admin | doctor | asistente</span>
+  nombre <span class="k">TEXT</span>,
+  created_at <span class="k">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="c">-- Pacientes</span>
+<span class="k">CREATE TABLE</span> pacientes (
+  id <span class="k">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  tenant_id <span class="k">UUID NOT NULL REFERENCES</span> tenants(id) <span class="k">ON DELETE CASCADE</span>,
+  whatsapp <span class="k">TEXT NOT NULL</span>,
+  nombre <span class="k">TEXT</span>,
+  cedula <span class="k">TEXT</span>,
+  consent_habeas_data <span class="k">BOOLEAN DEFAULT FALSE</span>,
+  consent_at <span class="k">TIMESTAMPTZ</span>,
+  created_at <span class="k">TIMESTAMPTZ DEFAULT</span> now(),
+  <span class="k">UNIQUE</span>(tenant_id, whatsapp)
+);
+
+<span class="c">-- Citas</span>
+<span class="k">CREATE TABLE</span> citas (
+  id <span class="k">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  tenant_id <span class="k">UUID NOT NULL REFERENCES</span> tenants(id) <span class="k">ON DELETE CASCADE</span>,
+  paciente_id <span class="k">UUID REFERENCES</span> pacientes(id),
+  fecha <span class="k">TIMESTAMPTZ NOT NULL</span>,
+  duracion_min <span class="k">INT DEFAULT</span> 30,
+  estado <span class="k">TEXT NOT NULL DEFAULT</span> <span class="s">'agendada'</span>, <span class="c">-- agendada | confirmada | cancelada | atendida | no_show</span>
+  google_event_id <span class="k">TEXT</span>,
+  notas <span class="k">TEXT</span>,
+  created_at <span class="k">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="c">-- Conversaciones de WhatsApp</span>
+<span class="k">CREATE TABLE</span> mensajes (
+  id <span class="k">UUID PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  tenant_id <span class="k">UUID NOT NULL REFERENCES</span> tenants(id) <span class="k">ON DELETE CASCADE</span>,
+  paciente_id <span class="k">UUID REFERENCES</span> pacientes(id),
+  direccion <span class="k">TEXT NOT NULL</span>, <span class="c">-- in | out</span>
+  contenido <span class="k">TEXT</span>,
+  tipo <span class="k">TEXT NOT NULL DEFAULT</span> <span class="s">'texto'</span>, <span class="c">-- texto | audio | imagen</span>
+  whatsapp_msg_id <span class="k">TEXT</span>,
+  created_at <span class="k">TIMESTAMPTZ DEFAULT</span> now()
+);
+
+<span class="k">CREATE INDEX</span> idx_citas_tenant_fecha <span class="k">ON</span> citas(tenant_id, fecha);
+<span class="k">CREATE INDEX</span> idx_pacientes_tenant_wa <span class="k">ON</span> pacientes(tenant_id, whatsapp);
+<span class="k">CREATE INDEX</span> idx_mensajes_paciente <span class="k">ON</span> mensajes(paciente_id, created_at <span class="k">DESC</span>);</pre>
+
+    <h3>Row Level Security (RLS) — crítico</h3>
+    <p>
+      Sin RLS, cualquier doctor puede leer pacientes de cualquier otra clínica si conoce un UUID. Con RLS,
+      <strong>la base de datos rechaza la query a nivel SQL</strong>. Es el secreto del multi-tenant seguro.
+    </p>
+<pre><span class="c">-- Activar RLS en todas las tablas</span>
+<span class="k">ALTER TABLE</span> tenants <span class="k">ENABLE ROW LEVEL SECURITY</span>;
+<span class="k">ALTER TABLE</span> users <span class="k">ENABLE ROW LEVEL SECURITY</span>;
+<span class="k">ALTER TABLE</span> pacientes <span class="k">ENABLE ROW LEVEL SECURITY</span>;
+<span class="k">ALTER TABLE</span> citas <span class="k">ENABLE ROW LEVEL SECURITY</span>;
+<span class="k">ALTER TABLE</span> mensajes <span class="k">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="c">-- Helper: tenant del usuario actual</span>
+<span class="k">CREATE OR REPLACE FUNCTION</span> current_tenant_id() <span class="k">RETURNS UUID AS</span> $$
+  <span class="k">SELECT</span> tenant_id <span class="k">FROM</span> users <span class="k">WHERE</span> id = auth.uid() <span class="k">LIMIT</span> 1;
+$$ <span class="k">LANGUAGE</span> sql <span class="k">SECURITY DEFINER STABLE</span>;
+
+<span class="c">-- Helper: ¿es super_admin? (vos como CEO)</span>
+<span class="k">CREATE OR REPLACE FUNCTION</span> is_super_admin() <span class="k">RETURNS BOOLEAN AS</span> $$
+  <span class="k">SELECT EXISTS</span> (
+    <span class="k">SELECT</span> 1 <span class="k">FROM</span> users
+    <span class="k">WHERE</span> id = auth.uid() <span class="k">AND</span> rol = <span class="s">'super_admin'</span>
+  );
+$$ <span class="k">LANGUAGE</span> sql <span class="k">SECURITY DEFINER STABLE</span>;
+
+<span class="c">-- Policy: cada tenant ve solo lo suyo, super_admin ve todo</span>
+<span class="k">CREATE POLICY</span> "tenant_isolation" <span class="k">ON</span> pacientes
+  <span class="k">FOR ALL USING</span> (
+    is_super_admin() <span class="k">OR</span> tenant_id = current_tenant_id()
+  );
+
+<span class="c">-- Repetir el patrón para citas, mensajes</span>
+<span class="k">CREATE POLICY</span> "tenant_isolation" <span class="k">ON</span> citas
+  <span class="k">FOR ALL USING</span> (is_super_admin() <span class="k">OR</span> tenant_id = current_tenant_id());
+
+<span class="k">CREATE POLICY</span> "tenant_isolation" <span class="k">ON</span> mensajes
+  <span class="k">FOR ALL USING</span> (is_super_admin() <span class="k">OR</span> tenant_id = current_tenant_id());</pre>
+
+    <h3>Storage para audios y fotos</h3>
+<pre><span class="c">-- Crear bucket "media" desde Supabase Dashboard:</span>
+<span class="c">-- Storage → New bucket → name: media → Public: NO</span>
+
+<span class="c">-- Policy: solo el tenant dueño puede leer/escribir su carpeta</span>
+<span class="k">CREATE POLICY</span> "tenant_media_access" <span class="k">ON</span> storage.objects
+  <span class="k">FOR ALL USING</span> (
+    bucket_id = <span class="s">'media'</span>
+    <span class="k">AND</span> (storage.foldername(name))[1] = current_tenant_id()::text
+  );</pre>
+    <p>Las rutas serán <code>media/{tenant_id}/audios/2026-04-28-abc.ogg</code>. La policy garantiza que el doctor de la clínica A no puede listar archivos de la B.</p>
+
+    <h3>Verificar que RLS funciona</h3>
+    <p>SQL Editor:</p>
+<pre><span class="c">-- Test: insertar 2 tenants ficticios</span>
+<span class="k">INSERT INTO</span> tenants (slug, nombre) <span class="k">VALUES</span>
+  (<span class="s">'dr-a'</span>, <span class="s">'Dr. A'</span>),
+  (<span class="s">'dr-b'</span>, <span class="s">'Dr. B'</span>);
+
+<span class="c">-- Crear users con auth ficticio (después con magic link reales)</span>
+<span class="c">-- ... y probar SELECT con auth.uid() simulado</span></pre>
+    <p>Para probar end-to-end real, andá al frontend (paso 7) y autenticate como doctor A — al hacer <code>SELECT * FROM citas</code> solo te debe devolver las del tenant A. <span class="pill green">✓ Multi-tenant seguro</span></p>
+
+    <!-- ========== 07 NEXT.JS + SUPABASE ========== -->
+    <h2 id="nextjs"><span class="num">07</span>Next.js conectado a Supabase</h2>
+
+<pre><span class="c"># En tu repo local</span>
+npm install @supabase/supabase-js @supabase/ssr</pre>
+
+    <p>Crear <code>lib/supabase/client.ts</code>:</p>
+<pre><span class="k">import</span> { createBrowserClient } <span class="k">from</span> <span class="s">'@supabase/ssr'</span>;
+
+<span class="k">export const</span> createClient = () =&gt;
+  createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );</pre>
+
+    <p>Crear <code>lib/supabase/server.ts</code> (para Server Components y API routes):</p>
+<pre><span class="k">import</span> { createServerClient } <span class="k">from</span> <span class="s">'@supabase/ssr'</span>;
+<span class="k">import</span> { cookies } <span class="k">from</span> <span class="s">'next/headers'</span>;
+
+<span class="k">export const</span> createClient = <span class="k">async</span> () =&gt; {
+  <span class="k">const</span> cookieStore = <span class="k">await</span> cookies();
+  <span class="k">return</span> createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () =&gt; cookieStore.getAll(),
+        setAll: (toSet) =&gt; toSet.forEach(({ name, value, options }) =&gt;
+          cookieStore.set(name, value, options))
+      }
+    }
+  );
+};</pre>
+
+    <h3>Variables de entorno locales</h3>
+    <p>Crear <code>.env.local</code> (NUNCA commitear — ya está en <code>.gitignore</code>):</p>
+<pre>NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJI...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJI...</pre>
+
+    <p>Pegar los mismos valores en Vercel → Settings → Environment Variables. <span class="pill blue">⚠ Service role solo en server-side</span></p>
+
+    <h3>Página de login con magic link (Supabase Auth)</h3>
+    <p>Crear <code>app/login/page.tsx</code>:</p>
+<pre><span class="s">'use client'</span>;
+<span class="k">import</span> { <span class="k">useState</span> } <span class="k">from</span> <span class="s">'react'</span>;
+<span class="k">import</span> { createClient } <span class="k">from</span> <span class="s">'@/lib/supabase/client'</span>;
+
+<span class="k">export default function</span> Login() {
+  <span class="k">const</span> [email, setEmail] = useState(<span class="s">''</span>);
+  <span class="k">const</span> [sent, setSent] = useState(<span class="k">false</span>);
+  <span class="k">const</span> supabase = createClient();
+
+  <span class="k">const</span> handleLogin = <span class="k">async</span> (e) =&gt; {
+    e.preventDefault();
+    <span class="k">await</span> supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: <span class="s">`${window.location.origin}/auth/callback`</span> }
+    });
+    setSent(<span class="k">true</span>);
+  };
+
+  <span class="k">return</span> sent
+    ? &lt;p&gt;Revisá tu correo. Te mandamos el link de acceso.&lt;/p&gt;
+    : (
+      &lt;form onSubmit={handleLogin}&gt;
+        &lt;input type=<span class="s">"email"</span> value={email} onChange={e =&gt; setEmail(e.target.value)} /&gt;
+        &lt;button&gt;Enviar link&lt;/button&gt;
+      &lt;/form&gt;
+    );
+}</pre>
+
+    <p>El magic link es la mejor UX para doctores: <strong>no tienen que recordar contraseña</strong>. Click en el correo y entran. Supabase maneja el SMTP gratis con su dominio (después podés conectar Resend o SendGrid para mejor deliverability).</p>
+
+    <!-- ========== 08 SHADCN ========== -->
+    <h2 id="shadcn"><span class="num">08</span>shadcn/ui + Tailwind</h2>
+
+    <p>Tailwind ya está instalado. Falta shadcn/ui (componentes copy-paste, no librería).</p>
+<pre>npx shadcn@latest init
+<span class="c"># Seleccionar:</span>
+<span class="c"># - Style: New York</span>
+<span class="c"># - Base color: Zinc (neutro)</span>
+<span class="c"># - CSS variables: Yes</span>
+
+<span class="c"># Instalar componentes a medida que los necesitás:</span>
+npx shadcn@latest add button card dialog input form table
+npx shadcn@latest add toast dropdown-menu avatar badge tabs</pre>
+
+    <p>Los componentes se instalan en <code>components/ui/</code> como código tuyo (editable). Esa es la magia: no hay versión a actualizar, no hay dependencia que rompa.</p>
+
+    <div class="callout info">
+      <span class="label">Iconos: Lucide</span>
+      <p>Ya viene con shadcn. Usalo así: <code>import {`{ Calendar, MessageSquare }`} from 'lucide-react'</code>. ~1.500 iconos consistentes, perfecto para dashboards médicos.</p>
+    </div>
+
+    <!-- ========== 09 WHATSAPP ========== -->
+    <h2 id="whatsapp"><span class="num">09</span>WhatsApp Cloud API (Meta directo)</h2>
+
+    <p>
+      Esta es la integración más delicada porque depende de Meta y tiene 4 pasos burocráticos.
+      Plan: empezar el día 1 — Meta tarda 24-72h en aprobar.
+    </p>
+
+    <h3>Setup</h3>
+    <ol class="steps">
+      <li><strong>Crear Meta Business Account</strong> en <code>business.facebook.com</code>. Te pide nombre legal + email + país (Colombia).</li>
+      <li><strong>Crear App en Meta for Developers</strong>: <code>developers.facebook.com</code> → My Apps → Create App → "Business" type. Nombre: "MediFlow Bot".</li>
+      <li><strong>Agregar producto WhatsApp</strong>: dentro de la app, "Add product" → WhatsApp → Setup. Te asigna un número de prueba gratis (formato +1 555…) que sirve para desarrollo.</li>
+      <li><strong>Generar System User Token permanente</strong>: Business Settings → System Users → Add → "Admin". Generar Access Token con permisos <code>whatsapp_business_messaging</code> y <code>whatsapp_business_management</code>. <strong>Sin expiración</strong>. Guardar en password manager.</li>
+      <li><strong>Migrar tu número real</strong> (cuando arranques con clínicas pagas): WhatsApp Manager → Add phone number → seleccionar tu eSIM dedicada. Meta envía un código por SMS. Verificás. Pasa por proceso de "Display Name" review (24-48h).</li>
+      <li><strong>Configurar webhook</strong>: Configuration → Webhooks → URL: <code>https://mediflow.co/api/whatsapp/webhook</code>. Verify token: una string random tuya (ej. <code>mfw_2026_xK9pL2</code>). Subscribe a: <code>messages</code> y <code>message_status</code>.</li>
+    </ol>
+
+    <h3>Endpoint en Next.js</h3>
+    <p>Crear <code>app/api/whatsapp/webhook/route.ts</code>:</p>
+<pre><span class="k">import</span> { NextRequest, NextResponse } <span class="k">from</span> <span class="s">'next/server'</span>;
+
+<span class="c">// Verificación inicial (Meta llama una vez con GET)</span>
+<span class="k">export async function</span> GET(req: NextRequest) {
+  <span class="k">const</span> params = req.nextUrl.searchParams;
+  <span class="k">const</span> mode = params.get(<span class="s">'hub.mode'</span>);
+  <span class="k">const</span> token = params.get(<span class="s">'hub.verify_token'</span>);
+  <span class="k">const</span> challenge = params.get(<span class="s">'hub.challenge'</span>);
+
+  <span class="k">if</span> (mode === <span class="s">'subscribe'</span> &amp;&amp; token === process.env.WHATSAPP_VERIFY_TOKEN) {
+    <span class="k">return new</span> NextResponse(challenge, { status: 200 });
+  }
+  <span class="k">return new</span> NextResponse(<span class="s">'Forbidden'</span>, { status: 403 });
+}
+
+<span class="c">// Recepción de mensajes (POST)</span>
+<span class="k">export async function</span> POST(req: NextRequest) {
+  <span class="k">const</span> body = <span class="k">await</span> req.json();
+
+  <span class="c">// Reenviar al webhook de n8n para procesarlo</span>
+  <span class="k">await</span> fetch(process.env.N8N_WEBHOOK_URL!, {
+    method: <span class="s">'POST'</span>,
+    headers: { <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span> },
+    body: JSON.stringify(body)
+  });
+
+  <span class="c">// Meta requiere 200 en &lt;5s o reintenta</span>
+  <span class="k">return new</span> NextResponse(<span class="s">'OK'</span>, { status: 200 });
+}</pre>
+
+    <h3>Variables a guardar en Vercel</h3>
+<pre>WHATSAPP_VERIFY_TOKEN=mfw_2026_xK9pL2
+WHATSAPP_PHONE_NUMBER_ID=123456789012345  <span class="c"># del dashboard Meta</span>
+WHATSAPP_ACCESS_TOKEN=EAAxxxxxxxxxxxxx     <span class="c"># System User Token</span>
+N8N_WEBHOOK_URL=https://n8n.tudominio.com/webhook/wa-incoming</pre>
+
+    <h3>Probar</h3>
+    <ol class="steps">
+      <li>En el dashboard Meta WhatsApp → "Send and receive messages" → mandate vos mismo un mensaje de prueba al número que asignaron. Recibís un POST en tu webhook.</li>
+      <li>Para enviar respuesta:
+<pre>curl -X POST \
+  https://graph.facebook.com/v18.0/$PHONE_NUMBER_ID/messages \
+  -H <span class="s">"Authorization: Bearer $ACCESS_TOKEN"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+    "messaging_product": "whatsapp",
+    "to": "573001234567",
+    "type": "text",
+    "text": { "body": "Hola, soy MediFlow. ¿Listo para agendar?" }
+  }'</span></pre>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="label">Lo que casi nadie te dice</span>
+      <p>
+        <strong>Templates HSM</strong>: para iniciar conversación con un paciente que NO te escribió primero
+        (recordatorio, confirmación), Meta exige usar un template pre-aprobado. Cada template tarda 24-48h en aprobarse.
+        Empezá YA con: <code>recordatorio_24h</code>, <code>confirmacion_cita</code>, <code>cancelacion_disponible</code>, <code>encuesta_post_consulta</code>.
+      </p>
+    </div>
+
+    <!-- ========== 10 GEMINI ========== -->
+    <h2 id="gemini"><span class="num">10</span>Google Gemini API</h2>
+
+    <p>Gemini 1.5 Flash es lo más barato del mercado para respuestas de buena calidad. Costo: <strong>$0.075 USD por millón de tokens input</strong>, $0.30 output. Una conversación promedio de paciente (~5K tokens) cuesta $0.001 USD ≈ $4 COP.</p>
+
+    <h3>Setup</h3>
+    <ol class="steps">
+      <li><code>aistudio.google.com</code> → Get API key → Create API key in new project. Copiar.</li>
+      <li>Pegar en Vercel: <code>GEMINI_API_KEY=AIzaSy...</code></li>
+      <li>Instalar SDK:
+<pre>npm install @google/generative-ai</pre>
+      </li>
+    </ol>
+
+    <h3>Función agente conversacional</h3>
+    <p>Crear <code>lib/agent/gemini.ts</code>:</p>
+<pre><span class="k">import</span> { GoogleGenerativeAI } <span class="k">from</span> <span class="s">'@google/generative-ai'</span>;
+
+<span class="k">const</span> genAI = <span class="k">new</span> GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+
+<span class="k">const</span> SYSTEM_PROMPT = <span class="s">`Eres MediFlow, asistente del consultorio de [DOCTOR_NAME].
+
+REGLAS:
+- Solo agendas, confirmas o cancelas citas. NO das diagnósticos.
+- Si el paciente describe síntomas graves (dolor de pecho, sangrado, mareo severo), respondes:
+  "Eso requiere atención médica directa. ¿Llamo al doctor o prefieres ir a urgencias?"
+- Hablas en tono cercano colombiano, sin tutear excesivamente.
+- Confirmas datos antes de agendar: nombre, cédula, fecha, hora.
+- Si la franja no está disponible, ofreces 2 alternativas.
+- Cierres con: "Confirmado, te mando recordatorio 24h antes."
+
+CONTEXTO DEL PACIENTE:
+- Nombre: {{nombre}}
+- Última cita: {{ultima_cita}}
+- Próxima cita: {{proxima_cita}}
+- Tratamiento activo: {{tratamiento}}
+`</span>;
+
+<span class="k">export async function</span> chatWithPatient(historial, mensajeNuevo, contextoPaciente) {
+  <span class="k">const</span> model = genAI.getGenerativeModel({
+    model: <span class="s">'gemini-1.5-flash'</span>,
+    systemInstruction: SYSTEM_PROMPT.replace(<span class="s">'{{nombre}}'</span>, contextoPaciente.nombre)
+      .replace(<span class="s">'{{ultima_cita}}'</span>, contextoPaciente.ultimaCita ?? <span class="s">'ninguna'</span>)
+      .replace(<span class="s">'{{proxima_cita}}'</span>, contextoPaciente.proximaCita ?? <span class="s">'ninguna'</span>)
+  });
+
+  <span class="k">const</span> chat = model.startChat({ history: historial });
+  <span class="k">const</span> result = <span class="k">await</span> chat.sendMessage(mensajeNuevo);
+  <span class="k">return</span> result.response.text();
+}</pre>
+
+    <div class="callout info">
+      <span class="label">Tool calling (lo poderoso)</span>
+      <p>
+        Gemini soporta <strong>function calling</strong> nativo. Le definís funciones (<code>buscar_disponibilidad</code>, <code>crear_cita</code>, <code>cancelar_cita</code>) y el modelo decide cuándo llamarlas. El paciente dice "agéndame el martes 4pm" → Gemini llama <code>buscar_disponibilidad("martes 4pm")</code> → tu código consulta Google Calendar → si libre, <code>crear_cita</code>. Esto evita parsing manual y reduce errores.
+      </p>
+    </div>
+
+    <!-- ========== 11 GROQ ========== -->
+    <h2 id="groq"><span class="num">11</span>Groq Whisper (transcripción de audios)</h2>
+
+    <p>Pacientes mandan notas de voz contando síntomas. Whisper de OpenAI cuesta $6 USD/1000 min. Groq corre el mismo modelo a velocidad absurda y tiene <strong>free tier de 14.400 audios/día</strong>.</p>
+
+    <ol class="steps">
+      <li><code>console.groq.com</code> → Sign up con Google → API Keys → Create.</li>
+      <li>Pegar en Vercel: <code>GROQ_API_KEY=gsk_...</code></li>
+      <li>Instalar:
+<pre>npm install groq-sdk</pre>
+      </li>
+      <li>Función:
+<pre><span class="k">import</span> Groq <span class="k">from</span> <span class="s">'groq-sdk'</span>;
+
+<span class="k">const</span> groq = <span class="k">new</span> Groq({ apiKey: process.env.GROQ_API_KEY });
+
+<span class="k">export async function</span> transcribirAudio(audioBuffer: Buffer) {
+  <span class="k">const</span> file = <span class="k">new</span> File([audioBuffer], <span class="s">'audio.ogg'</span>, { type: <span class="s">'audio/ogg'</span> });
+  <span class="k">const</span> { text } = <span class="k">await</span> groq.audio.transcriptions.create({
+    file,
+    model: <span class="s">'whisper-large-v3-turbo'</span>,
+    language: <span class="s">'es'</span>
+  });
+  <span class="k">return</span> text;
+}</pre>
+      </li>
+    </ol>
+
+    <p>El audio de WhatsApp llega como URL en el webhook. Lo descargás con <code>fetch</code>, lo pasás a Groq, y le pasás el texto resultante a Gemini como mensaje normal.</p>
+
+    <!-- ========== 12 N8N ========== -->
+    <h2 id="n8n"><span class="num">12</span>n8n self-hosted en Railway</h2>
+
+    <p>
+      n8n es <strong>el reemplazo de "escribir 30 routes en Next.js"</strong>. Es Zapier open source, visual, con 400+ nodos.
+      Self-hosted en Railway: <strong>$5 USD/mes</strong>. Hace toda la orquestación: WhatsApp → transcribir → Gemini → calendar → DB.
+    </p>
+
+    <h3>Por qué n8n y no escribir todo en Next.js</h3>
+    <ul>
+      <li><strong>Visualizás el flujo.</strong> Cuando estés con el doctor mostrándole "así funciona", abrís n8n y ve la cosa correr en vivo. Imposible con código.</li>
+      <li><strong>Logs por nodo.</strong> Si Gemini falló, ves el input/output exacto del nodo. Sin printf debugging.</li>
+      <li><strong>Re-ejecutás un flujo fallido.</strong> El paciente no recibió respuesta porque Calendar tuvo timeout — re-corrés el flujo desde el nodo que falló, sin perder estado.</li>
+      <li><strong>Plantillas.</strong> Cuando agregues "consultorio dental" como vertical, clonás el flujo, ajustás 3 prompts, listo.</li>
+    </ul>
+
+    <h3>Deploy en Railway</h3>
+    <ol class="steps">
+      <li><code>railway.app</code> → Sign up con GitHub → New Project → Deploy a Template → buscar "n8n".</li>
+      <li>Railway provisiona n8n + PostgreSQL en 90s. Te da URL <code>https://n8n-production-xxxx.up.railway.app</code>.</li>
+      <li><strong>Conectar dominio propio</strong>: Settings → Networking → Custom Domain → <code>n8n.mediflow.co</code>. Crear registro CNAME en tu DNS.</li>
+      <li><strong>Primera vez</strong>: andá a <code>n8n.mediflow.co</code>. Te pide crear usuario admin. Email + password fuerte. Login.</li>
+      <li><strong>Activar autenticación básica HTTP</strong> (extra capa): Variables de entorno en Railway:
+<pre>N8N_BASIC_AUTH_ACTIVE=true
+N8N_BASIC_AUTH_USER=admin
+N8N_BASIC_AUTH_PASSWORD=&lt;password fuerte&gt;
+N8N_PROTOCOL=https
+N8N_HOST=n8n.mediflow.co
+WEBHOOK_URL=https://n8n.mediflow.co</pre>
+      </li>
+    </ol>
+
+    <h3>El flujo principal: "WhatsApp Inbound"</h3>
+    <p>Dentro de n8n, New Workflow → "WhatsApp Inbound". Nodos en orden:</p>
+    <div class="diagram"><span class="info">[1] Webhook trigger</span>            <span class="warn">→ recibe POST de Next.js</span>
+    POST /webhook/wa-incoming
+    <span class="ok">expects: { entry: [{ changes: [...] }] }</span>
+
+<span class="info">[2] Function (extract message)</span>     <span class="warn">→ saca el texto/audio</span>
+    msg = $json.entry[0].changes[0].value.messages[0]
+    return { from: msg.from, type: msg.type, content: msg.text?.body, mediaId: msg.audio?.id }
+
+<span class="info">[3] IF node</span>                          <span class="warn">→ ¿es audio?</span>
+    type === <span class="s">'audio'</span>
+    ├── true  → <span class="info">[4a] HTTP Request (Groq)</span> → texto
+    └── false → continúa con texto crudo
+
+<span class="info">[5] Postgres node (Supabase)</span>          <span class="warn">→ obtener/crear paciente</span>
+    INSERT INTO pacientes (whatsapp, tenant_id) VALUES (...)
+    ON CONFLICT (whatsapp, tenant_id) DO NOTHING RETURNING *
+
+<span class="info">[6] Postgres node</span>                    <span class="warn">→ últimos 10 mensajes (contexto)</span>
+    SELECT * FROM mensajes WHERE paciente_id = $1 ORDER BY created_at DESC LIMIT 10
+
+<span class="info">[7] HTTP Request (Gemini)</span>            <span class="warn">→ generar respuesta</span>
+    POST https://generativelanguage.googleapis.com/...
+    body: { contents: [historial + mensaje nuevo] }
+
+<span class="info">[8] IF node</span>                          <span class="warn">→ ¿Gemini llamó tool "crear_cita"?</span>
+    └── sí → <span class="info">[9a] Google Calendar (insert event)</span>
+            <span class="info">[9b] Postgres (insert into citas)</span>
+
+<span class="info">[10] HTTP Request (WhatsApp send)</span>    <span class="warn">→ responder al paciente</span>
+    POST https://graph.facebook.com/v18.0/.../messages
+
+<span class="info">[11] Postgres (log mensaje out)</span></div>
+
+    <p><strong>Tiempo de implementar este flujo en n8n:</strong> ~3 horas la primera vez. <strong>Versus en código:</strong> ~3 días.</p>
+
+    <h3>Conectar n8n con Supabase</h3>
+    <p>Credentials → New → Postgres. Con la connection string que sale de Supabase → Settings → Database → Connection string → URI mode. Pegar.</p>
+
+    <h3>Conectar n8n con Google Calendar</h3>
+    <p>Credentials → New → Google Calendar OAuth2. Cada doctor que se onboardea hace click en "Conectar mi calendario" — eso lanza el flujo OAuth y guarda el token <em>de ese doctor</em>. n8n soporta múltiples credenciales por servicio.</p>
+
+    <!-- ========== 13 WOMPI ========== -->
+    <h2 id="wompi"><span class="num">13</span>Wompi (pagos en COP)</h2>
+
+    <p>
+      Wompi (de Bancolombia) es la mejor opción para cobrar suscripciones en COP. Acepta tarjetas, PSE, Nequi, Bancolombia.
+      Comisión: <strong>2.99% + $900 COP por transacción</strong>. Para una suscripción de $249.000 = $8.331 de fee. Aceptable.
+    </p>
+
+    <h3>Por qué Wompi y no Stripe</h3>
+    <table>
+      <thead><tr><th></th><th>Wompi</th><th>Stripe</th></tr></thead>
+      <tbody>
+        <tr><td>Liquida en COP a banco colombiano</td><td><span class="pill green">Sí</span></td><td><span class="pill red">No directo</span></td></tr>
+        <tr><td>PSE / Nequi / Bancolombia</td><td><span class="pill green">Sí</span></td><td><span class="pill red">No</span></td></tr>
+        <tr><td>Tu cliente ve el cobro en COP</td><td><span class="pill green">Sí</span></td><td><span class="pill yellow">Conversión, ve USD</span></td></tr>
+        <tr><td>Comisión total</td><td>2.99% + $900</td><td>3.6% + 30¢ USD</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Setup</h3>
+    <ol class="steps">
+      <li><code>comercios.wompi.co</code> → Crear cuenta. Te piden RUT, cédula, info bancaria. Aprobación: 2-5 días hábiles.</li>
+      <li>Modo Sandbox primero: API keys de prueba en Dashboard → Configuración → API Keys.</li>
+      <li>Pegar en Vercel:
+<pre>WOMPI_PUBLIC_KEY=pub_test_...
+WOMPI_PRIVATE_KEY=prv_test_...
+WOMPI_INTEGRITY_KEY=test_integrity_...</pre>
+      </li>
+      <li>Implementar widget en pricing page:
+<pre>&lt;form action=<span class="s">"https://checkout.wompi.co/p/"</span> method=<span class="s">"GET"</span>&gt;
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"public-key"</span> value={WOMPI_PUBLIC_KEY} /&gt;
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"currency"</span> value=<span class="s">"COP"</span> /&gt;
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"amount-in-cents"</span> value=<span class="s">"24900000"</span> /&gt; <span class="c">// $249.000</span>
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"reference"</span> value={tenantId} /&gt;
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"redirect-url"</span> value=<span class="s">"https://mediflow.co/billing/ok"</span> /&gt;
+  &lt;input type=<span class="s">"hidden"</span> name=<span class="s">"signature:integrity"</span> value={signature} /&gt;
+  &lt;button&gt;Pagar suscripción&lt;/button&gt;
+&lt;/form&gt;</pre>
+      </li>
+      <li>Webhook de eventos: <code>https://mediflow.co/api/wompi/webhook</code> → marca tenant como <code>plan='basico', estado='activo'</code> al recibir <code>transaction.updated</code> con status APPROVED.</li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="label">Pagos recurrentes</span>
+      <p>
+        Wompi <strong>no tiene "subscription billing" automático</strong> como Stripe. Vos guardás el <code>customer_token</code>
+        del primer cobro y disparás el cobro manualmente cada mes desde un cron en Vercel (o nodo Schedule en n8n).
+        Es 30 líneas de código adicionales pero funciona perfecto.
+      </p>
+    </div>
+
+    <!-- ========== 14 CALENDAR ========== -->
+    <h2 id="calendar"><span class="num">14</span>Google Calendar API</h2>
+
+    <ol class="steps">
+      <li><code>console.cloud.google.com</code> → New Project → "MediFlow Calendar".</li>
+      <li>APIs &amp; Services → Library → Buscar "Google Calendar API" → Enable.</li>
+      <li>OAuth consent screen: External, nombre "MediFlow", scopes: <code>calendar.events</code> + <code>calendar.readonly</code>. Add test users (vos + 1-2 doctores piloto). Después en producción → "Publish app".</li>
+      <li>Credentials → Create Credentials → OAuth client ID → Web application. Authorized redirect URIs:
+<pre>https://mediflow.co/api/auth/google/callback
+https://n8n.mediflow.co/rest/oauth2-credential/callback</pre>
+      </li>
+      <li>Guardar Client ID + Client Secret en Vercel y en n8n credentials.</li>
+    </ol>
+
+    <p>Cuando un doctor se onboardea, ve un botón "Conectar Google Calendar". Click → flujo OAuth → guardás el refresh_token en <code>tenants.google_refresh_token</code>. n8n ahora puede crear/leer eventos en su calendario.</p>
+
+    <!-- ========== 15 RESEND ========== -->
+    <h2 id="resend"><span class="num">15</span>Resend (emails transaccionales)</h2>
+
+    <ol class="steps">
+      <li><code>resend.com</code> → Sign up → API Keys → Create.</li>
+      <li>Add domain <code>mediflow.co</code>. Te da 4 registros DNS (SPF, DKIM, DMARC, MX). Pegarlos en tu DNS. Verifica en 5 min.</li>
+      <li>Pegar en Vercel: <code>RESEND_API_KEY=re_...</code></li>
+      <li>Instalar:
+<pre>npm install resend react-email @react-email/components</pre>
+      </li>
+      <li>Crear template <code>emails/welcome.tsx</code>:
+<pre><span class="k">import</span> { Html, Button, Text } <span class="k">from</span> <span class="s">'@react-email/components'</span>;
+
+<span class="k">export default function</span> Welcome({ doctorName }) {
+  <span class="k">return</span> (
+    &lt;Html&gt;
+      &lt;Text&gt;Hola Dr/a {doctorName}, bienvenido a MediFlow.&lt;/Text&gt;
+      &lt;Button href=<span class="s">"https://mediflow.co/onboarding"</span>&gt;Configurar mi consultorio&lt;/Button&gt;
+    &lt;/Html&gt;
+  );
+}</pre>
+      </li>
+      <li>Enviarlo:
+<pre><span class="k">import</span> { Resend } <span class="k">from</span> <span class="s">'resend'</span>;
+<span class="k">import</span> Welcome <span class="k">from</span> <span class="s">'@/emails/welcome'</span>;
+
+<span class="k">const</span> resend = <span class="k">new</span> Resend(process.env.RESEND_API_KEY);
+<span class="k">await</span> resend.emails.send({
+  from: <span class="s">'MediFlow &lt;hola@mediflow.co&gt;'</span>,
+  to: doctor.email,
+  subject: <span class="s">'Bienvenido a MediFlow'</span>,
+  react: Welcome({ doctorName: doctor.nombre })
+});</pre>
+      </li>
+    </ol>
+
+    <!-- ========== 16 SENTRY ========== -->
+    <h2 id="sentry"><span class="num">16</span>Sentry (errores en producción)</h2>
+
+    <ol class="steps">
+      <li><code>sentry.io</code> → Sign up con GitHub → Create Project → Next.js. Free tier: 5K errores/mes.</li>
+      <li>Te da el comando de instalación. Correrlo:
+<pre>npx @sentry/wizard@latest -i nextjs</pre>
+        Esto crea <code>sentry.client.config.ts</code>, <code>sentry.server.config.ts</code> y agrega la DSN al <code>.env</code>.</li>
+      <li>Pegar <code>SENTRY_DSN</code> también en Vercel.</li>
+      <li>Test: tirar un error manual:
+<pre><span class="k">throw new</span> Error(<span class="s">'Sentry test'</span>);</pre>
+        Refresh la página, andá al dashboard de Sentry → debería aparecer el error en &lt;30s con stack trace completo. <span class="pill green">✓</span></li>
+    </ol>
+
+    <!-- ========== 17 FLUJO ========== -->
+    <h2 id="flujo-completo"><span class="num">17</span>Flujo end-to-end real (paciente → cita confirmada)</h2>
+
+    <p>Esto es lo que pasa cuando una paciente nueva escribe "hola, quiero pedir cita":</p>
+
+    <div class="diagram"><span class="accent">[T+0s]    Paciente envía WhatsApp:</span> <span class="s">"Hola, quiero pedir cita para el martes"</span>
+
+<span class="accent">[T+0.1s]  Meta WhatsApp Cloud</span> envía POST a <span class="info">https://mediflow.co/api/whatsapp/webhook</span>
+          payload: { entry: [{ changes: [{ value: { messages: [{...}] } }] }] }
+
+<span class="accent">[T+0.2s]  Next.js webhook</span> retorna 200 OK inmediato (Meta requiere &lt;5s)
+          y forwardea el payload a <span class="info">https://n8n.mediflow.co/webhook/wa-incoming</span>
+
+<span class="accent">[T+0.3s]  n8n: Function node</span> extrae { from: <span class="s">'573001234567'</span>, content: <span class="s">'Hola, quiero pedir cita...'</span> }
+
+<span class="accent">[T+0.4s]  n8n: Postgres (Supabase)</span>
+          → buscar tenant por <span class="s">'whatsapp_phone_number_id'</span> que recibió el mensaje
+          → buscar/crear paciente con whatsapp=573001234567
+          → si paciente nuevo: marcar consent_habeas_data=false (el bot lo pedirá)
+
+<span class="accent">[T+0.5s]  n8n: Postgres</span>
+          → SELECT últimos 10 mensajes del paciente para contexto
+
+<span class="accent">[T+1.5s]  n8n: HTTP Gemini</span>
+          → manda system prompt + historial + mensaje nuevo
+          → Gemini responde:
+             <span class="ok">{ tool_call: "buscar_disponibilidad", args: { dia: "martes" } }</span>
+
+<span class="accent">[T+2.0s]  n8n: Google Calendar</span>
+          → freebusy() del calendario del doctor para el martes
+          → respuesta: <span class="s">[10:00, 10:30, 14:00, 15:00]</span> libres
+
+<span class="accent">[T+2.5s]  n8n: HTTP Gemini (segundo turn)</span>
+          → le mando el resultado de la tool
+          → Gemini responde:
+             <span class="ok">"¡Hola! Tenemos para el martes 5 de mayo: 10am, 10:30am, 2pm o 3pm. ¿Cuál prefieres?"</span>
+
+<span class="accent">[T+2.7s]  n8n: HTTP WhatsApp send</span>
+          → manda el mensaje al paciente
+          → WhatsApp message_id guardado
+
+<span class="accent">[T+2.8s]  n8n: Postgres</span>
+          → INSERT INTO mensajes (in + out)
+
+<span class="accent">[T+2.9s]  Paciente</span> ve la respuesta. <span class="ok">2.9 segundos total. Sin humano.</span>
+
+<span class="accent">[T+15s]   Paciente</span>: <span class="s">"10am perfecto"</span>
+<span class="accent">[T+16s]   Bot</span>: <span class="s">"Perfecto. ¿Me confirmas tu nombre completo y cédula?"</span>
+<span class="accent">[T+45s]   Paciente</span>: <span class="s">"Camila Rodríguez, 1.234.567.890"</span>
+<span class="accent">[T+46s]   Bot</span>: <span class="s">"Listo Camila. Tu cita: martes 5 de mayo a las 10am con Dr. Pérez.</span>
+                <span class="s">Te mando recordatorio 24h antes. ¿Confirmas? (responder SÍ)"</span>
+<span class="accent">[T+50s]   Paciente</span>: <span class="s">"sí"</span>
+<span class="accent">[T+51s]   n8n</span>: ejecuta tool <span class="ok">crear_cita()</span>
+          → INSERT INTO citas (...)
+          → POST Google Calendar → google_event_id guardado
+          → Bot: <span class="s">"✓ Confirmada. Te llega recordatorio el lunes a las 10am."</span>
+
+<span class="accent">[Lun 10:00]</span> Cron de n8n (cada 15min) busca citas en T+24h sin recordatorio enviado
+          → manda template HSM <span class="s">"recordatorio_24h"</span> a la paciente
+          → si responde "sí confirmo" → estado=<span class="s">'confirmada'</span>
+          → si no responde en 6h → re-envía + ofrece reagendar</div>
+
+    <p>Ese flujo, multiplicado por las 30-60 conversaciones que un doctor maneja por semana, es lo que vendés.</p>
+
+    <!-- ========== 18 VARIABLES ========== -->
+    <h2 id="variables-entorno"><span class="num">18</span>Mapa completo de variables de entorno</h2>
+
+    <p>Pegar todas en Vercel → Settings → Environment Variables (Production + Preview + Development):</p>
+
+<pre><span class="c"># Supabase</span>
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...    <span class="err"># SECRET</span>
+
+<span class="c"># WhatsApp Cloud API</span>
+WHATSAPP_VERIFY_TOKEN=mfw_2026_xK9pL2
+WHATSAPP_PHONE_NUMBER_ID=123456789012345
+WHATSAPP_BUSINESS_ACCOUNT_ID=987654321098765
+WHATSAPP_ACCESS_TOKEN=EAAxx...      <span class="err"># SECRET (system user, no expira)</span>
+
+<span class="c"># Google AI / Calendar</span>
+GEMINI_API_KEY=AIzaSy...             <span class="err"># SECRET</span>
+GOOGLE_OAUTH_CLIENT_ID=...apps.googleusercontent.com
+GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-...
+
+<span class="c"># Groq</span>
+GROQ_API_KEY=gsk_...                 <span class="err"># SECRET</span>
+
+<span class="c"># Wompi (sandbox + producción)</span>
+WOMPI_PUBLIC_KEY=pub_test_...
+WOMPI_PRIVATE_KEY=prv_test_...       <span class="err"># SECRET</span>
+WOMPI_INTEGRITY_KEY=test_integrity_  <span class="err"># SECRET</span>
+WOMPI_EVENTS_KEY=events_test_...     <span class="err"># SECRET</span>
+
+<span class="c"># Resend</span>
+RESEND_API_KEY=re_...                <span class="err"># SECRET</span>
+
+<span class="c"># Sentry</span>
+NEXT_PUBLIC_SENTRY_DSN=https://...@o.ingest.sentry.io/...
+SENTRY_AUTH_TOKEN=sntrys_...         <span class="err"># SECRET (para sourcemaps)</span>
+
+<span class="c"># n8n (URL del webhook que tu Next.js llama)</span>
+N8N_WEBHOOK_URL=https://n8n.mediflow.co/webhook/wa-incoming
+N8N_API_KEY=...                      <span class="err"># SECRET (si querés llamar API de n8n desde Next)</span>
+
+<span class="c"># App</span>
+NEXT_PUBLIC_APP_URL=https://mediflow.co
+NEXT_PUBLIC_ENV=production</pre>
+
+    <h3>Para desarrollo local</h3>
+    <p>Crear <code>.env.local</code> con las MISMAS keys pero apuntando a:</p>
+    <ul>
+      <li><strong>Supabase:</strong> mismo proyecto (compartido) o uno separado <code>mediflow-dev</code> (mejor).</li>
+      <li><strong>WhatsApp:</strong> el número de prueba de Meta (gratis, +1 555…).</li>
+      <li><strong>Wompi:</strong> sandbox keys.</li>
+      <li><strong>App URL:</strong> <code>http://localhost:3000</code>.</li>
+    </ul>
+
+    <p>Para que el webhook de WhatsApp llegue a tu localhost: usar <strong>ngrok</strong> (<code>ngrok http 3000</code>) y pegar la URL pública en Meta como webhook temporal mientras desarrollás.</p>
+
+    <!-- ========== 19 ORDEN ========== -->
+    <h2 id="orden-implementacion"><span class="num">19</span>Orden de implementación: 8 semanas</h2>
+
+    <p>De cero a primer doctor pago. Vos solo. Trabajo de 6h/día.</p>
+
+    <table>
+      <thead><tr><th style="width:12%">Semana</th><th>Foco</th><th>Entregables verificables</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Sem 1</strong></td>
+          <td>Cuentas + setup base</td>
+          <td>
+            ✓ GitHub repo creado · ✓ Vercel deploy de Next.js vacío · ✓ Dominio apuntando ·
+            ✓ Supabase project + schema + RLS · ✓ Login con magic link funciona local + prod
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 2</strong></td>
+          <td>Frontend del dashboard doctor</td>
+          <td>
+            ✓ Layout con sidebar · ✓ Página /citas (lista) · ✓ Página /pacientes ·
+            ✓ Página /conversaciones · ✓ Solo el doctor del tenant ve sus datos (testeado con 2 cuentas)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 3</strong></td>
+          <td>WhatsApp + n8n + Gemini</td>
+          <td>
+            ✓ Meta business setup + webhook activo · ✓ n8n deployado en Railway · ✓ Flujo "WhatsApp Inbound" en n8n ·
+            ✓ Bot responde "Hola" a cualquier mensaje · ✓ Gemini conectado y dando respuesta básica
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 4</strong></td>
+          <td>Agendamiento real</td>
+          <td>
+            ✓ Google Calendar OAuth · ✓ Tool calling: <code>buscar_disponibilidad</code> + <code>crear_cita</code> ·
+            ✓ End-to-end: paciente WhatsApp → bot → cita en Calendar + DB · ✓ Recordatorio 24h con cron de n8n
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 5</strong></td>
+          <td>Onboarding doctor + multi-tenant</td>
+          <td>
+            ✓ Página /onboarding: crear tenant, conectar WA, conectar Calendar, definir horarios ·
+            ✓ Probar con 2 tenants ficticios · ✓ Verificar aislamiento (tenant A no ve nada de B)
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 6</strong></td>
+          <td>Pagos + portal admin</td>
+          <td>
+            ✓ Wompi sandbox funcionando · ✓ Página /pricing con checkout · ✓ Webhook activa plan ·
+            ✓ Portal /admin (super_admin): lista de tenants, MRR, churn
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 7</strong></td>
+          <td>Landing + materiales venta</td>
+          <td>
+            ✓ Landing público pulido (versión COP) · ✓ Demo cinemático 60s · ✓ Calculadora ROI ·
+            ✓ Resend templates: bienvenida, confirmación, recordatorio · ✓ FAQ
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sem 8</strong></td>
+          <td>Piloto con 3 doctores</td>
+          <td>
+            ✓ Migrar a Wompi producción · ✓ Onboardear 3 doctores conocidos (gratis 30 días) ·
+            ✓ Monitorear errores en Sentry · ✓ Iterar prompts según conversaciones reales · ✓ Primera factura cobrada
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout ok">
+      <span class="label">Costo total real al final de semana 8</span>
+      <p>
+        $30 USD dominio + $5 Railway × 2 meses + $1 Gemini + $1 WhatsApp = <strong>~$42 USD ≈ $176.000 COP</strong>.
+        Si cobrás $249.000 COP/mes a 3 doctores piloto: <strong>$747.000 COP/mes de ingreso</strong>. Operación rentable desde la semana 9.
+      </p>
+    </div>
+
+    <!-- ========== 20 TROUBLESHOOTING ========== -->
+    <h2 id="troubleshooting"><span class="num">20</span>Errores comunes (y cómo resolverlos)</h2>
+
+    <table>
+      <thead><tr><th style="width:30%">Error / Síntoma</th><th>Causa</th><th>Solución</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>RLS policy violation</code> al hacer SELECT</td>
+          <td>El usuario logueado no tiene <code>tenant_id</code> en la tabla <code>users</code>.</td>
+          <td>Asegurate de que en el flujo de signup/onboarding, después de <code>auth.signUp</code>, hagas un INSERT en <code>users</code> con el tenant correspondiente.</td>
+        </tr>
+        <tr>
+          <td>WhatsApp webhook no recibe POSTs</td>
+          <td>Meta llamó GET para verificar y devolviste algo distinto al challenge.</td>
+          <td>Verificar que tu route <code>/webhook</code> retorne exactamente <code>params.get('hub.challenge')</code> en GET. Mirar Vercel logs.</td>
+        </tr>
+        <tr>
+          <td>Mensajes WhatsApp tardan &gt;10s en responder</td>
+          <td>Cold start de Vercel + Gemini lento + Calendar lento (suma).</td>
+          <td>Mover lógica pesada a n8n (que no tiene cold start). El webhook de Next solo hace forward + 200 OK.</td>
+        </tr>
+        <tr>
+          <td>Gemini responde en inglés</td>
+          <td>System prompt no es lo suficientemente fuerte.</td>
+          <td>Agregar al inicio: <code>"SIEMPRE respondes en español colombiano. Nunca en otro idioma."</code> y temperature: 0.3.</td>
+        </tr>
+        <tr>
+          <td>n8n se cae al ejecutarse muchos flujos</td>
+          <td>Railway plan default tiene 512MB RAM.</td>
+          <td>Subir a $10/mes (1GB) cuando pases 30 mensajes/min. Antes de eso, no es necesario.</td>
+        </tr>
+        <tr>
+          <td>Wompi: <code>signature mismatch</code></td>
+          <td>Cálculo del HMAC de integridad mal hecho.</td>
+          <td>String a firmar: <code>{reference}{amount-in-cents}{currency}{integrity-key}</code>. SHA-256 hex. Sin espacios.</td>
+        </tr>
+        <tr>
+          <td>Vercel build falla con TypeScript errors</td>
+          <td>Errores en código que <code>next dev</code> ignoraba.</td>
+          <td>Correr <code>npm run build</code> localmente antes de pushear. Vercel es estricto. Si urge: <code>typescript.ignoreBuildErrors: true</code> en next.config (deuda técnica).</td>
+        </tr>
+        <tr>
+          <td>Audio de WhatsApp llega pero Groq dice "file empty"</td>
+          <td>El audio de WA viene como <code>media_id</code>, no como URL directa. Hay que descargarlo primero con tu access_token.</td>
+          <td>2 pasos: (1) GET <code>https://graph.facebook.com/v18.0/{media_id}</code> retorna URL. (2) GET esa URL con <code>Authorization: Bearer {token}</code> retorna el binario.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      <p>
+        <strong>Documento operativo · Stack revisado v1.0 · Costos en COP y USD donde corresponde</strong><br>
+        Próxima revisión: cuando llegues a 10 clientes pagos (probablemente toque agregar Redis, ahí actualizo este doc).
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+</body>
+</html>

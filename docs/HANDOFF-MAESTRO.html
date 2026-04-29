@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HANDOFF MAESTRO · MEDACCER</title>
+<style>
+  :root {
+    --bg: #0c0d10;
+    --surface: #15171c;
+    --surface-2: #1a1d24;
+    --border: #2a2e38;
+    --text: #e8e9ec;
+    --text-dim: #9aa0ac;
+    --accent: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a78bfa;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: -apple-system, 'Inter Tight', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans); background: var(--bg); color: var(--text);
+    line-height: 1.55; font-size: 15px;
+    background-image:
+      radial-gradient(circle at 15% 5%, rgba(245,158,11,0.04) 0, transparent 40%),
+      radial-gradient(circle at 85% 50%, rgba(59,130,246,0.04) 0, transparent 40%);
+  }
+  .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  /* SIDEBAR */
+  aside {
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 28px 22px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  @media (max-width: 900px) { aside { position: static; height: auto; } }
+  .brand {
+    font-family: var(--serif); font-size: 24px; font-weight: 400; letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .brand em { color: var(--accent); font-style: italic; }
+  .brand-sub { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 26px; }
+  nav ul { list-style: none; }
+  nav .toc-section {
+    font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em;
+    text-transform: uppercase; margin: 18px 0 6px; padding: 0 6px;
+  }
+  nav a {
+    display: block; padding: 6px 10px; color: var(--text-dim); text-decoration: none;
+    font-size: 13px; border-radius: 6px; transition: all .15s; line-height: 1.4;
+  }
+  nav a:hover { color: var(--text); background: var(--surface-2); }
+  nav .num { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-right: 8px; }
+
+  /* MAIN */
+  main { padding: 56px 64px; max-width: 980px; }
+  @media (max-width: 900px) { main { padding: 32px 24px; } }
+
+  .doc-title {
+    font-family: var(--serif); font-size: 56px; line-height: 1; letter-spacing: -0.025em;
+    font-weight: 400; margin-bottom: 12px;
+  }
+  .doc-title em { color: var(--accent); font-style: italic; }
+  .doc-sub {
+    font-family: var(--serif); font-style: italic; font-size: 22px;
+    color: var(--text-dim); margin-bottom: 8px; line-height: 1.4;
+  }
+  .doc-meta {
+    font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 48px;
+  }
+
+  h2 {
+    font-family: var(--serif); font-size: 38px; line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 400; margin: 64px 0 8px; padding-top: 24px;
+    border-top: 1px solid var(--border); display: flex; align-items: baseline; gap: 18px;
+  }
+  h2 em { color: var(--accent); font-style: italic; }
+  h2 .num {
+    font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  h3 {
+    font-size: 18px; font-weight: 600; margin: 28px 0 8px;
+    letter-spacing: -0.005em;
+  }
+  h4 {
+    font-size: 15px; font-weight: 600; margin: 18px 0 6px;
+    color: var(--text);
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+  p.lead {
+    font-family: var(--serif); font-size: 19px; line-height: 1.5; font-style: italic;
+    color: var(--text-dim); margin-bottom: 24px;
+  }
+  ul, ol { margin: 0 0 18px 22px; }
+  li { margin-bottom: 6px; }
+  strong { color: #fff; font-weight: 600; }
+  em { font-style: italic; color: var(--text); }
+  code {
+    font-family: var(--mono); font-size: 12px; background: var(--surface);
+    padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);
+    color: var(--accent);
+  }
+  pre {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.6; margin: 14px 0; color: #d1d5db;
+  }
+  pre code { background: none; border: 0; padding: 0; color: inherit; }
+  a { color: var(--blue); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: var(--blue); }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+    font-size: 13.5px; background: var(--surface); border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--surface-2); font-weight: 600; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); }
+  tr:last-child td { border-bottom: 0; }
+
+  .callout {
+    border-left: 3px solid var(--accent); background: var(--surface);
+    padding: 18px 22px; margin: 18px 0; border-radius: 0 8px 8px 0;
+  }
+  .callout.green { border-left-color: var(--green); }
+  .callout.red { border-left-color: var(--red); }
+  .callout.blue { border-left-color: var(--blue); }
+  .callout.purple { border-left-color: var(--purple); }
+  .callout-title {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-weight: 600;
+  }
+  .callout.green .callout-title { color: var(--green); }
+  .callout.red .callout-title { color: var(--red); }
+  .callout.blue .callout-title { color: var(--blue); }
+  .callout.purple .callout-title { color: var(--purple); }
+
+  .step-list { counter-reset: step; list-style: none; margin-left: 0; }
+  .step-list > li {
+    counter-increment: step; padding: 18px 22px 18px 70px; position: relative;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .step-list > li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 22px; top: 18px;
+    font-family: var(--mono); font-size: 12px; color: var(--accent); font-weight: 600;
+  }
+
+  .difficulty-bar {
+    display: inline-block; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px;
+    text-transform: uppercase; margin-left: 8px; font-weight: 600;
+  }
+  .difficulty-bar.easy { background: rgba(16,185,129,0.15); color: var(--green); }
+  .difficulty-bar.medium { background: rgba(245,158,11,0.15); color: var(--accent); }
+  .difficulty-bar.hard { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  .cards { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); margin: 16px 0; }
+  @media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px;
+  }
+  .card h4 { margin-top: 0; }
+
+  .kbd {
+    font-family: var(--mono); font-size: 11px; padding: 2px 6px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px;
+  }
+
+  .hr { height: 1px; background: var(--border); margin: 32px 0; }
+
+  .timeline {
+    position: relative; padding-left: 28px; margin: 20px 0;
+    border-left: 1px dashed var(--border);
+  }
+  .timeline-item { position: relative; padding-bottom: 22px; }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -34px; top: 4px;
+    width: 12px; height: 12px; background: var(--bg);
+    border: 2px solid var(--accent); border-radius: 50%;
+  }
+  .timeline-item.done::before { background: var(--green); border-color: var(--green); }
+  .timeline-when {
+    font-family: var(--mono); font-size: 10px; color: var(--accent);
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .timeline-item.done .timeline-when { color: var(--green); }
+
+  /* PROMPT BLOCK - special block for "what to send to next chat" */
+  .prompt-block {
+    background: linear-gradient(180deg, rgba(167,139,250,0.06), rgba(167,139,250,0.02));
+    border: 1px solid rgba(167,139,250,0.3); border-radius: 12px;
+    padding: 24px 28px; margin: 24px 0;
+  }
+  .prompt-block h4 {
+    color: var(--purple); font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .prompt-block pre {
+    background: rgba(0,0,0,0.4); margin: 0; font-size: 12px;
+    user-select: all; -webkit-user-select: all;
+  }
+  .copy-btn {
+    background: var(--purple); color: #fff; border: 0; padding: 8px 16px;
+    border-radius: 6px; font-family: var(--mono); font-size: 11px; font-weight: 600;
+    cursor: pointer; margin-top: 12px; letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .copy-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="brand">M<em>edaccer</em></div>
+    <div class="brand-sub">Handoff maestro · v1</div>
+    <nav>
+      <ul>
+        <li class="toc-section">Empezá acá</li>
+        <li><a href="#estado"><span class="num">00</span>Dónde estás hoy</a></li>
+        <li><a href="#prompt-nuevo-chat"><span class="num">01</span>Para tu próximo chat</a></li>
+
+        <li class="toc-section">Plan ordenado</li>
+        <li><a href="#orden"><span class="num">02</span>Orden por dificultad</a></li>
+        <li><a href="#facil"><span class="num">03</span>Lo fácil (esta semana)</a></li>
+        <li><a href="#medio"><span class="num">04</span>Lo medio (próximos 14 días)</a></li>
+        <li><a href="#dificil"><span class="num">05</span>Lo difícil (mes 2-3)</a></li>
+
+        <li class="toc-section">Integraciones</li>
+        <li><a href="#meta"><span class="num">06</span>Meta · WhatsApp</a></li>
+        <li><a href="#wompi"><span class="num">07</span>Wompi · Pagos</a></li>
+        <li><a href="#supabase"><span class="num">08</span>Supabase · DB</a></li>
+        <li><a href="#vercel"><span class="num">09</span>Vercel · Deploy</a></li>
+        <li><a href="#dominio"><span class="num">10</span>Dominio · DNS</a></li>
+        <li><a href="#otras"><span class="num">11</span>Las otras 8</a></li>
+
+        <li class="toc-section">Landing</li>
+        <li><a href="#auditoria"><span class="num">12</span>Auditoría: muy larga</a></li>
+        <li><a href="#seo"><span class="num">13</span>SEO: cómo aparecer</a></li>
+        <li><a href="#fotos"><span class="num">14</span>Cómo subir fotos</a></li>
+        <li><a href="#animaciones"><span class="num">15</span>Animaciones</a></li>
+
+        <li class="toc-section">Trabajar conmigo</li>
+        <li><a href="#prompts-utiles"><span class="num">16</span>Prompts útiles</a></li>
+        <li><a href="#tokens"><span class="num">17</span>Cómo no quemar tokens</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="doc-title">Handoff <em>maestro</em></div>
+    <div class="doc-sub">Todo lo que necesitás para seguir solo (o con otro chat) — ordenado de fácil a difícil.</div>
+    <div class="doc-meta">Generado 29 abril 2026 · Para Juan / MEDACCER</div>
+
+    <p class="lead">Este documento es tu mapa. No tenés que leerlo todo — buscás la sección que te corresponde según en qué estás trabajando. Cada sección tiene <strong>orden de pasos</strong>, <strong>tiempo estimado</strong> y <strong>qué te bloquea si no lo hacés</strong>.</p>
+
+    <!-- ============================================ -->
+    <h2 id="estado"><span class="num">00</span>Dónde estás hoy</h2>
+
+    <div class="callout green">
+      <div class="callout-title">✓ Lo que ya tenés hecho</div>
+      <ul>
+        <li><strong>RUT actualizado</strong> — NIT 1.000.161.517-7 · CIIU 6201/6202/6311/6209 · Persona Natural · Régimen Ordinario</li>
+        <li><strong>Firma electrónica DIAN</strong> — activa, lista para firmar facturas y declaraciones</li>
+        <li><strong>Software gratuito DIAN asociado</strong> — para facturación electrónica</li>
+        <li><strong>Cuenta Google</strong> medaccer@gmail.com</li>
+        <li><strong>Repo GitHub</strong> juanguerreror356/MEDACCER-Website (landing actual)</li>
+        <li><strong>Tarjeta de crédito internacional</strong> con presupuesto listo</li>
+        <li><strong>Diseño completo</strong> — landing + 18 pantallas del SaaS, todo navegable</li>
+        <li><strong>Código base estructurado</strong> — migraciones SQL, prompts Gemini, webhook WhatsApp</li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">⏳ Lo que está en camino</div>
+      <ul>
+        <li><strong>Set de pruebas DIAN</strong> — ~10 facturas ficticias para habilitar facturación electrónica en producción</li>
+        <li><strong>Resolución de numeración</strong> — pedir rango 1-5000 cuando termine el set</li>
+        <li><strong>Régimen Simple (1.8%)</strong> — agendado para enero 2027</li>
+      </ul>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-title">✗ Lo que falta para empezar a vender</div>
+      <ul>
+        <li><strong>Dominio comprado</strong> (medaccer.co) — bloquea email profesional, Meta Business y todo lo demás</li>
+        <li><strong>Repo nuevo medaccer-app</strong> — separado del landing</li>
+        <li><strong>Cuenta Meta Business + WhatsApp Business API</strong> — bloquea el bot</li>
+        <li><strong>Cuenta Wompi</strong> — bloquea cobrar suscripciones</li>
+        <li><strong>Supabase setup</strong> — bloquea guardar datos</li>
+        <li><strong>Deploy en Vercel</strong> — bloquea que la gente te vea online</li>
+      </ul>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="prompt-nuevo-chat"><span class="num">01</span>Para tu próximo chat <em>(léelo primero)</em></h2>
+
+    <p>Vas a abrir un chat nuevo para no quemar tokens en este. <strong>Copiá-pegá este bloque exacto</strong> al inicio del chat nuevo. Le da contexto en una sola pasada y te ahorra como 50 mensajes de explicación.</p>
+
+    <div class="prompt-block">
+      <h4>📋 Prompt para nuevo chat (copiá-pegá esto)</h4>
+<pre>Hola. Estoy construyendo MEDACCER, un SaaS de WhatsApp con IA para
+consultorios médicos en Colombia. Vengo de otro chat donde ya armamos
+el diseño completo, la guía técnica y los pasos legales.
+
+CONTEXTO RÁPIDO:
+- Soy 1 persona, customer service en Mercado Libre, Bogotá.
+- Salario ~$2M COP/mes. Tengo presupuesto de bootstrapping.
+- Mercado: solo Colombia por ahora (cumplir Ley 1581 + DIAN).
+- Stack decidido: Next.js + Vercel + Supabase + Gemini API + Wompi + Meta WhatsApp Cloud API.
+
+LO QUE YA HICE:
+- RUT actualizado (NIT 1.000.161.517-7, CIIU 6201)
+- Firma electrónica DIAN activa
+- Cuenta Google medaccer@gmail.com
+- Diseño completo (landing + 18 pantallas SaaS) en HTML/JSX
+- Código base con migraciones SQL, prompts Gemini, webhook WhatsApp
+- Repo GitHub: juanguerreror356/MEDACCER-Website (landing pública)
+
+LO QUE NECESITO HACER (en orden):
+1. Comprar dominio medaccer.co
+2. Crear repo nuevo medaccer-app (separado del landing)
+3. Setup Supabase + correr migraciones
+4. Cuenta Meta Business + WhatsApp Business Platform
+5. Cuenta Wompi sandbox + integración pagos
+6. Deploy en Vercel
+7. Conectar Gemini API con prompts médicos
+8. Onboarding del primer doctor real
+
+DOCUMENTACIÓN QUE TENGO (puedo subirla):
+- HANDOFF-MAESTRO.html (este doc)
+- conexion-stack.html (cómo conectar todo)
+- guia-rut.html y asistente-rut.html (RUT, ya hecho)
+- checklist-12-semanas.html (plan operativo)
+- guia-tecnica.html (specs detalladas)
+- mejoras-y-conexion.html (mejoras al landing + ideas)
+- codigo-base/ (carpeta con migrations SQL, lib/ai, app/api/webhooks)
+
+EMPEZÁ POR: [acá decís qué necesitás resolver primero, ej:
+"Ayudame a comprar el dominio paso a paso" o
+"Conectá Supabase con las migraciones"]</pre>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent);this.textContent='✓ Copiado'">Copiar al portapapeles</button>
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-title">💡 Tip para no quemar tokens</div>
+      <p style="margin:0">Cuando subas archivos al chat nuevo, <strong>subí solo los que necesites para esa tarea</strong>. Ej: si vas a configurar Supabase, subí <code>conexion-stack.html</code> + las migraciones (<code>codigo-base/migrations/*.sql</code>). No subas todo el zip de una.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="orden"><span class="num">02</span>Orden por <em>dificultad</em></h2>
+
+    <p class="lead">Si seguís este orden no te trabás. Cada item es un bloqueador del siguiente.</p>
+
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="timeline-when">✓ Hecho hoy</div>
+        <strong>RUT + Firma + Software DIAN</strong>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 1 — 30 min · <span class="difficulty-bar easy">FÁCIL</span></div>
+        <strong>Comprar dominio medaccer.co</strong> en GoDaddy/Namecheap. ~$45 USD/año.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 1 — 15 min · <span class="difficulty-bar easy">FÁCIL</span></div>
+        <strong>Email profesional</strong> hola@medaccer.co con Google Workspace ($6 USD/mes) o Zoho gratis (más limitado).
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 2 — 1h · <span class="difficulty-bar easy">FÁCIL</span></div>
+        <strong>Crear repo medaccer-app</strong> en GitHub (vacío).
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 2 — 1h · <span class="difficulty-bar easy">FÁCIL</span></div>
+        <strong>Cuenta Vercel</strong> con tu GitHub y conectar repo.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 3 — 2h · <span class="difficulty-bar medium">MEDIO</span></div>
+        <strong>Cuenta Supabase</strong> + correr las 5 migraciones SQL.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 4 — 2h · <span class="difficulty-bar medium">MEDIO</span></div>
+        <strong>Meta Business Manager</strong> + verificar negocio (acá necesitás el dominio + email profesional).
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Día 5-7 — 3h · <span class="difficulty-bar medium">MEDIO</span></div>
+        <strong>WhatsApp Business Platform</strong> — número de prueba primero, después tu número de pago.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Sem 2 — 2h · <span class="difficulty-bar medium">MEDIO</span></div>
+        <strong>Cuenta Wompi sandbox</strong> + crear claves test. Probar suscripciones falsas antes de pasar a producción.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Sem 2 — 30 min · <span class="difficulty-bar easy">FÁCIL</span></div>
+        <strong>Cuenta Google AI Studio</strong> → API key Gemini. Gratis al principio.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Sem 3 — 8h · <span class="difficulty-bar hard">DIFÍCIL</span></div>
+        <strong>Conectar el código</strong>: webhook WhatsApp + Gemini con prompts + guardar en Supabase. Acá viene el grueso.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Sem 4 — 4h · <span class="difficulty-bar hard">DIFÍCIL</span></div>
+        <strong>Wompi en producción</strong> + flujo completo de suscripción + webhook de pagos.
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-when">Sem 5-6 — 12h · <span class="difficulty-bar hard">DIFÍCIL</span></div>
+        <strong>Onboarding del primer doctor real</strong> — beta cerrada, vos ahí mirando todo lo que pasa, fixing en vivo.
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="facil"><span class="num">03</span>Lo fácil <em>(esta semana)</em></h2>
+
+    <h3>1. Dominio · medaccer.co</h3>
+    <p>Te recomiendo <strong>Namecheap o GoDaddy</strong>. <code>.co</code> es perfecto para Colombia (señal de mercado local).</p>
+    <ol>
+      <li>Andá a <a href="https://www.namecheap.com" target="_blank">namecheap.com</a> o <a href="https://www.godaddy.com" target="_blank">godaddy.com</a>.</li>
+      <li>Buscás <code>medaccer.co</code> — debería estar libre.</li>
+      <li>Comprás 2-3 años de una vez (~$130 USD). Más barato y no se te vence.</li>
+      <li>Activá <strong>protección WHOIS</strong> (oculta tu dirección). Algunos lo dan gratis.</li>
+      <li>Activá <strong>auto-renew</strong>.</li>
+    </ol>
+
+    <div class="callout">
+      <div class="callout-title">📌 Variantes que también podés comprar</div>
+      <p style="margin:0">Si tenés presupuesto: <code>medaccer.com</code> (~$15 USD), <code>medaccer.app</code> (~$20 USD), <code>medaccer.com.co</code> (~$25 USD). El <code>.co</code> es el principal, los demás los redirigís al <code>.co</code>. Esto evita que un competidor compre la variante.</p>
+    </div>
+
+    <h3>2. Email profesional · hola@medaccer.co</h3>
+    <p>Tres opciones, te recomiendo Google Workspace por integración con Gmail/Calendar/Drive:</p>
+    <table>
+      <thead><tr><th>Opción</th><th>Precio</th><th>Pros</th><th>Contras</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Google Workspace</strong></td><td>$6 USD/mes</td><td>Integra Gmail, Calendar, Drive. Lo conocés.</td><td>Pagás siempre.</td></tr>
+        <tr><td><strong>Zoho Mail</strong></td><td>Gratis hasta 5 usuarios</td><td>Gratis</td><td>Interfaz menos pulida</td></tr>
+        <tr><td><strong>Cloudflare Email</strong></td><td>Gratis (forwarding)</td><td>Solo redirige a tu Gmail personal</td><td>No podés enviar desde @medaccer.co</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3. Repo nuevo · medaccer-app</h3>
+    <ol>
+      <li>En GitHub: <strong>New repository</strong>.</li>
+      <li>Nombre: <code>medaccer-app</code>.</li>
+      <li>Privado (por ahora).</li>
+      <li>Add .gitignore: Node.</li>
+      <li>Add README.</li>
+      <li>Listo. Después en local: <code>git clone</code>.</li>
+    </ol>
+
+    <h3>4. Cuenta Vercel</h3>
+    <ol>
+      <li>Andá a <a href="https://vercel.com/signup" target="_blank">vercel.com/signup</a>.</li>
+      <li>Login con GitHub (con la misma cuenta del repo).</li>
+      <li>Plan <strong>Hobby</strong> (gratis) hasta que tengas usuarios pagando.</li>
+      <li>Importás el repo <code>medaccer-app</code>.</li>
+      <li>Vercel detecta Next.js solo. Click "Deploy".</li>
+    </ol>
+
+    <h3>5. Cuenta Google AI Studio · Gemini</h3>
+    <ol>
+      <li><a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> con tu cuenta medaccer@gmail.com.</li>
+      <li>"Get API key".</li>
+      <li>Guardá la clave en un password manager (Bitwarden gratis).</li>
+      <li>El plan free tiene cuota suficiente para los primeros 50 doctores.</li>
+    </ol>
+
+    <!-- ============================================ -->
+    <h2 id="medio"><span class="num">04</span>Lo medio <em>(próximos 14 días)</em></h2>
+
+    <h3>1. Supabase + migraciones</h3>
+    <p>Acá ya armaste 5 archivos SQL en <code>codigo-base/migrations/</code>. El proceso:</p>
+    <ol>
+      <li><a href="https://supabase.com" target="_blank">supabase.com</a> → "Start your project" → login con GitHub.</li>
+      <li>"New project" → región: <strong>South America (São Paulo)</strong>. Es el más cercano a Colombia.</li>
+      <li>Plan Free al inicio (500MB DB, suficiente para 100 doctores).</li>
+      <li>Anotá <strong>Project URL</strong> y <strong>anon key</strong> y <strong>service_role key</strong>.</li>
+      <li>En el dashboard: <strong>SQL Editor</strong>.</li>
+      <li>Copiás-pegás cada archivo en orden: <code>001_init.sql</code> → run → <code>002_clinical.sql</code> → run → ... hasta <code>005_audit.sql</code>.</li>
+      <li>Verificás en <strong>Table Editor</strong> que estén todas las tablas.</li>
+    </ol>
+
+    <h3>2. Meta Business Manager</h3>
+    <p class="lead">Acá es donde se traba la gente. Te lo cuento sin floridos.</p>
+    <ol>
+      <li><a href="https://business.facebook.com" target="_blank">business.facebook.com</a> → crear cuenta.</li>
+      <li>Datos: nombre legal "Juan Sebastián Guerrero Romero", NIT, dirección, email <code>hola@medaccer.co</code>.</li>
+      <li>Subir RUT en PDF cuando lo pidan (verificación de negocio).</li>
+      <li>Crear <strong>Página de Facebook</strong> "MEDACCER" — es requisito.</li>
+      <li>En la sección WhatsApp: empezar onboarding.</li>
+    </ol>
+    <div class="callout red">
+      <div class="callout-title">⚠ Verificación de negocio</div>
+      <p style="margin:0">Meta puede tardar 1-7 días. Si te rechazan: usás <strong>número de pruebas</strong> (gratis, ilimitado en testing) para empezar a desarrollar mientras se aprueba.</p>
+    </div>
+
+    <h3>3. Wompi sandbox</h3>
+    <ol>
+      <li><a href="https://comercios.wompi.co/registro" target="_blank">comercios.wompi.co/registro</a>.</li>
+      <li>Datos: NIT, RUT (PDF), cuenta bancaria (la podés vincular después), correo, teléfono.</li>
+      <li>Te aprueban en 1-3 días hábiles.</li>
+      <li>Mientras: usás <strong>llaves de prueba</strong> (sandbox) — están desde el día 1.</li>
+      <li>En el dashboard: <strong>Configuración → Llaves API</strong>. Copiás la pública y la privada de sandbox.</li>
+    </ol>
+
+    <h3>4. WhatsApp Business Platform — número de pruebas primero</h3>
+    <p>Meta te da un número de pruebas gratis. Ese sirve para que vos te mandes mensajes a un teléfono que vos mismo configurás. Lo usás para desarrollar.</p>
+    <ol>
+      <li>En Meta Business Manager → <strong>WhatsApp</strong> → <strong>Getting Started</strong>.</li>
+      <li>Aceptar términos.</li>
+      <li>Te aparece un <strong>número de pruebas</strong> ya activo + un <strong>WHATSAPP_BUSINESS_ACCOUNT_ID</strong> + un <strong>PHONE_NUMBER_ID</strong>.</li>
+      <li>Generás un token temporal (24h) en <strong>API Setup</strong>. Para producción después generás uno permanente.</li>
+      <li>Agregás tu número personal como "número receptor" — solo para test, recibís ahí los mensajes que envíes desde la API.</li>
+    </ol>
+
+    <!-- ============================================ -->
+    <h2 id="dificil"><span class="num">05</span>Lo difícil <em>(mes 2-3)</em></h2>
+
+    <h3>1. Conectar webhook WhatsApp</h3>
+    <p>Es la parte que más se traba. Tenés <code>codigo-base/app/api/webhooks/whatsapp/route.ts</code> con el código base. El flujo:</p>
+    <ol>
+      <li>Tu webhook está en Vercel: <code>https://medaccer.co/api/webhooks/whatsapp</code>.</li>
+      <li>Meta necesita verificar el webhook con un token GET. El código ya lo tiene.</li>
+      <li>Variables de entorno en Vercel: <code>WHATSAPP_VERIFY_TOKEN</code> (lo invento yo, ej "medaccer_verify_2026"), <code>WHATSAPP_APP_SECRET</code>, <code>WHATSAPP_TOKEN</code>, <code>PHONE_NUMBER_ID</code>.</li>
+      <li>En Meta Business → WhatsApp → Webhooks → Configurar URL → meter la URL de Vercel + el verify token.</li>
+      <li>Suscribirse a eventos: <code>messages</code>.</li>
+      <li>Mandás mensaje desde tu celular al número de pruebas → Meta hace POST → Vercel recibe → guardás en Supabase.</li>
+    </ol>
+
+    <h3>2. Conectar Gemini con prompts médicos</h3>
+    <p>Los prompts están en <code>codigo-base/lib/ai/system-prompts.ts</code> (uno por especialidad: dental, dermatología, psicología, estética, medicina general). Falta:</p>
+    <ol>
+      <li>Instalar SDK Gemini en el proyecto Next.js: <code>npm i @google/generative-ai</code>.</li>
+      <li>En el webhook de WhatsApp, después de guardar el mensaje: llamar Gemini con el prompt de la especialidad del doctor + el historial reciente del paciente.</li>
+      <li>Gemini responde — texto plano o con <code>tool_calls</code> (definidos en <code>codigo-base/lib/ai/tools.ts</code>: <code>book_appointment</code>, <code>send_quote</code>, <code>handoff_to_human</code>).</li>
+      <li>Si hay tool_call: ejecutarla (insertar cita en Supabase, enviar handoff por email, etc).</li>
+      <li>Mandar la respuesta de vuelta al paciente vía API de WhatsApp (POST a <code>/messages</code>).</li>
+    </ol>
+
+    <h3>3. Wompi en producción + suscripciones</h3>
+    <ol>
+      <li>Cuando Wompi te apruebe el comercio, generás llaves de producción.</li>
+      <li>En el frontend: <strong>Wompi Widget</strong> embebido en la página de checkout.</li>
+      <li>El doctor mete tarjeta → Wompi tokeniza → guarda token en tu DB.</li>
+      <li>Para suscripciones recurrentes: Wompi tiene <strong>Pagos por suscripción</strong>. Configurás un cron (Vercel Cron) que cobra el día 1 de cada mes.</li>
+      <li>Webhook de Wompi: <code>/api/webhooks/wompi</code> recibe eventos de pago aprobado/rechazado.</li>
+      <li>Si pago rechazado 3 veces seguidas: suspender bot del doctor automáticamente.</li>
+    </ol>
+
+    <h3>4. Onboarding del primer doctor real</h3>
+    <div class="callout purple">
+      <div class="callout-title">🎯 Estrategia "1 doctor a la vez"</div>
+      <p style="margin:0">No abras a 50 doctores el primer día. Hacé <strong>onboarding manual con vos al lado</strong> del primero. Sentate con él (o por video), configurás su número de WhatsApp Business, copiás sus servicios y precios al panel, mandás 5 mensajes de prueba. Te toma 4 horas. Pero te ahorra <em>40 horas de soporte después</em> porque viste todos los problemas.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="meta"><span class="num">06</span>Meta · WhatsApp <em>Business Platform</em></h2>
+
+    <p class="lead">Lo más complicado de todo. Pero lo separamos en 3 fases.</p>
+
+    <h3>Fase 1 · Cuenta Meta Business Manager</h3>
+    <ol>
+      <li>Creás cuenta en <a href="https://business.facebook.com" target="_blank">business.facebook.com</a> con <code>hola@medaccer.co</code>.</li>
+      <li>Nombre del negocio: "MEDACCER" o "Juan Sebastián Guerrero Romero" (tu razón social como persona natural).</li>
+      <li>NIT: 1.000.161.517 (sin dígito verificación a veces, prueba con y sin -7).</li>
+      <li>País: Colombia. Moneda: COP. Zona horaria: Bogotá.</li>
+      <li>Agregás un método de pago (la tarjeta internacional). No te van a cobrar nada hasta que mandes mensajes plantilla a producción.</li>
+    </ol>
+
+    <h3>Fase 2 · Verificación de negocio</h3>
+    <p>Meta te pide verificar que sos un negocio real. Subís:</p>
+    <ul>
+      <li><strong>RUT en PDF</strong> (lo descargás de MUISCA).</li>
+      <li><strong>Certificación de cuenta bancaria</strong> a nombre tuyo (lo pedís en el banco).</li>
+      <li>Ellos tardan <strong>1 a 7 días hábiles</strong>. Mientras tanto podés desarrollar con número de pruebas.</li>
+    </ul>
+
+    <h3>Fase 3 · WhatsApp Business Platform (Cloud API)</h3>
+    <p>La Cloud API es <strong>gratis hasta 1000 conversaciones/mes</strong>. Después cobran por mensaje plantilla (~30-50 COP cada uno). Los mensajes que el paciente inicia son gratis durante 24h después de su último mensaje.</p>
+    <ol>
+      <li>En Meta Business Manager → <strong>WhatsApp Accounts</strong> → "Get started".</li>
+      <li>Aceptás términos (los específicos de WhatsApp Business).</li>
+      <li>Configurás <strong>Display Name</strong>: "MEDACCER" (lo van a ver los pacientes en el chat).</li>
+      <li>Subís foto de perfil (logo cuadrado 640x640).</li>
+      <li>Categoría: <strong>Health</strong> o <strong>Medical Services</strong>.</li>
+      <li>Te dan número de pruebas + IDs.</li>
+    </ol>
+
+    <h3>Fase 4 · Tu número real</h3>
+    <ol>
+      <li>Necesitás un número que <strong>no esté en WhatsApp normal</strong>. Si tu número personal lo está: tenés que dar de baja WhatsApp en ese número primero (perdés historial).</li>
+      <li>Recomendación: <strong>compras un número virtual</strong> de Twilio (~$1 USD/mes), o usás un chip nuevo de Movistar/Claro (~$15.000 COP único).</li>
+      <li>En Meta: agregás el número → te llega código por SMS → lo confirmás.</li>
+      <li>El número queda <strong>bloqueado para WhatsApp normal</strong> — solo se usa por la API.</li>
+      <li>Ese número es el que verán los pacientes. Si querés cambiarlo después, es papelera.</li>
+    </ol>
+
+    <h3>Fase 5 · Plantillas (templates)</h3>
+    <p>Para iniciar conversación vos al paciente (no responder, iniciar), Meta exige plantillas pre-aprobadas. Ej: "Hola {{1}}, te recordamos tu cita el {{2}} a las {{3}}". Las creás en Meta Business → WhatsApp → Templates. <strong>Aprobación: 1-24h</strong>.</p>
+
+    <div class="callout blue">
+      <div class="callout-title">💡 Plantillas que vas a usar</div>
+      <ol style="margin:8px 0 0 22px">
+        <li><strong>Recordatorio de cita</strong> (24h antes)</li>
+        <li><strong>Confirmación de cita</strong> (al agendarse)</li>
+        <li><strong>Cobro pendiente</strong> (después de la cita)</li>
+        <li><strong>Recuperación de presupuesto</strong> (3-7 días después de cotizar sin agendar)</li>
+        <li><strong>Encuesta post-consulta</strong> (12h después)</li>
+      </ol>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="wompi"><span class="num">07</span>Wompi · <em>pagos en pesos</em></h2>
+
+    <p class="lead">El mejor para Colombia. Acepta tarjetas, PSE, Nequi, Bancolombia Transfer, Daviplata. Comisión ~2.99% + IVA por transacción.</p>
+
+    <h3>Pasos</h3>
+    <ol>
+      <li><a href="https://comercios.wompi.co/registro" target="_blank">comercios.wompi.co/registro</a> con <code>hola@medaccer.co</code>.</li>
+      <li>Datos del comercio: NIT, RUT (PDF), cuenta bancaria, dirección.</li>
+      <li>Categoría MCC: <strong>Healthcare</strong> o <strong>SaaS</strong>.</li>
+      <li>Modelo de cobro: <strong>Suscripción mensual</strong>.</li>
+      <li>Aprueban en 1-3 días.</li>
+      <li>Mientras: ya tenés llaves de <strong>sandbox</strong> activas. Podés desarrollar con tarjeta de prueba <code>4242 4242 4242 4242</code>.</li>
+    </ol>
+
+    <h3>Integración técnica</h3>
+    <p>Wompi tiene <strong>Widget Drop-in</strong> (el más fácil) o <strong>API directa</strong>:</p>
+    <pre>// Frontend (Next.js)
+&lt;script src="https://checkout.wompi.co/widget.js"&gt;&lt;/script&gt;
+&lt;form&gt;
+  &lt;script
+    src="https://checkout.wompi.co/widget.js"
+    data-render="button"
+    data-public-key="pub_test_..."
+    data-currency="COP"
+    data-amount-in-cents="14900000"
+    data-reference="MEDACCER-DOC-001"
+    data-redirect-url="https://medaccer.co/checkout/exito"&gt;
+  &lt;/script&gt;
+&lt;/form&gt;</pre>
+
+    <h3>Webhook</h3>
+    <p>Wompi te manda POST a <code>/api/webhooks/wompi</code> cuando el pago se aprueba o rechaza. Validás con HMAC-SHA256 (Wompi lo firma). Si aprobado: activás bot del doctor. Si rechazado: mostrás mensaje "intentá otra tarjeta".</p>
+
+    <!-- ============================================ -->
+    <h2 id="supabase"><span class="num">08</span>Supabase · <em>tu base de datos</em></h2>
+
+    <h3>Setup inicial</h3>
+    <ol>
+      <li><a href="https://supabase.com" target="_blank">supabase.com</a> → New project.</li>
+      <li>Nombre: <code>medaccer-prod</code>. Región: São Paulo. DB password: generala fuerte y guardala.</li>
+      <li>Plan Free al inicio. Subís a Pro ($25 USD/mes) cuando tengas 50+ doctores.</li>
+      <li>En "Project Settings → API": copiás <code>URL</code>, <code>anon key</code> (público, va al frontend), <code>service_role key</code> (PRIVADO, solo backend).</li>
+      <li>En Vercel → Project → Settings → Environment Variables: agregás las 3.</li>
+    </ol>
+
+    <h3>Correr migraciones</h3>
+    <ol>
+      <li>Dashboard de Supabase → <strong>SQL Editor</strong> → New query.</li>
+      <li>Abrís <code>codigo-base/migrations/001_init.sql</code> en local.</li>
+      <li>Copiás-pegás todo en SQL Editor → "Run".</li>
+      <li>Si sale error: leelo, corregís, volvés a correr (los <code>CREATE TABLE IF NOT EXISTS</code> hacen que sea idempotente).</li>
+      <li>Repetís con <code>002</code>, <code>003</code>, <code>004</code>, <code>005</code> en ORDEN.</li>
+      <li>Verificás en <strong>Table Editor</strong> que aparezcan 20+ tablas.</li>
+    </ol>
+
+    <h3>Row Level Security (RLS)</h3>
+    <div class="callout red">
+      <div class="callout-title">🔒 Esto es SÚPER importante</div>
+      <p style="margin:0">Sin RLS, cualquier doctor puede ver datos de otros doctores. Las migraciones ya tienen <code>ENABLE ROW LEVEL SECURITY</code> + policies. Verificá en cada tabla que esté el ícono del candado verde. Si falta, no la actives en producción.</p>
+    </div>
+
+    <h3>Storage (para fotos de pacientes)</h3>
+    <ol>
+      <li>En Supabase → Storage → New bucket.</li>
+      <li>Nombre: <code>patient-files</code>. Public: NO (privado).</li>
+      <li>Policies: solo el doctor dueño puede leer/escribir archivos donde el path empiece con su <code>doctor_id</code>.</li>
+    </ol>
+
+    <!-- ============================================ -->
+    <h2 id="vercel"><span class="num">09</span>Vercel · <em>donde vive el código</em></h2>
+
+    <h3>Setup</h3>
+    <ol>
+      <li><a href="https://vercel.com" target="_blank">vercel.com</a> → "Sign up with GitHub".</li>
+      <li>Plan Hobby (gratis). Hasta 100 GB-h compute/mes — suficiente para 200 doctores.</li>
+      <li>"New Project" → import de GitHub → seleccionás <code>medaccer-app</code>.</li>
+      <li>Framework preset: Next.js (autodetectado).</li>
+      <li>Environment Variables: agregás todas (Supabase, Wompi, Meta, Gemini).</li>
+      <li>Deploy. Vercel te da una URL temporal <code>medaccer-app-xxx.vercel.app</code>.</li>
+    </ol>
+
+    <h3>Conectar dominio</h3>
+    <ol>
+      <li>En Vercel → Project → Settings → Domains.</li>
+      <li>Agregás <code>medaccer.co</code> y <code>www.medaccer.co</code>.</li>
+      <li>Vercel te muestra DNS records (CNAME y A).</li>
+      <li>En Namecheap/GoDaddy: panel DNS → agregás los records que pide Vercel.</li>
+      <li>Esperás ~10 minutos. Vercel valida automáticamente.</li>
+      <li>SSL se genera solo (Let's Encrypt).</li>
+    </ol>
+
+    <h3>Variables de entorno (resumen)</h3>
+    <pre># Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...   # privado, no NEXT_PUBLIC_
+
+# Meta WhatsApp
+WHATSAPP_VERIFY_TOKEN=medaccer_verify_2026
+WHATSAPP_APP_SECRET=xxx
+WHATSAPP_TOKEN=EAAxxx...
+WHATSAPP_PHONE_NUMBER_ID=123456789
+
+# Wompi
+WOMPI_PUBLIC_KEY=pub_prod_...
+WOMPI_PRIVATE_KEY=prv_prod_...   # privado
+WOMPI_EVENTS_SECRET=xxx          # privado
+
+# Gemini
+GEMINI_API_KEY=AIza...
+
+# Email (Resend)
+RESEND_API_KEY=re_...</pre>
+
+    <!-- ============================================ -->
+    <h2 id="dominio"><span class="num">10</span>Dominio · <em>DNS</em></h2>
+
+    <h3>Records que vas a configurar</h3>
+    <table>
+      <thead><tr><th>Tipo</th><th>Host</th><th>Valor</th><th>Para qué</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>@</td><td>76.76.21.21</td><td>Apunta medaccer.co a Vercel</td></tr>
+        <tr><td>CNAME</td><td>www</td><td>cname.vercel-dns.com</td><td>www.medaccer.co a Vercel</td></tr>
+        <tr><td>CNAME</td><td>app</td><td>cname.vercel-dns.com</td><td>app.medaccer.co (panel doctor)</td></tr>
+        <tr><td>MX</td><td>@</td><td>varios</td><td>Email entrante (Google Workspace)</td></tr>
+        <tr><td>TXT</td><td>@</td><td>v=spf1 include:_spf.google.com ~all</td><td>SPF (anti-spam email)</td></tr>
+        <tr><td>TXT</td><td>_dmarc</td><td>v=DMARC1; p=none; rua=mailto:hola@...</td><td>DMARC</td></tr>
+        <tr><td>TXT</td><td>@</td><td>verificación dominio Meta (te lo da Meta)</td><td>Meta Business verifica dueño del dominio</td></tr>
+      </tbody>
+    </table>
+
+    <p>Vercel y Google Workspace te dan los valores exactos cuando configurás. <strong>No los inventes.</strong></p>
+
+    <!-- ============================================ -->
+    <h2 id="otras"><span class="num">11</span>Las <em>otras 8</em> integraciones</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h4>Gemini API</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Google AI Studio → API key. Free tier suficiente para empezar (60 req/min).</p>
+        <p style="font-size:12px"><strong>Bloquea:</strong> bot no responde</p>
+      </div>
+      <div class="card">
+        <h4>Resend</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Email transaccional (welcome, recibos, recordatorios). 3000 emails/mes gratis.</p>
+        <p style="font-size:12px"><strong>Bloquea:</strong> emails no se envían</p>
+      </div>
+      <div class="card">
+        <h4>Google Calendar API</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Para sincronizar agenda del doctor. OAuth 2.0. Si el doctor lo conecta, citas aparecen en su Google Cal.</p>
+        <p style="font-size:12px"><strong>Bloquea:</strong> sincronización opcional</p>
+      </div>
+      <div class="card">
+        <h4>n8n (autohospedado o cloud)</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Para integraciones que no exista nativamente. Ej: pacient → MailChimp. Cloud: $20 USD/mes.</p>
+        <p style="font-size:12px"><strong>Opcional al inicio</strong></p>
+      </div>
+      <div class="card">
+        <h4>Sentry</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Para ver errores en producción. Plan free: 5000 errores/mes. Te aviso cuando algo se rompe.</p>
+        <p style="font-size:12px"><strong>Recomendado mes 2</strong></p>
+      </div>
+      <div class="card">
+        <h4>PostHog</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Analytics del producto: qué usan los doctores, dónde se traban. Free hasta 1M eventos/mes.</p>
+        <p style="font-size:12px"><strong>Recomendado mes 2</strong></p>
+      </div>
+      <div class="card">
+        <h4>Clerk (alternativa a Supabase Auth)</h4>
+        <p style="font-size:13px;color:var(--text-dim)">Auth + 2FA + Magic Links muy bien hechos. Free hasta 10000 MAU. Si Supabase Auth te queda corto.</p>
+        <p style="font-size:12px"><strong>Opcional</strong></p>
+      </div>
+      <div class="card">
+        <h4>Cloudflare</h4>
+        <p style="font-size:13px;color:var(--text-dim)">DNS + protección DDoS gratis. Movés DNS de GoDaddy/Namecheap a Cloudflare para más velocidad y seguridad.</p>
+        <p style="font-size:12px"><strong>Recomendado, gratis</strong></p>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="auditoria"><span class="num">12</span>Landing actual: <em>auditoría honesta</em></h2>
+
+    <p class="lead">Sí, la landing es <strong>muy larga</strong>. Te lo confirmo y te digo qué cortar.</p>
+
+    <h3>Diagnóstico</h3>
+    <p>Tu landing tiene <strong>11 secciones largas</strong>: Hero, Especialidades, Problem/Stats, Módulos interactivos, ROI Calculator, Integraciones, Cómo funciona, Early Access, Pricing, FAQ, CTA Final. Suma <strong>3.400px de altura</strong>. Es ~5 scrolls completos.</p>
+
+    <p>Para SaaS B2B colombiano, el largo óptimo es <strong>2.000-2.500px</strong> (3 scrolls). Te paso qué cortar:</p>
+
+    <table>
+      <thead><tr><th>Sección</th><th>Decisión</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hero</strong></td><td>✓ Mantener</td><td>Es el 1er pantallazo. Crítico.</td></tr>
+        <tr><td><strong>Especialidades</strong></td><td>✓ Mantener pero <em>mover dentro del hero</em> como tabs</td><td>Mejora claridad inmediata. Hoy ocupa 600px de su propia sección.</td></tr>
+        <tr><td><strong>Problem/Stats</strong></td><td>⚠ Acortar a 3 stats grandes</td><td>Hoy tiene mucho copy. Suficiente con: "300 mensajes/sem · 28% no-shows · 6h/sem manuales".</td></tr>
+        <tr><td><strong>Módulos interactivos</strong></td><td>✓ Mantener (es tu wow)</td><td>Es lo más original que tenés. Conservalo.</td></tr>
+        <tr><td><strong>ROI Calculator</strong></td><td>⚠ <em>Mover</em> dentro del Pricing</td><td>Hoy compite con Pricing por atención. Junto, refuerza la decisión.</td></tr>
+        <tr><td><strong>Integraciones</strong></td><td>⚠ Acortar a logo strip + "ver todas"</td><td>12 cards es overkill. Mostrar 8 logos como strip + un link.</td></tr>
+        <tr><td><strong>Cómo funciona</strong></td><td>✗ <em>Eliminar</em></td><td>Repite "se conecta a tu WhatsApp" que ya está en Hero. Redundante.</td></tr>
+        <tr><td><strong>Early Access</strong></td><td>⚠ <em>Mover</em> al final como sticky banner</td><td>Hoy interrumpe el flujo. Mejor como banner persistente arriba.</td></tr>
+        <tr><td><strong>Pricing</strong></td><td>✓ Mantener</td><td>Crítico.</td></tr>
+        <tr><td><strong>FAQ</strong></td><td>✓ Mantener pero acortar a 5 preguntas (no 8)</td><td>Las 3 últimas son edge cases.</td></tr>
+        <tr><td><strong>CTA Final</strong></td><td>✓ Mantener</td><td>Crítico.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Resultado: <strong>de 11 secciones a 7 secciones</strong>, ~2.300px. Más fácil de leer, mismo mensaje.</p>
+
+    <div class="callout blue">
+      <div class="callout-title">¿Querés que lo haga?</div>
+      <p style="margin:0">Decime "achicá la landing" y te dejo una versión nueva en <code>landing-v2.jsx</code> sin tocar la actual. Las comparás lado a lado.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="seo"><span class="num">13</span>SEO · <em>cómo aparecer en Google</em></h2>
+
+    <p class="lead">Tu landing actual tiene SEO pobre porque es una SPA con todo el contenido en JSX (Google ve poco). Te paso 8 cambios concretos que disparan ranking.</p>
+
+    <h3>1. Metadatos correctos (impacto: ALTO, esfuerzo: BAJO)</h3>
+    <pre>&lt;title&gt;MEDACCER · WhatsApp con IA para consultorios médicos en Colombia&lt;/title&gt;
+&lt;meta name="description" content="Reduce no-shows del 25% al 8%. Tu bot agenda, cobra y recuerda citas en WhatsApp. 14 días gratis. Cumple Ley 1581."&gt;
+&lt;meta property="og:image" content="https://medaccer.co/og.png"&gt;
+&lt;link rel="canonical" href="https://medaccer.co/"&gt;
+&lt;meta name="geo.region" content="CO"&gt;
+&lt;meta name="geo.placename" content="Bogotá"&gt;</pre>
+
+    <h3>2. Schema.org JSON-LD (impacto: ALTO, esfuerzo: BAJO)</h3>
+    <p>Google muestra estrellas, precios, reviews directo en search. Agregás:</p>
+    <pre>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MEDACCER",
+  "applicationCategory": "MedicalSoftware",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "149000",
+    "priceCurrency": "COP"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "12"
+  }
+}
+&lt;/script&gt;</pre>
+
+    <h3>3. Server-Side Rendering (impacto: ALTO, esfuerzo: MEDIO)</h3>
+    <p>Tu landing actual es JSX en cliente. Google indexa pero no idealmente. <strong>Cuando migrás a Next.js, Server Components renderizan HTML puro</strong> → Google ve todo. Sin tocar nada más, +30% indexación.</p>
+
+    <h3>4. Sitemap + robots.txt (impacto: MEDIO, esfuerzo: BAJO)</h3>
+    <pre># public/robots.txt
+User-agent: *
+Allow: /
+Sitemap: https://medaccer.co/sitemap.xml
+
+# app/sitemap.ts (Next.js auto-genera)
+export default function sitemap() {
+  return [
+    { url: 'https://medaccer.co', lastModified: new Date() },
+    { url: 'https://medaccer.co/precios', lastModified: new Date() },
+    { url: 'https://medaccer.co/blog', lastModified: new Date() },
+  ];
+}</pre>
+
+    <h3>5. Blog SEO (impacto: ALTO, esfuerzo: ALTO)</h3>
+    <p>Es <strong>el motor real</strong> de SEO. Pero tarda. Cada post bien hecho te trae 50-200 visitas/mes a 6 meses. Te recomiendo:</p>
+    <ul>
+      <li><strong>15 posts en 3 meses</strong>, 1.500-2.500 palabras cada uno.</li>
+      <li>Keywords colombianas con menos competencia: <em>"software citas dentista Colombia"</em>, <em>"sistema agenda médica WhatsApp"</em>, <em>"como reducir no-shows consultorio"</em>.</li>
+      <li>Título estructurado: H1 con keyword principal, H2 con sub-temas.</li>
+      <li>Mínimo 3 imágenes por post + alt text.</li>
+      <li>Link interno entre posts.</li>
+    </ul>
+    <p>Cuando estés listo, te genero los 15 títulos + outlines basados en keyword research real.</p>
+
+    <h3>6. Velocidad (impacto: ALTO, esfuerzo: BAJO)</h3>
+    <ul>
+      <li>Imágenes en formato <strong>WebP</strong> (no PNG/JPG). 80% menos peso.</li>
+      <li>Lazy loading: <code>&lt;img loading="lazy"&gt;</code>.</li>
+      <li>Vercel Edge Network entrega tu sitio en &lt;200ms desde Colombia.</li>
+      <li>Test: <a href="https://pagespeed.web.dev/" target="_blank">pagespeed.web.dev</a>. Apuntá a &gt;90 en mobile.</li>
+    </ul>
+
+    <h3>7. Backlinks (impacto: ALTO, esfuerzo: ALTO)</h3>
+    <p>Que otros sitios médicos te enlacen. Estrategia mes 3-6:</p>
+    <ul>
+      <li>Guest posts en blogs de doctores colombianos.</li>
+      <li>Aparecer en directorios: <em>SiigoApps</em>, <em>Capterra LATAM</em>, <em>GetApp Colombia</em>.</li>
+      <li>Notas de prensa cuando tengas 50 doctores.</li>
+    </ul>
+
+    <h3>8. Google Search Console (impacto: MEDIO, esfuerzo: BAJO)</h3>
+    <ol>
+      <li><a href="https://search.google.com/search-console" target="_blank">search.google.com/search-console</a>.</li>
+      <li>Agregás <code>medaccer.co</code> → verificás con TXT record en DNS.</li>
+      <li>Subís el sitemap.</li>
+      <li>Cada semana mirás "Performance": qué keywords te traen tráfico.</li>
+    </ol>
+
+    <!-- ============================================ -->
+    <h2 id="fotos"><span class="num">14</span>Cómo me <em>subís fotos</em></h2>
+
+    <p class="lead">Acá no hay magia: hay 3 formas de pasarme imágenes. Te explico cada una con cuándo usarla.</p>
+
+    <h3>Opción 1 · Pegar en el chat (más fácil)</h3>
+    <p>En el chat, hacés drag & drop de la imagen al textarea, o copiás-pegás (<span class="kbd">Ctrl/Cmd + V</span>). Yo la veo de inmediato y puedo analizarla. <strong>Ideal para</strong>: screenshots, fotos sueltas que solo querés que vea.</p>
+
+    <h3>Opción 2 · Subir al proyecto y referenciar</h3>
+    <p>Si querés que la imagen quede <strong>como asset del sitio</strong> (logo, foto de equipo, screenshot del producto que aparezca en la landing):</p>
+    <ol>
+      <li>En el chat, drag & drop de la imagen — pero pedís: "<em>guardá esta imagen como assets/logo.png</em>".</li>
+      <li>Yo la guardo en la carpeta del proyecto.</li>
+      <li>Después la referencio en el HTML: <code>&lt;img src="assets/logo.png"&gt;</code>.</li>
+    </ol>
+
+    <h3>Opción 3 · Mediante GitHub (cuando ya esté el proyecto vivo)</h3>
+    <p>Cuando el proyecto esté en GitHub:</p>
+    <ol>
+      <li>Subís la imagen al repo en una carpeta <code>public/images/</code>.</li>
+      <li>Me das el link de raw GitHub o me decís el nombre del archivo.</li>
+      <li>Lo uso desde el código.</li>
+    </ol>
+
+    <h3>Tipos de imágenes que te van a hacer falta</h3>
+    <table>
+      <thead><tr><th>Imagen</th><th>Uso</th><th>Tamaño recomendado</th></tr></thead>
+      <tbody>
+        <tr><td>Logo principal</td><td>Header, OG image</td><td>SVG (vector) + PNG 512x512 fallback</td></tr>
+        <tr><td>Logo cuadrado WhatsApp</td><td>Foto de perfil del bot</td><td>PNG 640x640</td></tr>
+        <tr><td>Favicon</td><td>Pestaña navegador</td><td>ICO + PNG 32x32, 192x192, 512x512</td></tr>
+        <tr><td>OG Image (preview redes)</td><td>Cuando comparten link</td><td>PNG 1200x630</td></tr>
+        <tr><td>Hero</td><td>Imagen grande del hero</td><td>WebP 2400x1400 (responsive)</td></tr>
+        <tr><td>Screenshots producto</td><td>Demo en landing</td><td>WebP 1440x900</td></tr>
+        <tr><td>Foto tuya</td><td>Sobre nosotros</td><td>JPG 800x800</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout green">
+      <div class="callout-title">✏️ Si no tenés logo todavía</div>
+      <p style="margin:0">Te puedo armar uno como <strong>placeholder funcional</strong>: SVG con la "M" en serif + acento del color de marca. Te dura hasta que contrates a un diseñador real (o usás Looka, Brandmark, Recraft.ai por ~$20 USD).</p>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="animaciones"><span class="num">15</span>Animaciones · <em>sí, hay manera</em></h2>
+
+    <p class="lead">CSS y SVG dan para muchísimo. Te enumero qué se puede hacer y cuáles agregaríamos primero.</p>
+
+    <h3>Lo que ya tenés</h3>
+    <ul>
+      <li>Cursores parpadeantes en mensajes del bot.</li>
+      <li>Hover con escala en cards y botones.</li>
+      <li>Fade-in al cargar el hero.</li>
+      <li>Tabs de especialidad con transición de color.</li>
+    </ul>
+
+    <h3>Lo que podemos agregar (de menor a mayor esfuerzo)</h3>
+
+    <table>
+      <thead><tr><th>Animación</th><th>Dónde</th><th>Esfuerzo</th><th>Wow</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Scroll reveal</strong> (cards aparecen al scrollear)</td><td>Toda la landing</td><td>Bajo</td><td>★★★</td></tr>
+        <tr><td><strong>Conteo animado</strong> de stats (de 0 a 28%)</td><td>Stats strip</td><td>Bajo</td><td>★★★</td></tr>
+        <tr><td><strong>Marquee infinito</strong> de logos integraciones</td><td>Sección integraciones</td><td>Bajo</td><td>★★</td></tr>
+        <tr><td><strong>Demo bot autoplay</strong> que escribe mensajes solos</td><td>Hero</td><td>Medio</td><td>★★★★★</td></tr>
+        <tr><td><strong>Calculadora ROI con números fluyendo</strong></td><td>Calculadora</td><td>Medio</td><td>★★★★</td></tr>
+        <tr><td><strong>Mockup phone con notif animada</strong></td><td>Hero</td><td>Medio</td><td>★★★★</td></tr>
+        <tr><td><strong>Confetti al click "empezar"</strong></td><td>CTAs</td><td>Bajo</td><td>★★</td></tr>
+        <tr><td><strong>Tipo escribiendo</strong> en el headline (que cambie cada 3s)</td><td>Hero</td><td>Bajo</td><td>★★★</td></tr>
+        <tr><td><strong>Diagrama de flujo animado</strong> "paciente → bot → cita"</td><td>Cómo funciona</td><td>Alto</td><td>★★★★</td></tr>
+        <tr><td><strong>Lottie del logo</strong> hace algo al hover</td><td>Header</td><td>Bajo</td><td>★★</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="callout-title">📌 Mi recomendación</div>
+      <p style="margin:0">Empezamos con <strong>scroll reveal + conteo animado de stats + demo bot autoplay</strong>. Son las 3 que más impacto generan con menos esfuerzo. Si me decís "agregá animaciones" hago esas 3 hoy.</p>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="prompts-utiles"><span class="num">16</span>Prompts <em>útiles</em> para mí</h2>
+
+    <p class="lead">Cuando me pidas cosas, mientras más específico, mejor. Te dejo plantillas que te ahorran ida y vuelta.</p>
+
+    <div class="prompt-block">
+      <h4>🎨 Para diseño</h4>
+<pre>"Necesito [pantalla X]. Tiene que tener [3 cosas concretas]. Inspirate
+en el estilo de [proyecto que ya hicimos / referencia]. Dame [N opciones]
+con variantes en [color / layout / lo que sea]. Tweaks para que pueda
+cambiar [Y, Z]."</pre>
+    </div>
+
+    <div class="prompt-block">
+      <h4>🛠 Para integración técnica</h4>
+<pre>"Conectame [servicio] con el código actual. Asumí que ya tengo:
+- API key en env: VAR_NAME
+- Migración X corrida
+- Webhook en /api/webhooks/Y
+
+Tareas:
+1. ...
+2. ...
+Dame el código + cambios a env + qué probar después."</pre>
+    </div>
+
+    <div class="prompt-block">
+      <h4>📝 Para contenido</h4>
+<pre>"Escribime [tipo de copy] para [contexto]. Tono: [profesional / cercano].
+Audiencia: [doctores en Colombia / pacientes / equipo].
+Largo: [X palabras]. Incluí: [palabras clave / referencias específicas].
+Mantené el estilo de la landing actual (no inventes adjetivos vacíos)."</pre>
+    </div>
+
+    <div class="prompt-block">
+      <h4>🐛 Para debugging</h4>
+<pre>"No funciona [X]. Esperaba [Y]. Estoy haciendo [Z].
+Logs/error: [pegar exacto]
+¿Qué reviso primero?"</pre>
+    </div>
+
+    <!-- ============================================ -->
+    <h2 id="tokens"><span class="num">17</span>Cómo no <em>quemar tokens</em></h2>
+
+    <p class="lead">Vas a abrir un chat nuevo. Para que dure el doble:</p>
+
+    <ol>
+      <li><strong>No subas todo el zip de una.</strong> Subí solo lo que necesites para esa tarea.</li>
+      <li><strong>Empezá con el prompt de contexto</strong> de la sección 01 — me ahorra ~20.000 tokens de explicación.</li>
+      <li><strong>Pedí cosas concretas, no abiertas.</strong> "Hacé X" mejor que "qué te parece esto".</li>
+      <li><strong>Cuando termines una tarea, cerralá explícitamente.</strong> Decí "perfecto, listo, vamos al siguiente". Eso hace que olvide los detalles intermedios y libere contexto.</li>
+      <li><strong>No pidas que recuerde más allá del proyecto activo.</strong> Cada tarea grande, chat nuevo.</li>
+      <li><strong>Si el chat se siente lento o repetitivo</strong> → es señal de que se está llenando el contexto. Cortá y abrí uno nuevo con un nuevo handoff.</li>
+    </ol>
+
+    <div class="callout green">
+      <div class="callout-title">✓ Resumen de un buen flujo de trabajo</div>
+      <p style="margin:0">1 chat = 1 milestone grande. Ej: "configurar Supabase + correr migraciones + verificar conexión". Cuando ese milestone está done, cierro chat, abro uno nuevo con handoff actualizado, sigo con el próximo milestone.</p>
+    </div>
+
+    <div class="hr"></div>
+
+    <p style="text-align:center;color:var(--text-dim);font-size:13px;margin-top:48px;font-style:italic">
+      Documento generado el 29 de abril de 2026 · MEDACCER · Juan Sebastián Guerrero R.
+    </p>
+
+  </main>
+</div>
+
+</body>
+</html>

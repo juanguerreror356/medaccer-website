@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="es" data-accent="cyan" data-intensity="medium" data-typography="editorial">
+<head>
+<meta charset="utf-8"/>
+<!-- Security headers -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+<meta name="robots" content="index, follow">
+<meta name="author" content="MEDACCER">
+<!-- End security -->
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MEDACCER — Automatización con IA para consultorios</title>
+<meta name="description" content="El asistente de WhatsApp con IA que optimiza la agenda de su consultorio, libera horas al mes y genera el RDA de la Resolución 1888. Hecho para consultorios independientes en Colombia."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+<script>
+ window.__tweaks = Object.assign({
+ "accent": "cyan",
+ "intensity": "medium",
+ "typography": "editorial",
+ "grain": true
+ }, JSON.parse(localStorage.getItem('medaccer-tweaks') || '{}'));
+</script>
+<script type="application/json" id="__editmode__">/*EDITMODE-BEGIN*/{
+ "accent": "cyan",
+ "intensity": "high",
+ "typography": "tech",
+ "grain": true
+}/*EDITMODE-END*/</script>
+
+<!-- Canonical & language -->
+<link rel="canonical" href="https://medaccer.com/">
+<link rel="alternate" hreflang="es-co" href="https://medaccer.com/">
+
+<!-- Favicon (inline SVG) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cpath d='M3 13 L8 13 L10 7 L14 19 L16 13 L23 13' stroke='%230F172A' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='23' cy='13' r='1.8' fill='%2322D3EE'/%3E%3C/svg%3E">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MEDACCER">
+<meta property="og:title" content="MEDACCER — Su consultorio, respondiendo solo.">
+<meta property="og:description" content="El asistente de WhatsApp con IA que optimiza la agenda de su consultorio, libera horas al mes y genera el RDA de la Resolución 1888. Para consultorios en Colombia.">
+<meta property="og:url" content="https://medaccer.com/">
+<meta property="og:image" content="https://medaccer.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MEDACCER — Su consultorio, respondiendo solo.">
+<meta property="og:locale" content="es_CO">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MEDACCER — Su consultorio, respondiendo solo.">
+<meta name="twitter:description" content="El asistente de WhatsApp con IA para consultorios independientes. Cumple Resolución 1888.">
+<meta name="twitter:image" content="https://medaccer.com/og-image.png">
+
+<!-- JSON-LD: Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MEDACCER",
+  "url": "https://medaccer.com/",
+  "logo": "https://medaccer.com/og-image.png",
+  "description": "Automatización con IA por WhatsApp para consultorios médicos independientes en Colombia. Cumple la Resolución 1888 del Ministerio de Salud.",
+  "email": "medaccer@gmail.com",
+  "telephone": "+57-302-357-1724",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bogotá",
+    "addressCountry": "CO"
+  },
+  "sameAs": [
+    "https://wa.me/573023571724"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+57-302-357-1724",
+    "contactType": "sales",
+    "areaServed": "CO",
+    "availableLanguage": ["Spanish"]
+  }
+}
+</script>
+
+<!-- JSON-LD: SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MEDACCER",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Asistente con IA por WhatsApp para consultorios médicos. Agenda, recordatorios, reagendamiento y RDA de la Resolución 1888 automatizados.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "COP",
+    "price": "179000",
+    "description": "Plan Esencial mensual"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "12"
+  }
+}
+</script>
+
+<!-- JSON-LD: FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Necesito cambiar mi WhatsApp actual?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. MEDACCER se integra por encima de su WhatsApp Business actual. No cambia de número, no pierde chats existentes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué tan rápido se configura?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "48 horas. Nosotros conectamos WhatsApp, calendario y entrenamos el asistente con las preguntas específicas de su consultorio."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cumple con la Resolución 1888 de 2025?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. MEDACCER genera automáticamente el Resumen Digital de Atención (RDA) con todos los campos exigidos por el Ministerio de Salud."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué pasa con los datos de mis pacientes? (Ley 1581)",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cumplimos la Ley 1581 de 2012 de protección de datos. Los datos están cifrados, no se comparten con terceros y usted conserva control total."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puedo cancelar cuando quiera?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Sin permanencia ni penalidades. Cancela con un mensaje y exportamos todos sus datos al correo que indique."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="bg-grain"></div>
+<div class="scroll-progress" id="scroll-progress"></div>
+<div class="cursor-glow" id="cursor-glow"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- ANNOUNCE -->
+<div class="announce" data-screen-label="00 Announce">
+ <span class="announce-pulse"></span>
+ <span><b>Resolución 1888/2025</b> · Plazo vence el <b>15 abril 2026</b>. ¿Su consultorio está listo para generar el RDA?</span>
+ <a href="#compliance">Ver cumplimiento →</a>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav" data-screen-label="00 Nav">
+ <a href="#" class="logo">
+ <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+ <path d="M3 13 L8 13 L10 7 L14 19 L16 13 L23 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="23" cy="13" r="1.8" fill="currentColor"/>
+ </svg>
+ medaccer
+ </a>
+ <ul class="nav-links">
+ <li><a href="#product">Producto</a></li>
+ <li><a href="#demo">Demo en vivo</a></li>
+ <li><a href="#pricing">Precios</a></li>
+ <li><a href="sobre.html">Sobre</a></li>
+ <li><a href="recursos.html">Blogs</a></li>
+ <li><a href="contacto.html">Contacto</a></li>
+ </ul>
+ <div class="nav-actions">
+ <a href="https://wa.me/573023571724?text=Hola,%20quiero%20probar%20MEDACCER%204%20d%C3%ADas%20gratis" class="btn-cta">Probar 4 días gratis</a>
+ </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" data-screen-label="01 Hero">
+ <canvas id="neural-canvas"></canvas>
+ <div class="hero-inner">
+ <div class="hero-copy">
+ <h1 class="hero-title">
+ Libere <em>26 horas</em><br/>
+ al mes y atienda<br/>
+ más pacientes por
+ <span class="wa-word">
+ <svg class="wa-glyph" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#25D366"/><path d="M27 22.5c-.4-.2-2.4-1.2-2.8-1.3-.4-.2-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.9.1-2.5-1.3-4.2-2.3-5.9-5.2-.4-.8.4-.7 1.2-2.3.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.4 7 6.2 2.6 1.1 3.6 1.2 4.9 1 .8-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.2-.4-.3-.8-.5z" fill="#fff"/></svg>
+ <em>WhatsApp</em>
+ </span>.
+ </h1>
+ <p class="hero-sub">
+ MEDACCER optimiza los procesos de su consultorio. Su equipo deja de responder WhatsApp uno por uno y recupera horas para lo que de verdad importa: <b>atender pacientes</b>.
+ </p>
+ <div class="hero-cta">
+ <a href="https://wa.me/573023571724?text=Hola,%20quiero%20probar%20MEDACCER%204%20d%C3%ADas%20gratis" class="btn-primary btn-primary-lg">Probar 4 días gratis <span style="font-size:20px">→</span></a>
+ <a href="#demo" class="btn-secondary btn-secondary-light"><span class="play-ico"></span> Ver demo en vivo</a>
+ </div>
+ <div class="hero-trust">
+ <span class="trust-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sin permanencia</span>
+ <span class="sep">·</span>
+ <span class="trust-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Setup en 48h</span>
+ <span class="sep">·</span>
+ <span class="trust-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> HL7 FHIR · Ley 1581</span>
+ </div>
+ </div>
+
+ <div class="hero-stage" id="hero-stage">
+ <div class="stage-scene" id="stage-scene">
+ <div class="orbit orbit-1"></div>
+ <div class="orbit orbit-2"></div>
+ <div class="orbit orbit-3"></div>
+
+ <!-- Floating 3D-ish objects -->
+ <div class="float-obj obj-heart" style="--x:-230px;--y:-180px;--d:0s">
+ <svg viewBox="0 0 70 70" fill="none"><defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#F43F5E"/><stop offset="1" stop-color="#DB2777"/></linearGradient></defs><path d="M35 58C20 48 8 38 8 24c0-8 6-14 14-14 5 0 10 3 13 8 3-5 8-8 13-8 8 0 14 6 14 14 0 14-12 24-27 34z" fill="url(#g1)" stroke="rgba(255,255,255,.3)" stroke-width="1"/><path d="M18 28h8l3-6 4 12 3-6h16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+ </div>
+ <div class="float-obj obj-cal" style="--x:260px;--y:-210px;--d:1s">
+ <svg viewBox="0 0 70 70" fill="none"><defs><linearGradient id="g2" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#06B6D4"/><stop offset="1" stop-color="#0891B2"/></linearGradient></defs><rect x="10" y="14" width="50" height="46" rx="6" fill="url(#g2)" stroke="rgba(255,255,255,.3)"/><rect x="10" y="14" width="50" height="12" rx="6" fill="rgba(0,0,0,.2)"/><rect x="20" y="8" width="4" height="12" rx="2" fill="#fff"/><rect x="46" y="8" width="4" height="12" rx="2" fill="#fff"/><circle cx="23" cy="40" r="3" fill="#fff"/><circle cx="35" cy="40" r="3" fill="#fff" opacity=".5"/><circle cx="47" cy="40" r="3" fill="#fff" opacity=".5"/><circle cx="23" cy="50" r="3" fill="#fff" opacity=".5"/><circle cx="35" cy="50" r="3" fill="#F59E0B"/><circle cx="47" cy="50" r="3" fill="#fff" opacity=".5"/></svg>
+ </div>
+ <div class="float-obj obj-doc" style="--x:-250px;--y:180px;--d:2s">
+ <svg viewBox="0 0 70 70" fill="none"><defs><linearGradient id="g3" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#F8FAFC"/><stop offset="1" stop-color="#CBD5E1"/></linearGradient></defs><path d="M14 10 L46 10 L58 22 L58 60 L14 60 Z" fill="url(#g3)" stroke="rgba(0,0,0,.15)"/><path d="M46 10 V22 H58" stroke="rgba(0,0,0,.2)" fill="none"/><rect x="20" y="32" width="30" height="2" fill="#64748B"/><rect x="20" y="38" width="24" height="2" fill="#64748B"/><rect x="20" y="44" width="28" height="2" fill="#64748B"/><circle cx="48" cy="52" r="6" fill="#10B981"/><path d="M45 52 l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+ </div>
+ <div class="float-obj obj-pill" style="--x:230px;--y:190px;--d:1.5s">
+ <svg viewBox="0 0 70 70" fill="none"><defs><linearGradient id="g4" x1="0" x2="1" y1="0" y2="0"><stop offset=".5" stop-color="#8B5CF6"/><stop offset=".5" stop-color="#C4B5FD"/></linearGradient></defs><rect x="10" y="26" width="50" height="18" rx="9" fill="url(#g4)" stroke="rgba(255,255,255,.3)" transform="rotate(-20 35 35)"/></svg>
+ </div>
+
+ <!-- Data cards -->
+ <div class="data-card dc-1">
+ <div class="dc-ico dc-ico-green"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+ <div><div class="dc-num">127</div><div class="dc-lbl">citas agendadas hoy</div></div>
+ </div>
+ <div class="data-card dc-3">
+ <div class="dc-ico dc-ico-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h3l2-5 3 10 2-5h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+ <div><div class="dc-num">+26<span style="font-size:14px">h</span></div><div class="dc-lbl">por semana</div></div>
+ </div>
+ </div>
+ <div class="data-card dc-2">
+ <div class="dc-pulse">
+ <span></span>
+ <svg class="pulse-line" viewBox="0 0 36 24" fill="none"><path d="M0 12 L8 12 L10 6 L14 18 L18 12 L22 12 L24 8 L28 16 L32 12 L36 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+ </div>
+ <div><div class="dc-num">+26<span style="font-size:14px">h</span></div><div class="dc-lbl">recuperadas / mes</div></div>
+ </div>
+ <div class="data-card dc-3">
+ <div class="dc-ico dc-ico-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+ <div><div class="dc-num">+<span data-count="42" data-suffix="%">42%</span></div><div class="dc-lbl">ingresos/mes</div></div>
+ </div>
+
+ <!-- PHONE -->
+ <div class="phone" id="phone">
+ <div class="phone-shadow"></div>
+ <div class="phone-frame">
+ <div class="phone-notch"></div>
+ <div class="phone-screen">
+ <div class="wa-bg"></div>
+ <div class="wa-head">
+ <span class="wa-back">‹</span>
+ <div class="wa-avatar">MA<span class="wa-online"></span></div>
+ <div class="wa-meta">
+ <div class="wa-name">MEDACCER Asistente <svg width="14" height="14" viewBox="0 0 14 14" fill="#06B6D4"><path d="M7 0L8.5 3.5L12 4L9.5 6.5L10 10L7 8.5L4 10L4.5 6.5L2 4L5.5 3.5Z"/></svg></div>
+ <div class="wa-status"><span class="typing-dots"><i></i><i></i><i></i></span>en línea</div>
+ </div>
+ <svg class="wa-icons" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+ </div>
+ <div class="chat-body" id="hero-chat"></div>
+ <div class="wa-input">
+ <div class="wa-input-box">Escriba un mensaje</div>
+ <div class="wa-input-mic">
+ <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a3 3 0 00-3 3v4a3 3 0 006 0V4a3 3 0 00-3-3zM3 8a5 5 0 0010 0M8 13v2" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="scroll-hint">
+ <span>Descubra más</span>
+ <div class="scroll-hint-line"></div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section class="specialties" data-screen-label="02 Specialties">
+ <div class="spec-intro">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> Para qué especialidades</span>
+ <h3>Diseñado para consultorios independientes<br/><em>de salud</em> en Colombia.</h3>
+ <p>MEDACCER se adapta al vocabulario, los tiempos y los procedimientos típicos de cada especialidad. Si su consultorio agenda pacientes por WhatsApp, funciona para usted.</p>
+ </div>
+ <div class="spec-marquee"><div class="spec-track">
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2c-3 0-5 2-5 5v4c0 4 2 7 5 7s5-3 5-7V7c0-3-2-5-5-5z" stroke="currentColor" stroke-width="1.5"/><path d="M8 8h4M8 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Odontología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 18c1-4 4-5 6-5s5 1 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Medicina estética</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3a3 3 0 00-3 3v2a3 3 0 106 0V6a3 3 0 00-3-3z" stroke="currentColor" stroke-width="1.5"/><path d="M10 11v3M6 17h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Psicología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 7v6M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Medicina general</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Dermatología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 3v14M14 3v14M3 8h14M3 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Fisioterapia</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Nutrición</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2c-3 0-5 2-5 5v4c0 4 2 7 5 7s5-3 5-7V7c0-3-2-5-5-5z" stroke="currentColor" stroke-width="1.5"/><path d="M8 8h4M8 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Odontología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M4 18c1-4 4-5 6-5s5 1 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Medicina estética</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3a3 3 0 00-3 3v2a3 3 0 106 0V6a3 3 0 00-3-3z" stroke="currentColor" stroke-width="1.5"/><path d="M10 11v3M6 17h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Psicología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 7v6M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Medicina general</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Dermatología</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 3v14M14 3v14M3 8h14M3 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Fisioterapia</span>
+ <span class="spec"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Nutrición</span>
+ </div></div>
+</section>
+
+
+<!-- METRICS (bento) -->
+<section class="metrics" id="metrics" data-screen-label="03 Metrics">
+ <div class="section-head">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> Impacto real</span>
+ <h2 class="section-title">Lo que pasa cuando <em>la IA</em><br/>atiende su WhatsApp.</h2>
+ <p class="section-sub">Estas son proyecciones típicas según el volumen de un consultorio promedio. No son promesas — los resultados reales dependen de cada práctica.</p>
+ </div>
+
+ <div class="bento">
+ <!-- HERO metric -->
+ <div class="bento-card bento-hero">
+ <span class="bento-tag">Proyección de tiempo</span>
+ <div class="big-num"><span data-count="26" data-suffix="h">26h</span></div>
+ <h3>Recuperadas por semana*</h3>
+ <p>El equivalente a <b style="color:var(--green)">3 días laborales al mes</b> que hoy se van respondiendo WhatsApp uno por uno. MEDACCER responde, agenda y recuerda por usted — su equipo se enfoca en el paciente.</p>
+ <div class="bar-compare">
+ <div class="bar-row">
+ <span>Hoy — respondiendo manual</span>
+ <div class="bar-track"><div class="bar-fill bar-before" style="--w:85%"></div></div>
+ <span class="bar-val">~32h</span>
+ </div>
+ <div class="bar-row">
+ <span>Con MEDACCER</span>
+ <div class="bar-track"><div class="bar-fill bar-after" style="--w:18%"></div></div>
+ <span class="bar-val bar-val-good">~6h</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- small metrics -->
+ <div class="bento-card">
+ <div class="bento-ico">
+ <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M10 5v5l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+ </div>
+ <div class="big-num" style="font-size:52px"><span data-count="5" data-suffix="s">5s</span></div>
+ <h3>Tiempo de respuesta</h3>
+ <p>Un paciente pregunta, el bot responde. Sin esperas, sin horarios de oficina.</p>
+ </div>
+
+ <div class="bento-card">
+ <div class="bento-ico bento-ico-green">
+ <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 17V9l4-2 3 3 4-5 3 2v10" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+ </div>
+ <div class="big-num" style="font-size:52px">24 / 7</div>
+ <h3>Disponibilidad</h3>
+ <p>Su consultorio atiende también fuera de horario — noches, fines de semana y festivos. Sin contratar más personal.</p>
+ </div>
+
+ <!-- wide row -->
+ <div class="bento-card bento-wide">
+ <div class="bento-wide-l">
+ <div class="big-num" style="font-size:56px"><span data-count="95" data-suffix="%">95%</span></div>
+ <h3>Tasa de apertura</h3>
+ </div>
+ <p style="font-size:15px;line-height:1.6">WhatsApp abre <b style="color:var(--text)">95–98%</b> de los mensajes — el doble que el SMS y 5× que el email. Lo mejor: sus pacientes ya lo usan todos los días.
+ <span class="wide-badges"><span>WhatsApp 95%</span><span>SMS 45%</span><span>Email 18%</span></span>
+ </p>
+ </div>
+
+ <div class="bento-card bento-wide">
+ <div class="bento-wide-l">
+ <div class="big-num" style="font-size:56px"><span data-count="48" data-suffix="h">48h</span></div>
+ <h3>Setup completo</h3>
+ </div>
+ <p style="font-size:15px;line-height:1.6">Sin migrar datos, sin cambiar software. Nos conectamos por encima de su <b style="color:var(--text)">WhatsApp Business</b> y su <b style="color:var(--text)">calendario existente</b>. Su equipo sigue trabajando exactamente igual.
+ <span class="wide-badges"><span>WhatsApp Business</span><span>Google Calendar</span></span>
+ </p>
+ </div>
+ </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo" id="demo" data-screen-label="04 Demo">
+ <div class="section-head">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> Demo interactiva</span>
+ <h2 class="section-title">Vea <em>cómo piensa</em> el asistente.</h2>
+ <p class="section-sub">Elija un escenario. A la izquierda, lo que ve el paciente. A la derecha, lo que hace MEDACCER por detrás.</p>
+ </div>
+
+ <div class="demo-shell">
+ <div class="demo-tabs">
+ <button class="demo-tab active" data-scenario="schedule">📅 Agendar cita</button>
+ <button class="demo-tab" data-scenario="confused">🤔 Paciente confundido</button>
+ <button class="demo-tab" data-scenario="reminder">⏰ Recordatorio</button>
+ <button class="demo-tab" data-scenario="reschedule">🔄 Reagendar</button>
+ <button class="demo-tab" data-scenario="rda">🎙️ Generar RDA</button>
+ <button class="demo-tab" data-scenario="emergency">🚨 Urgencia</button>
+ <button class="demo-tab" data-scenario="review">⭐ Reseña Google</button>
+ </div>
+
+ <div class="demo-controls">
+   <button class="demo-ctrl" id="demo-btn-pause" title="Pausar/Reanudar demo">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>
+     <span class="ctrl-lbl">Pausar</span>
+   </button>
+   <button class="demo-ctrl" id="demo-btn-replay" title="Reiniciar escenario">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+     <span class="ctrl-lbl">Reiniciar</span>
+   </button>
+   <button class="demo-ctrl" id="demo-btn-speed" title="Velocidad">
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M13 3l-8 10h6l-1 8 8-10h-6l1-8z" fill="currentColor"/></svg>
+     <span class="ctrl-lbl">1x</span>
+   </button>
+ </div>
+
+ <div class="demo-stage">
+ <div class="demo-phone">
+ <div class="phone-frame big">
+ <div class="phone-notch"></div>
+ <div class="phone-screen">
+ <div class="wa-bg"></div>
+ <div class="wa-head">
+ <span class="wa-back">‹</span>
+ <div class="wa-avatar">MA<span class="wa-online"></span></div>
+ <div class="wa-meta">
+ <div class="wa-name">Consultorio MEDACCER</div>
+ <div class="wa-status"><span class="typing-dots"><i></i><i></i><i></i></span>asistente IA en línea</div>
+ </div>
+ </div>
+ <div class="chat-body" id="demo-chat"></div>
+ <div class="wa-input">
+ <div class="wa-input-box">Escriba un mensaje</div>
+ <div class="wa-input-mic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a3 3 0 00-3 3v4a3 3 0 006 0V4a3 3 0 00-3-3zM3 8a5 5 0 0010 0M8 13v2" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="demo-side">
+ <div class="demo-side-head">
+ <span class="demo-side-pulse"></span>
+ <span>Proceso en tiempo real</span>
+ </div>
+ <div class="demo-side-body">
+ <div class="backstage-step" data-step="0">
+ <span class="bs-tick"><span class="bs-num">1</span></span>
+ <div class="bs-txt"><b>Recibe e interpreta</b><span>Lee el mensaje del paciente y entiende la intención real — incluso cuando está mal escrito o confuso.</span></div>
+ </div>
+ <div class="backstage-step" data-step="1">
+ <span class="bs-tick"><span class="bs-num">2</span></span>
+ <div class="bs-txt"><b>Consulta sus sistemas</b><span>Revisa agenda, historial del paciente y reglas del consultorio — todo en segundos.</span></div>
+ </div>
+ <div class="backstage-step" data-step="2">
+ <span class="bs-tick"><span class="bs-num">3</span></span>
+ <div class="bs-txt"><b>Resuelve o escala</b><span>Ejecuta la acción cuando puede, o escala al equipo humano cuando detecta urgencia o duda.</span></div>
+ </div>
+ <div class="backstage-step" data-step="3">
+ <span class="bs-tick"><span class="bs-num">4</span></span>
+ <div class="bs-txt"><b>Deja registro</b><span>Sincroniza calendario, actualiza el dashboard y cumple la Resolución 1888 automáticamente.</span></div>
+ </div>
+ </div>
+ <div class="demo-side-footer">
+ <div class="side-stat"><span class="side-stat-lbl">Tiempo de respuesta</span><span class="side-stat-val">instantáneo</span></div>
+ <div class="side-stat"><span class="side-stat-lbl">Atención</span><span class="side-stat-val">24 / 7</span></div>
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- PRODUCT -->
+<section class="product" id="product" data-screen-label="05 Product">
+ <div class="section-head">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> Qué hace MEDACCER</span>
+ <h2 class="section-title">Siete funciones, <em>un solo WhatsApp.</em></h2>
+ <p class="section-sub">Cada funcionalidad diseñada para un dolor específico del consultorio independiente.</p>
+ </div>
+
+ <div class="prod-grid">
+ <!-- BIG card -->
+ <div class="prod-card prod-big">
+ <div class="prod-head">
+ <div class="prod-ico prod-ico-cyan">
+ <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 8a5 5 0 015-5h8a5 5 0 015 5v5a5 5 0 01-5 5H9l-4 3v-3a5 5 0 01-2-5V8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 11h.01M12 11h.01M16 11h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+ </div>
+ <div>
+ <h3>Chatbot con IA multimedia</h3>
+ <p>Texto, audio, imágenes y PDFs. El paciente puede escribir, enviar nota de voz o foto; el asistente entiende y responde en segundos.</p>
+ </div>
+ </div>
+ <div class="prod-visual">
+ <div class="mini-chat-glow"></div>
+ <div class="mini-chat">
+ <div class="mc-bubble mc-in">🎙️ <i style="color:#25D366">Audio 0:12</i> — "Me duele aquí arriba, tengo fiebre"</div>
+ <div class="mc-bubble mc-out">Entiendo, por el audio detecto molestia + fiebre. ¿Le gustaría ver hoy al Dr.?</div>
+ <div class="mc-bubble mc-in">📎 radiografía_panoramica.jpg</div>
+ <div class="mc-bubble mc-out"><b>Análisis preliminar:</b> posible caries en molar superior derecho. Se la dejo guardada al Dr.</div>
+ </div>
+ </div>
+ <div class="prod-feats" style="margin-top:20px"><span>Texto</span><span>Voz</span><span>Imágenes</span><span>PDF</span><span>Español / Inglés</span></div>
+ </div>
+
+ <!-- small cards -->
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-green"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 9h16M8 2v4M14 2v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="13" r="2" fill="currentColor"/></svg></div>
+ <h3>Agenda 24/7</h3>
+ <p>Sincroniza con su calendario. El paciente elige horario disponible en segundos — sin llamar, sin esperar.</p>
+ <div class="prod-feats"><span>Google Calendar</span></div>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-amber"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v8l5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+ <h3>Recordatorios</h3>
+ <p>24h antes. 2h antes. Pide confirmación. Libera espacio si cancelan y avisa a la lista de espera.</p>
+ <div class="timeline-mini">
+ <span class="tm-dot active"></span>
+ <div class="tm-line"></div>
+ <span class="tm-dot active"></span>
+ <div class="tm-line"></div>
+ <span class="tm-dot"></span>
+ <div class="tm-labels"><span>24h</span><span>2h</span><span>Cita</span></div>
+ </div>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-pink"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3a8 8 0 100 16 8 8 0 000-16z" stroke="currentColor" stroke-width="1.5"/><path d="M2 11h3l2-4 3 8 2-6 2 4h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+ <h3>Triage inteligente</h3>
+ <p>Detecta urgencias y escala al doctor. Clasifica por prioridad clínica automáticamente.</p>
+ <div class="prod-feats"><span>Escalado &lt;2 min</span></div>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-cyan"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h10l4 4v10H4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 4v4h4M8 12h6M8 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+ <h3>RDA automático</h3>
+ <p>Dicta por voz tras la consulta. MEDACCER genera el Resumen Digital de Atención en el formato oficial y lo envía al Ministerio.</p>
+ <span class="rda-badge"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Res. 1888/2025</span>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-green"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 17V9l4-2 3 3 4-5 3 2v10H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+ <h3>Dashboard rentabilidad</h3>
+ <p>Ocupación, ingresos, horas recuperadas, ticket promedio. Resumen accionable por WhatsApp cada lunes.</p>
+ <div class="mini-chart">
+ <div class="mc-bar" style="--h:40%"></div>
+ <div class="mc-bar" style="--h:60%"></div>
+ <div class="mc-bar" style="--h:55%"></div>
+ <div class="mc-bar" style="--h:80%"></div>
+ <div class="mc-bar active" style="--h:95%"></div>
+ </div>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-amber"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3l2.5 5 5.5 1-4 4 1 5.5-5-2.5L6 18l1-5.5-4-4 5.5-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+ <h3>Gestor de reseñas</h3>
+ <p>Pide reseña post-consulta por WhatsApp. Si fue excelente → Google Maps. Si no → feedback privado.</p>
+ <div class="stars"><span></span><span></span><span></span><span></span><span></span><b>4.9</b></div>
+ </div>
+
+ <div class="prod-card">
+ <div class="prod-ico prod-ico-pink"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2v18M2 11h18M5 5l12 12M5 17L17 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/><circle cx="11" cy="11" r="4" fill="currentColor"/></svg></div>
+ <h3>Seguimiento post-op</h3>
+ <p>Chequea al paciente a las 24h, 7d y 30d. Detecta complicaciones y escala al doctor si hay señales.</p>
+ <div class="follow-pills"><span>24h</span><span>7d</span><span>30d</span></div>
+ </div>
+ </div>
+</section>
+
+<!-- COMPLIANCE / RDA -->
+<section class="compliance" id="compliance" data-screen-label="06 Compliance">
+ <div class="compliance-inner">
+ <div class="comp-copy">
+ <span class="eyebrow eyebrow-amber"><span class="eyebrow-dot"></span> Urgencia regulatoria</span>
+ <h2 class="section-title">El <em>RDA</em> es obligatorio.<br/>Y el plazo casi se agota.</h2>
+ <p class="section-sub">La Resolución 1888 de 2025 obliga a todos los prestadores de salud a generar y enviar el Resumen Digital de Atención en formato HL7 FHIR. Incumplir acarrea multas de la SuperSalud y suspensión de servicios.</p>
+
+ <div class="comp-facts">
+ <div class="comp-fact">
+ <div class="comp-fact-num">15 <span>ABR<br/>2026</span></div>
+ <div><b>Fecha límite</b><span>6 meses desde el 15 octubre 2025</span></div>
+ </div>
+ <div class="comp-fact">
+ <div class="comp-fact-num">100<span>%</span></div>
+ <div><b>Prestadores obligados</b><span>IPS, EPS, ARL, aseguradoras y consultorios privados</span></div>
+ </div>
+ <div class="comp-fact">
+ <div class="comp-fact-num">+<span data-count="500" data-prefix="" data-suffix="M" style="font-style:italic">500M</span></div>
+ <div><b>Multas posibles</b><span>COP por incumplimiento reiterado según SuperSalud</span></div>
+ </div>
+ </div>
+
+ <a href="#cta" class="btn-primary">Automatizar mi RDA ahora <span style="font-size:20px">→</span></a>
+ </div>
+
+ <div class="rda-stage">
+ <div class="rda-paper">
+ <div class="rda-paper-head">
+ <svg class="rda-paper-seal" viewBox="0 0 52 52" fill="none"><circle cx="26" cy="26" r="22" stroke="currentColor" stroke-width="1.5"/><circle cx="26" cy="26" r="17" stroke="currentColor" stroke-width="1"/><path d="M26 10 L30 22 L42 22 L32 30 L36 42 L26 34 L16 42 L20 30 L10 22 L22 22 Z" fill="currentColor"/></svg>
+ <div><div class="rda-paper-t1">Resumen Digital<br/>de Atención</div><div class="rda-paper-t2">MINSALUD · HL7 FHIR R4</div></div>
+ </div>
+ <div class="rda-rows">
+ <div class="rda-row"><span>Paciente</span><b>María L. González</b></div>
+ <div class="rda-row"><span>Documento</span><b>CC 52.***.***</b></div>
+ <div class="rda-row"><span>Fecha atención</span><b>18 abr 2026</b></div>
+ <div class="rda-row"><span>Procedimiento</span><b>Profilaxis (K03.6)</b></div>
+ <div class="rda-row"><span>Diagnóstico</span><b>Sin hallazgos</b></div>
+ <div class="rda-row"><span>Control</span><b>6 meses</b></div>
+ </div>
+ <div class="rda-check">
+ <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+ <circle class="rda-circle" cx="24" cy="24" r="20" stroke="#10B981" stroke-width="2" fill="none"/>
+ <path class="rda-tick" d="M14 24 l7 7 l13 -14" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+ </svg>
+ <b>Enviado a SISPRO</b>
+ <span>ID: RDA-2026-0418-7291</span>
+ </div>
+ </div>
+
+ 
+ </div>
+ </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing" data-screen-label="07 Pricing">
+ <div class="section-head">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> Precios simples</span>
+ <h2 class="section-title">Menos que <em>medio salario</em><br/>de una secretaria.</h2>
+ <p class="section-sub">Sin permanencia. 4 días de prueba gratis. Todos los planes incluyen RDA y cumplimiento Resolución 1888.</p>
+ </div>
+
+ <div class="plans">
+ <div class="plan">
+ <div class="plan-head"><h3>Inicio</h3><span class="plan-for">Consultorio individual</span></div>
+ <div class="plan-price"><span class="currency">$</span><span class="amount">350.000</span><span class="per">COP/mes</span></div>
+ <span class="plan-setup">Setup único: $500.000 COP</span>
+ <ul class="plan-feats">
+ <li>Chatbot WhatsApp 24/7</li>
+ <li>Agenda + Google Calendar</li>
+ <li>Recordatorios automáticos</li>
+ <li>Confirmación / cancelación</li>
+ <li>Reporte semanal básico</li>
+ <li>Setup en 48h</li>
+ </ul>
+ <a href="#cta" class="btn-plan">Empezar prueba</a>
+ </div>
+
+ <div class="plan plan-featured">
+ <div class="plan-ribbon">Más elegido</div>
+ <div class="plan-head"><h3>Profesional</h3><span class="plan-for">Consultorio establecido</span></div>
+ <div class="plan-price"><span class="currency">$</span><span class="amount">800.000</span><span class="per">COP/mes</span></div>
+ <span class="plan-setup">Setup único: $1.000.000 COP</span>
+ <ul class="plan-feats">
+ <li>Todo lo de Inicio</li>
+ <li>Notas clínicas con IA por voz</li>
+ <li>Seguimiento de presupuestos</li>
+ <li>Lista de espera inteligente</li>
+ <li>Gestor de reseñas Google</li>
+ <li>Marketing automatizado</li>
+ <li>Multimedia (audio, imágenes)</li>
+ </ul>
+ <a href="#cta" class="btn-plan btn-plan-cta">Empezar prueba →</a>
+ </div>
+
+ <div class="plan">
+ <div class="plan-head"><h3>Premium</h3><span class="plan-for">Clínica multi-doctor</span></div>
+ <div class="plan-price"><span class="currency">$</span><span class="amount">2.000.000</span><span class="per">COP/mes</span></div>
+ <span class="plan-setup">Setup único: $2.000.000 COP</span>
+ <ul class="plan-feats">
+ <li>Todo lo de Profesional</li>
+ <li>Generador RDA · Res. 1888</li>
+ <li>Triage inteligente</li>
+ <li>Dashboard rentabilidad</li>
+ <li>Seguimiento post-op 24/7</li>
+ <li>Multi-doctor (hasta 5)</li>
+ <li>Soporte prioritario</li>
+ </ul>
+ <a href="#cta" class="btn-plan">Hablar con ventas</a>
+ </div>
+ </div>
+
+ <!-- Aclaraciones del plan -->
+ <div class="plan-clarify">
+ <div class="clarify-card">
+ <div class="clarify-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10l3 3 5-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+ <h4>Los 4 días gratis incluyen todo</h4>
+ <p>Puede probar el chatbot, la agenda, los recordatorios y el generador de RDA sin restricciones. Si no le sirve, simplemente no continúa. <b>No pedimos tarjeta de crédito.</b></p>
+ </div>
+ <div class="clarify-card">
+ <div class="clarify-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="6" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 6V4h8v2" stroke="currentColor" stroke-width="1.5"/></svg></div>
+ <h4>¿Qué es el setup único?</h4>
+ <p>Configuramos su WhatsApp Business, conectamos su calendario, entrenamos al asistente con su información y le enseñamos a usar el panel. <b>Se paga una sola vez al iniciar</b>, no es recurrente.</p>
+ </div>
+ <div class="clarify-card">
+ <div class="clarify-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l2.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+ <h4>¿Por qué varía el costo?</h4>
+ <p>El precio depende del <b>volumen de mensajes y funciones activas</b>. Un consultorio individual con agenda básica paga menos que una clínica con varios doctores y generador de RDA. Todos incluyen cumplimiento de Ley 1581 y Resolución 1888.</p>
+ </div>
+ <div class="clarify-card">
+ <div class="clarify-ico"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+ <h4>Sin permanencia</h4>
+ <p>Si en cualquier momento quiere detener el servicio, avisa con <b>30 días de anticipación</b> y no hay penalidades. Los datos de sus pacientes son suyos y se le entregan al cierre.</p>
+ </div>
+ </div>
+</section>
+
+<!-- COMPARADOR MEDACCER vs SECRETARIA -->
+
+<!-- FUNCIONA MEJOR CUANDO -->
+<section class="best-for" id="best-for" data-screen-label="07.6 Best-for">
+ <div class="best-wrap">
+ <div class="best-head">
+ <span class="eyebrow"><span class="eyebrow-dot"></span> ¿Es para usted?</span>
+ <h2 class="section-title">MEDACCER funciona<br/>mejor <em>cuando...</em></h2>
+ </div>
+ <div class="best-grid">
+ <div class="best-card">
+ <div class="bc-num">01</div>
+ <h3>Usted o su equipo responden WhatsApp todo el día</h3>
+ <p>Si siente que el WhatsApp le consume más de 2 horas diarias, cada hora recuperada es más tiempo con pacientes.</p>
+ </div>
+ <div class="best-card">
+ <div class="bc-num">02</div>
+ <h3>Tiene citas que se pierden por falta de confirmación</h3>
+ <p>Los recordatorios automáticos y la confirmación por WhatsApp reducen las ausencias sin que usted haga nada.</p>
+ </div>
+ <div class="best-card">
+ <div class="bc-num">03</div>
+ <h3>Necesita cumplir con la Resolución 1888</h3>
+ <p>Si aún no tiene forma de generar el Resumen Digital de Atención, MEDACCER lo genera por voz al terminar la consulta.</p>
+ </div>
+ <div class="best-card">
+ <div class="bc-num">04</div>
+ <h3>Su consultorio crece y no quiere contratar más personal aún</h3>
+ <p>MEDACCER absorbe el volumen adicional sin necesidad de expandir el equipo administrativo.</p>
+ </div>
+ <div class="best-card">
+ <div class="bc-num">05</div>
+ <h3>Quiere operar fuera de horario sin perder pacientes</h3>
+ <p>Noches, fines de semana y festivos — su consultorio sigue disponible, aunque usted esté descansando.</p>
+ </div>
+ <div class="best-card">
+ <div class="bc-num">06</div>
+ <h3>Busca profesionalizar la experiencia del paciente</h3>
+ <p>Respuestas claras, en segundos y con su tono. El paciente siente que lo atiende un consultorio moderno.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta" data-screen-label="08 CTA">
+ <div class="cta-inner">
+ <div class="cta-ring"></div>
+ <div class="cta-ring cta-ring-2"></div>
+ <h2>Empiece a recuperar<br/><em>el tiempo perdido</em> en WhatsApp.</h2>
+ <p>Conecte su WhatsApp Business en 48 horas. Primeros 4 días gratis. Sin tarjeta de crédito.</p>
+ <div class="cta-actions">
+ <a href="https://wa.me/573023571724" class="btn-primary btn-primary-lg">Agendar llamada de 15 min <span style="font-size:20px">→</span></a>
+ <a href="#demo" class="btn-secondary"><span class="play-ico"></span> Ver demo otra vez</a>
+ </div>
+ <div class="cta-trust">Sin permanencia · 4 días gratis · Cumple Ley 1581 y Res. 1888</div>
+ </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot" data-screen-label="09 Footer">
+ <div class="foot-inner">
+ <div class="foot-brand">
+ <a href="#" class="logo logo-foot">
+ <svg width="22" height="22" viewBox="0 0 26 26" fill="none"><path d="M3 13 L8 13 L10 7 L14 19 L16 13 L23 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="23" cy="13" r="1.8" fill="currentColor"/></svg>
+ medaccer
+ </a>
+ <p>Automatización con IA para consultorios independientes en Colombia y Latinoamérica.</p>
+ </div>
+ <div class="foot-col">
+ <h4>Producto</h4>
+ <a href="#product">Funciones</a>
+ <a href="#demo">Demo</a>
+ <a href="#pricing">Precios</a>
+ <a href="#compliance">RDA · Res. 1888</a>
+ </div>
+ <div class="foot-col">
+ <h4>Empresa</h4>
+ <a href="sobre.html">Sobre MEDACCER</a>
+ <a href="recursos.html">Blog</a>
+ <a href="https://wa.me/573023571724">Contacto</a>
+ </div>
+ <div class="foot-col">
+ <h4>Legal</h4>
+ <a href="privacidad.html">Política de datos</a>
+ <a href="terminos.html">Términos</a>
+ <a href="ley-1581.html">Ley 1581</a>
+ <a href="ley-1581.html#res1888">Resolución 1888</a>
+ </div>
+ </div>
+ <div class="foot-bottom">
+ © 2026 MEDACCER · Hecho en Bogotá, Colombia · <a href="https://wa.me/573023571724" style="color:var(--accent)">+57 302 357 1724</a>
+ </div>
+</footer>
+
+<!-- TWEAKS -->
+<div class="tweaks" id="tweaks-panel" hidden>
+ <div class="tweaks-head">
+ <span>Tweaks</span>
+ <button id="tweaks-close">×</button>
+ </div>
+ <div class="tweaks-body">
+ <div class="tweak" data-key="accent">
+ <label>Color de acento</label>
+ <div class="tweak-swatches">
+ <button data-val="cyan" style="background:#06B6D4" title="Cyan"></button>
+ <button data-val="emerald" style="background:#10B981" title="Emerald"></button>
+ <button data-val="violet" style="background:#8B5CF6" title="Violet"></button>
+ <button data-val="amber" style="background:#F59E0B" title="Amber"></button>
+ <button data-val="rose" style="background:#F43F5E" title="Rose"></button>
+ </div>
+ </div>
+ <div class="tweak" data-key="intensity">
+ <label>Intensidad de efectos</label>
+ <div class="tweak-segs">
+ <button data-val="low">Low</button>
+ <button data-val="medium">Med</button>
+ <button data-val="high">High</button>
+ </div>
+ </div>
+ <div class="tweak" data-key="typography">
+ <label>Tipografía display</label>
+ <div class="tweak-segs">
+ <button data-val="editorial">Editorial</button>
+ <button data-val="tech">Tech</button>
+ </div>
+ </div>
+ <div class="tweak" data-key="grain">
+ <label>Grano de película</label>
+ <div class="tweak-toggle">
+ <button data-val="on">On</button>
+ <button data-val="off">Off</button>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script src="effects.js"></script>
+<script src="chat.js"></script>
+<script src="tweaks.js"></script>
+<script>
+ // Video placeholder: revealed when source loads. User uncomments <source> after uploading.
+ (function() {
+ const video = document.getElementById('founder-video');
+ const placeholder = document.getElementById('video-placeholder');
+ if (!video || !placeholder) return;
+ video.addEventListener('loadeddata', () => {
+ video.style.display = 'block';
+ video.classList.add('has-source');
+ placeholder.style.display = 'none';
+ });
+ })();
+</script>
+
+<!-- Floating WhatsApp -->
+<a class="wa-float" href="https://wa.me/573023571724?text=Hola,%20quiero%20probar%20MEDACCER%204%20d%C3%ADas%20gratis" target="_blank" rel="noopener" aria-label="WhatsApp">
+ <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20.5 3.5A11.8 11.8 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.5 5.8 1.5 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.4zM12 21.9c-1.8 0-3.6-.5-5.2-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.5-1.5-5.4 0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10z" fill="currentColor"/><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3c.1.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z" fill="currentColor"/></svg>
+ <span class="wa-float-lbl">Escríbanos</span>
+</a>
+
+
+
+</body>
+</html>

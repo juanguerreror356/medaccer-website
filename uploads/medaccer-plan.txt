@@ -1,0 +1,954 @@
+Plan de Negocios para MEDACCER
+1. Resumen ejecutivo
+Visión general. MEDACCER es una startup HealthTech colombiana que ofrece Automatización como Servicio para consultorios médicos y odontológicos. Su producto principal es un asistente de WhatsApp con IA que agenda citas, envía recordatorios, gestiona listas de espera, genera el Resumen Digital de Atención (RDA) requerido por la Resolución 1888/2025 y produce notas clínicas mediante IA. La empresa se apalanca en la penetración de WhatsApp en Latinoamérica (95–98 % de tasa de apertura, frente a 85–90 % de los SMS)[1], y en estudios que muestran que los recordatorios automatizados reducen la inasistencia hasta en 40 %[2].
+Problema. En Colombia hay aproximadamente 137 700 médicos (87 000 médicos generales y 28 900 especialistas)[3] y 457 000 profesionales de la salud[4]. Muchos consultorios siguen gestionando citas a través de WhatsApp personal y hojas de cálculo, lo que provoca altas tasas de no‑show y pérdida de ingresos. La Resolución 1888/2025 hace obligatorio el RDA y obliga a prestadores y aseguradoras a integrar sus sistemas en un plazo de seis meses contado desde el 15 de octubre de 2025[5]. El incumplimiento puede acarrear multas y suspensión de servicios[6].
+Solución. MEDACCER desarrolla un chatbot de WhatsApp basado en la API de Claude AI que entiende el lenguaje natural, agenda y confirma citas, envía recordatorios, gestiona listas de espera, automatiza marketing y genera el RDA. El producto se integra con Google Calendar, n8n, WhatsApp Business API y cumple con los estándares HL7 FHIR mencionados en la Resolución 1888[7].
+Modelo de negocio. MEDACCER ofrece tres paquetes: Inicio (350 000 COP/mes, setup de 500 000 COP), Profesional (800 000 COP/mes, setup de 1 000 000 COP) y Premium (2 000 000 COP/mes, setup de 2 000 000 COP). El coste variable estimado es de 60 000–80 000 COP por cliente al mes; el margen bruto objetivo se sitúa entre 65 % y 95 %. Un análisis de proyecciones (ver sección 8) muestra que con apenas 13 clientes de Inicio, 14 Profesionales y 2 Premium al cierre del primer año se pueden generar 237 millones de COP de ingresos recurrentes anuales con una utilidad bruta superior a 212 millones de COP.
+Mercado. El mercado objetivo inicial son los consultorios y clínicas de Bogotá (unos 42 000–49 000 profesionales de la salud) y los 137 700 médicos a nivel nacional[3]. A nivel LATAM y España existen más de 700 000 profesionales; el mercado de salud digital de Latinoamérica asciende a 12,82 millardos USD en 2024 y proyecta llegar a 66,4 millardos USD en 2033 (CAGR de 20 %)[8]. La IA en salud en la región creció de 0,47 millardos USD en 2024 a una proyección de 3,78 millardos USD en 2033[9], lo cual confirma la oportunidad de negocio.
+Ventaja competitiva. A diferencia de soluciones genéricas (Landbot, ManyChat, B2Chat, Bewe, Dentalink), MEDACCER está enfocada en profesionales de salud, incluye generación automática del RDA, notas clínicas con IA y cumplimiento normativo. La Resolución 1888/2025 constituye un factor de adopción porque obliga a digitalizar la historia clínica y genera urgencia; los competidores actuales no cubren ese nicho.
+Finanzas e inversión. Se proyecta alcanzar el punto de equilibrio en el séptimo mes tras el lanzamiento. La empresa requiere una inversión inicial de ~130 000 COP/mes para infraestructura y espera captar 1 millardo COP (≈250 000 USD) para escalar ventas, desarrollo de producto y expansión regional. La estrategia de salida prevé llegar a 300 consultorios en 5 años, con ingresos recurrentes superiores a 1 000 millones COP mensuales y EBITDA mayor al 40 %.
+2. Problema del mercado
+2.1 Ineficiencias en la gestión de citas y consultas
+No‑shows. Los consultorios pierden dinero cada día porque los pacientes no se presentan a sus citas. Estudios en EE. UU. muestran que los recordatorios de texto reducen las inasistencias hasta en 38 %[2]. En Latinoamérica, los mensajes de WhatsApp tienen tasas de apertura del 95–98 %[1] y las confirmaciones automatizadas reducen las ausencias 25–40 %[10]. Sin automatización, muchos consultorios manejan agendas con Excel y secretarias saturadas, lo que provoca demoras, errores y pérdida de ingresos.
+Costos ocultos. Cada no‑show le cuesta a un consultorio de estética u odontología alrededor de 300 000 COP en tiempo y materiales desperdiciados. Si hay 5 ausencias por semana, se pierden 6 millones COP al mes (72 millones COP/año). A esto se suman los costos de atención telefónica (salarios de secretarias) y el desperdicio de equipos y salas de consulta vacías.
+Carga administrativa. El personal administrativo destina horas a llamar a pacientes, confirmar citas y llenar formularios. Esta carga reduce su disponibilidad para tareas estratégicas (venta de tratamientos, seguimiento de presupuestos) y limita el crecimiento del negocio.
+2.2 Cumplimiento normativo y riesgo legal
+La Resolución 1888 de 2025 adopta el Resumen Digital de Atención (RDA) y obliga a todos los prestadores de servicios de salud a interoperar sus sistemas. La normativa establece que, a partir del 15 de octubre de 2025, las IPS, EPS, ARL y aseguradoras tienen un plazo de seis meses para ajustar sus sistemas[5]. Esto significa que para el 15 de abril de 2026 todos los actores deben generar y enviar el RDA en formato HL7 FHIR[7].
+El incumplimiento acarrea sanciones. La Superintendencia de Salud puede imponer multas millonarias y suspender servicios[6]. Además, la ausencia de RDA dificulta auditorías, genera glosas y puede llevar a la ruptura de convenios con EPS[11].
+2.3 Demanda insatisfecha
+Colombia cuenta con 137 700 médicos y 91 000 enfermeros[4]. La demanda de profesionales supera la oferta: la Organización Panamericana de la Salud estima que América Latina necesita entre 600 000 y 2 millones de trabajadores de la salud adicionales para responder a futuras pandemias[12]. Esta brecha impulsa la necesidad de automatizar procesos administrativos para liberar personal clínico.
+3. Solución: la propuesta de MEDACCER
+3.1 Descripción del producto
+MEDACCER ofrece un asistente virtual basado en IA que se conecta al WhatsApp Business de las clínicas. Emplea modelos de lenguaje natural (Claude API) para entender solicitudes y ejecutar acciones a través de n8n y Google Calendar. Sus funcionalidades principales son:
+Agenda automática 24/7: El paciente solicita una cita por WhatsApp; el asistente verifica disponibilidad en Google Calendar y responde en menos de 5 segundos[1].
+Recordatorios y confirmaciones: Envía confirmaciones, recordatorios 24 h antes y alerta sobre cancelaciones. Esto reduce las inasistencias hasta en 40 %[2].
+Lista de espera inteligente: Gestiona una lista de pacientes y asigna automáticamente espacios vacíos cuando se cancela una cita.
+Generación automática del RDA: Tras cada cita, el asistente solicita al médico un resumen por voz, lo transcribe y estructura usando IA según la Resolución 1888/2025[7]. Luego lo envía a la plataforma de interoperabilidad.
+Notas clínicas con IA: Convierte dictados en notas estructuradas que se integran con los sistemas clínicos existentes.
+Marketing y reseñas: Automatiza campañas de recordatorio, seguimiento post‑procedimiento y solicitudes de reseñas en Google.
+Dashboard de rentabilidad (Premium): Presenta métricas de ocupación, ingresos y tasa de no‑shows para tomar decisiones basadas en datos.
+3.2 Componentes tecnológicos
+Claude API (Haiku/Sonnet) para procesamiento de lenguaje natural y generación de respuestas.
+n8n self‑hosted para flujos de automatización (conexión con Google Calendar, bases de datos y servicios externos).
+WhatsApp Business API para envío y recepción de mensajes y plantillas certificadas.
+Google Calendar API para disponibilidad de citas y sincronización.
+Infraestructura en la nube (Kubernetes + Postgres) con cifrado TLS 1.3 y AES‑256.
+Cumplimiento normativo: HL7 FHIR, Ley 1581 de protección de datos personales[13], autenticación robusta y encriptación.
+4. Modelo de negocio
+4.1 Estructura de precios
+Paquete
+Setup (único)
+Tarifa mensual
+Funciones principales
+Inicio
+500 000 COP
+350 000 COP
+Chatbot WhatsApp 24/7, agendamiento automático, recordatorios, confirmación/cancelación, reporte básico
+Profesional
+1 000 000 COP
+800 000 COP
+Todo lo de Inicio + seguimiento de presupuestos, lista de espera, gestor de reseñas, marketing automatizado, notas clínicas con IA
+Premium
+2 000 000 COP
+2 000 000 COP
+Todo lo de Profesional + generador de RDA, triage inteligente, dashboard de rentabilidad, seguimiento post‑operatorio 24/7, soporte prioritario
+El cliente paga un fee de instalación y luego una suscripción mensual sin permanencia mínima. Se ofrece un período de prueba gratuita de 14 días para reducir la fricción inicial.
+4.2 Costos y margen
+El coste variable de servicio se estima entre 60 000 y 80 000 COP por cliente al mes (incluye infraestructura, uso de API, soporte y licencias). Tomando un valor medio de 70 000 COP, el margen bruto para el paquete Inicio (~79 %) es alto, creciendo a >90 % para el Premium porque el precio se multiplica mientras el coste variable aumenta poco.
+4.3 Unit Economics
+Ingresos promedio por usuario (ARPU). Para Inicio: 350 000 COP/mes; Profesional: 800 000 COP/mes; Premium: 2 000 000 COP/mes.
+Coste de adquisición de cliente (CAC). Basado en referencias de SaaS B2B (CAC medio de ~1 200 USD[14]) y campañas digitales de bajo costo en LATAM (CPM inferior al de EE. UU.), se estima un CAC inicial de 3 500 000 COP (~850 USD) por cliente.
+LTV. Suponiendo churn anual de 10 % y margen bruto del 80 %, el valor de vida del cliente es: LTV = ARPU × margen ÷ churn. Por ejemplo, para el paquete Profesional: 800 000 × 0,8 ÷ 0,1 = 6 400 000 COP. Así, el ratio LTV/CAC ≈ 2, que mejora conforme se optimiza el marketing. Se busca alcanzar el benchmark de 3:1[15].
+4.4 Flujo de ingresos
+Suscripciones mensuales (ingreso recurrente principal).
+Setup e implementación (ingreso único al inicio).
+Servicios adicionales: capacitación, personalización de flujos n8n, integraciones con software local, consultoría de cumplimiento.
+Ventas cruzadas: análisis de datos, suscripción a módulos de marketing avanzado, planes de telemedicina.
+5. Análisis de mercado
+5.1 Tamaño del mercado
+Mercado direccionable total (TAM): se calcula multiplicando el número total de profesionales de la salud (médicos, odontólogos, psicólogos) en los mercados hispanohablantes y el precio medio del servicio. El universo hispanohablante –Latinoamérica y España– suma aproximadamente 700 000 profesionales. Si cada uno pagara un promedio de 700 000 COP/mes por automatización y mensajería, el potencial mensual sería 490 000 000 000 COP, lo que equivale a 5,88 billones COP al año (700 000 profesionales × 700 000 COP × 12). Esta cifra refleja el tamaño del mercado total al que podría aspirar MEDACCER en los próximos años.
+Mercado disponible (SAM): el servicio está dirigido a consultorios individuales y pequeñas clínicas que aún no utilizan soluciones avanzadas como Dentalink. Partiendo de los 137 700 médicos registrados en Colombia[3], restamos los 20 000 usuarios aproximados de Dentalink y otras plataformas consolidadas, y excluimos el 30 % de clínicas grandes que no son nuestro objetivo. Esto deja un mercado real de ~82 000 profesionales en Colombia. Con un ingreso medio de 500 000 COP/mes por cliente, el SAM asciende a 492 mil millones COP/año (82 000 × 500 000 COP × 12).
+Mercado objetivo (SOM): para una proyección más realista, se plantea capturar una fracción muy pequeña del SAM durante los primeros años. Año 1: 29 clientes (0,035 % del SAM) generarían ingresos de 237 millones COP al año; Año 3: ~63 clientes aportarían 511 millones COP; Año 5: ~141 clientes podrían generar 1 143 millones COP anuales. Estas cifras se alinean con el ritmo de adopción de soluciones SaaS en el sector y permiten escalar sin sacrificar calidad de servicio.
+5.2 Tendencias del mercado
+Crecimiento de la salud digital. El mercado de salud digital de Latinoamérica fue valorado en 12,82 milmillones USD en 2024 y se proyecta que alcance 66,40 milmillones USD en 2033 (CAGR 20 %)[8]. La segmentación mHealth es la de mayor crecimiento[16].
+IA en salud. El mercado latinoamericano de IA en salud pasó de 0,47 milmillones USD en 2024 a una proyección de 3,78 milmillones USD en 2033, con un crecimiento anual del 26,10 %[9]. Se destaca la inversión en Brasil (23,03 mil millones de reales en 2024 para estrategias de IA)[17].
+Telemedicina y mensajería instantánea. Las tasas de apertura de WhatsApp superan el 95 %[1], muy por encima de otras plataformas, y la adopción de teleconsultas y bots se aceleró con la pandemia. Las clínicas buscan automatizar tareas repetitivas para paliar la escasez de personal sanitario.
+5.3 Drivers de adopción
+Regulación: la Resolución 1888/2025 obliga a digitalizar la historia clínica y generará demanda de herramientas que automaticen el RDA[5].
+Eficiencia operativa: reducción de no‑shows y de costos administrativos mediante recordatorios y automatización[2].
+Democratización de IA: la disponibilidad de APIs de lenguaje natural a bajo costo y la penetración de smartphones facilitan la adopción.
+Experiencia del paciente: pacientes valoran la rapidez y disponibilidad 24/7; se sienten más cómodos chateando que llamando.
+5.4 Mercado de chatbots en Colombia (2026)
+El ecosistema de automatización conversacional en Colombia ha madurado en los últimos años, impulsado por la digitalización de pymes y el auge de WhatsApp Business. Las agencias y desarrolladores locales ofrecen soluciones a medida cuyos costos sirven como referencia para posicionar a MEDACCER:
+Chatbots básicos basados en reglas. El desarrollo de un bot de conversación simple cuesta entre 3 y 10 millones COP por proyecto. Incluye un flujo de respuestas predeterminadas pero no utiliza IA ni se integra con agendas o bases de datos.
+Chatbots con IA. El precio de diseño e implementación oscila entre 6 y 18 millones COP, según la complejidad de las plantillas y el volumen de conversaciones. Este rango ha sido reportado por proveedores como Gulupa Digital, Consolidación Digital y Ventiva AI en 2026.
+Chatbots avanzados con integraciones. Los proyectos que incluyen orquestación con CRM, pagos y recordatorios a menudo superan los 20 millones COP. Estos valores reflejan la inversión inicial para desarrollar una solución personalizada.
+Mensualidades. Para mantener y alojar un bot, las empresas cobran habitualmente entre 200 000 y 1 500 000 COP al mes, dependiendo del número de conversaciones, de la inclusión de IA y del nivel de soporte.
+Implicación. Estos datos demuestran que los clientes colombianos ya pagan montos similares a los precios de MEDACCER (350 000–2 000 000 COP/mes). La oferta de MEDACCER se sitúa en el rango medio y aporta una ventaja competitiva al incluir IA conversacional, multimedia y generación de RDA en un esquema SaaS sin costos de desarrollo inicial.
+6. Análisis competitivo
+6.1 Competidores directos y sustitutos
+Competidor
+Ubicación/foco
+Funcionalidades principales
+Limitaciones respecto a MEDACCER
+B2Chat
+Colombia, multicanal
+Plataforma que centraliza WhatsApp, Facebook, Instagram; permite multi‑agente y cuenta con chatbots básicos[18].
+No dispone de generación de RDA ni especialización médica; chatbots basados en reglas; marketing genérico.
+Landbot
+España, global
+Constructor de chatbots sin código; integra WhatsApp y web; combina flujos y agentes de IA[19].
+Enfocado en marketing; carece de integraciones clínicas y cumplimiento de la Resolución 1888.
+ManyChat
+EE. UU.
+Plataforma de automatización conversacional; flujos visuales para Messenger y WhatsApp[20].
+No ofrece IA conversacional avanzada ni funciones de salud; chatbots basados en palabras clave.
+Bewe
+México/España
+Software de gestión y marketing para centros de bienestar; incluye agenda online, CRM, marketing y automatización de mensajes[21].
+Orientado a gimnasios y salones de belleza; no genera RDA ni integra IA médica; saturado de funcionalidades generales.
+Dentalink
+Chile/Latinoamérica
+Dentalink (líder regional, ~25‑30 % del mercado, más de 20 000 usuarios y 3 500 clínicas en Colombia). En 2026 lanzó siete módulos de IA incluyendo Contact Center IA (WhatsApp 24/7), Notas Clínicas con IA, Reportes con IA y análisis de radiografías. Cuenta con certificación ISO 27001.
+Los módulos de IA son complementos que se pagan por separado; requiere contratar el software base completo para acceder a la IA; está diseñado para clínicas medianas o grandes (3 o más doctores); la implementación toma semanas y la curva de aprendizaje es alta; el 59 % del mercado (consultorios individuales) lo percibe sobredimensionado y costoso para sus necesidades.
+| Doctocliq | México/LATAM | Asistente “Soyla” con IA, recordatorios y versión gratuita que permite automatizar mensajes básicos. | Enfocado en consultorios modernos pero limitado en IA conversacional avanzada; carece de generación de RDA y de integraciones clínicas profundas. | | Dentidesk | Chile/Cono Sur | Historia clínica, gestión de inventarios y una interfaz intuitiva; ofrece herramientas de agenda y facturación. | No dispone de módulos de IA ni de automatización de WhatsApp; orientado a clínicas de tamaño medio; sin funcionalidades de RDA. | | Nimbo Dental | LATAM | Odontogramas, expedientes electrónicos y soporte 24/7; integra odontograma digital y herramientas de administración. | No cuenta con IA ni automatización de comunicación; los recordatorios y confirmaciones se realizan manualmente; sin generación de RDA. | | Akeito | LATAM | Plataforma de marketing dental centrada en la captación de pacientes mediante campañas digitales y redes sociales. | Se limita al marketing; no gestiona agenda ni historia clínica y carece de módulos de IA clínica o RDA. | | Clinova 24 | Colombia | Software de facturación y atención con RDA; advierte sobre sanciones por incumplimiento[6]. | Sistema cerrado, centrado en clínicas grandes; su implementación es costosa y compleja; no enfoca en IA conversacional. | | Aurora Inbox | España | Agentes de IA con acceso a herramientas; integran WhatsApp y otras redes; CRM integrado[22]. | Orientado a ventas y marketing, no a procesos clínicos ni cumplimiento colombiano. | | Trement IA | Colombia (Medellín) | Chatbot IA para WhatsApp Business 24/7; incluye IA avanzada e integraciones. Precio: 189 000–649 000 COP/mes. | No especializado en salud; no genera RDA; no maneja multimedia (audio/imagen). | | Ventiva AI | Colombia | Agente IA médico con integración de citas; setup 600 000–2 000 000 COP y mensualidad 390 000–1 350 000 COP. | No genera RDA; no maneja multimedia; no está especializado en salud. | | Projectia | Colombia | Plataforma de IA para pymes; automatiza procesos y chatbots genéricos; precio 500 000–2 500 000 COP/mes. | No especializado en salud; no genera RDA; funcionalidades de negocio generalistas. | | Consolidación Digital | Colombia | Agencia que desarrolla chatbots IA a medida; cobra 6–18 millones COP por proyecto. | No es SaaS; cobra por desarrollo puntual; no incluye suscripción ni genera RDA. |
+6.2 Ventajas competitivas de MEDACCER
+MEDACCER se diferencia no por ser el único producto disponible, sino por ser el más accesible y más inteligente en su segmento específico:
+IA‑first, no IA como parche: mientras Dentalink y otros competidores han añadido módulos de IA sobre software existente, MEDACCER nace con la inteligencia artificial como núcleo. Cada funcionalidad está diseñada desde cero para ser inteligente y aprender de las interacciones.
+Segmento desatendido: aproximadamente el 59,29 % del mercado está compuesto por consultorios de un solo doctor. Dentalink apunta a clínicas medianas o grandes, dejando al profesional independiente sin opciones asequibles. MEDACCER es la solución diseñada para consultorios individuales que no necesitan (ni pueden pagar) un software completo y pesado.
+Zero‑friction: no requiere migración de datos, cambio de software ni una curva de aprendizaje pronunciada. Se conecta al WhatsApp y al Google Calendar que el doctor ya utiliza, lo que reduce la resistencia al cambio.
+Precio disruptivo: el paquete básico ofrece todas las funcionalidades desde 350 000 COP/mes, mientras que los competidores cobran 500 000–800 000 COP/mes o más y además venden la IA como módulo extra. La estructura de precios simples y sin cargos ocultos facilita la adopción.
+Velocidad de implementación: la instalación y puesta en marcha se realiza en 48 horas, frente a las semanas de onboarding que requieren las alternativas tradicionales. Esto permite a los consultorios ver resultados rápidamente.
+6.3 Análisis FODA
+Fortalezas: producto innovador, especializado, con alto margen y reducción de no‑shows; alineado con regulación. Oportunidades: mercado en crecimiento (digital health y AI), urgencia por cumplir Resolución 1888, expansión a LATAM y España. Debilidades: empresa joven sin casos de éxito; dependencia de APIs externas (Claude, WhatsApp) para el funcionamiento; CAC inicial alto. Amenazas: aparición de competidores internacionales con más capital; cambios regulatorios; resistencia al cambio por parte del personal sanitario.
+6.4 Implicaciones para la estrategia de precios
+La entrada de competidores colombianos como Trement IA, Ventiva AI, Projectia y Consolidación Digital obliga a ajustar la estrategia de precios de MEDACCER. Trement comercializa un chatbot genérico por 189 000 COP/mes, mientras que los planes de Ventiva AI y Projectia alcanzan 390 000–2 500 000 COP/mes. Estas soluciones carecen de generación de RDA y se orientan a múltiples sectores.
+Se evaluaron tres opciones:
+Mantener el precio de 350 000 COP/mes y justificarlo con la especialización en salud, la capacidad de manejar audio, imágenes y documentos (multimedia) y el cumplimiento de la Resolución 1888. El precio de MEDACCER es inferior a medio salario mínimo de una secretaria y aporta más valor que un chatbot genérico.
+Crear un plan “Lite” de 199 000 COP/mes con funciones limitadas (solo chatbot básico sin agenda) para competir con Trement. Este enfoque atraería a clientes sensibles al precio pero podría diluir la propuesta de valor.
+Mantener la estructura de precios actual y ofrecer incentivos como un período de prueba gratuito de cuatro días y una tarifa de setup reducida para nuevos clientes.
+Recomendación. Se opta por la opción A: no competir por precio sino por valor. El precio base de 350 000 COP mensuales refleja la especialización en salud, el cumplimiento legal y la inclusión de funciones que otros proveedores ofrecen como complementos pagos. El enfoque de valor también protege los márgenes y evita una carrera hacia abajo.
+7. Estrategia de go‑to‑market
+7.1 Segmentación y buyer persona
+Odontólogos y médicos estéticos: manejan agendas apretadas y alto valor por cita; pierden ingresos por ausencias. Buscan simplificar la gestión de citas y marketing.
+Psicólogos y clínicas pequeñas: necesitan reducir costos administrativos y cumplir con normativas de historia clínica.
+Gerentes de IPS: preocupados por el cumplimiento de la Resolución 1888 y la protección de datos; valoran soluciones llave en mano.
+7.2 Canales de adquisición
+Marketing de contenidos y SEO: publicar guías sobre la Resolución 1888, artículos sobre reducción de no‑shows y eficacia de WhatsApp; aprovechar las búsquedas de “software RDA” y “chatbot WhatsApp médico” en Colombia.
+Webinars educativos: sesiones mensuales con expertos en normatividad; demostraciones del sistema; testimonios de usuarios beta.
+Alianzas con asociaciones: convenios con colegios de odontólogos, sociedades médicas y cámaras de comercio; ofrecer descuentos a miembros.
+Referidos: programa de referidos con un mes de servicio gratis para clientes que recomienden el producto.
+Campañas de WhatsApp: uso del propio producto para captar leads (plantillas aprobadas por Meta).
+Ferias y eventos: participación en congresos de salud y tecnología en Colombia y Latinoamérica.
+7.3 Primeros 100 clientes
+Pilotos con clínicas pioneras: seleccionar 10 consultorios en Bogotá para programa beta; ofrecer el paquete Premium con descuento y recopilar testimonios.
+Validación de producto: usar feedback de pilotos para mejorar integraciones, UX y adaptabilidad.
+Escalado por verticales: tras validar en odontología, expandir a cirugía estética y psicología.
+Equipo de ventas especializado: contratar representantes con experiencia en ventas B2B en salud; utilizar CRM para seguimiento de leads.
+Estrategia de precios: ofrecer descuentos temporales para incentivizar adopción temprana y lograr tracción.
+8. Proyecciones financieras
+8.1 Proyección mensual (primer año)
+Se proyecta empezar en mayo de 2026 con 0 clientes pagos, dedicando el primer mes a pilotos gratuitos. En junio de 2026 se espera convertir 2 – 3 pilotos en clientes del paquete Inicio; en julio de 2026 se prevén 4 clientes de Inicio y 1 del paquete Profesional. A partir del mes 8 (septiembre) se incorporará el primer cliente Premium. Posteriormente se añadirá un cliente de Inicio y uno Profesional por mes, con un crecimiento gradual hasta completar los valores de la tabla siguiente. La tabla muestra los ingresos de setup (pago único), ingresos recurrentes mensuales (MRR), costos variables (COGS) y utilidad bruta.
+Mes
+Clientes Inicio
+Clientes Profesional
+Clientes Premium
+Ingresos Setup (COP)
+Ingresos recurrentes mensuales (COP)
+Costo variable (COGS) (COP)
+Utilidad bruta (COP)
+2026‑05
+0
+0
+0
+0
+0
+0
+0
+2026‑06
+3
+0
+0
+1 500 000
+1 050 000
+210 000
+840 000
+2026‑07
+4
+1
+0
+1 500 000
+2 200 000
+350 000
+1 850 000
+2026‑08
+5
+2
+0
+1 500 000
+3 350 000
+490 000
+2 860 000
+2026‑09
+6
+2
+1
+2 500 000
+5 700 000
+630 000
+5 070 000
+2026‑10
+7
+3
+1
+1 500 000
+6 850 000
+770 000
+6 080 000
+2026‑11
+8
+4
+1
+1 500 000
+8 000 000
+910 000
+7 090 000
+2026‑12
+9
+5
+1
+1 500 000
+9 150 000
+1 050 000
+8 100 000
+2027‑01
+10
+6
+1
+1 500 000
+10 300 000
+1 190 000
+9 110 000
+2027‑02
+11
+7
+1
+1 500 000
+11 450 000
+1 330 000
+10 120 000
+2027‑03
+12
+8
+2
+3 500 000
+14 600 000
+1 540 000
+13 060 000
+2027‑04
+13
+9
+2
+1 500 000
+15 750 000
+1 680 000
+14 070 000
+Interpretación. Al finalizar el primer año (abril 2027), MEDACCER tendría 13 clientes de Inicio, 9 de Profesional y 2 de Premium. El ingreso mensual recurrente alcanzaría 15,75 millones COP y la utilidad bruta 14,07 millones COP, todavía por debajo de los costos fijos estimados (unos 15 millones COP al incorporar salarios y marketing). Con una estructura de costos reducida (Juan Sebastián trabajando solo), el punto de equilibrio se alcanzaría entre los meses 8 y 9. Al contratar al primer empleado (mes 6‑8), el break‑even se desplazará hacia el mes 10.
+8.2 Proyección anual (5 años)
+Se aplicó una tasa de crecimiento moderada (50 % anual). Los datos representan el número de clientes por paquete al final de cada año, los ingresos recurrentes anuales, los costos variables y la utilidad bruta:
+Año
+Clientes Inicio
+Clientes Profesional
+Clientes Premium
+Ingresos recurrentes anuales (COP)
+Costo variable (COP)
+Utilidad bruta (COP)
+2027
+13
+9
+2
+189 000 000
+20 160 000
+168 840 000
+2028
+19
+21
+3
+353 400 000
+36 120 000
+317 280 000
+2029
+28
+31
+4
+511 200 000
+52 920 000
+458 280 000
+2030
+42
+46
+6
+762 000 000
+78 960 000
+683 040 000
+2031
+63
+69
+9
+1 143 000 000
+118 440 000
+1 024 560 000
+Concepto de los gráficos. Se recomienda mostrar un gráfico de líneas con dos curvas: ingresos recurrentes mensuales y utilidad bruta a lo largo de los 12 meses, para visualizar el aumento sostenido y el margen. Otro gráfico de barras apiladas puede reflejar la proyección de ingresos anuales por paquete en los próximos 5 años (Inicio, Profesional, Premium), evidenciando el crecimiento más acelerado del paquete Premium por su mayor valor.
+8.3 Punto de equilibrio y flujo de caja
+Los costos fijos mensuales incluyen nómina (desarrollador, vendedor y soporte), marketing, hosting y servicios administrativos (~15 millones COP). El punto de equilibrio se alcanza cuando la utilidad bruta mensual supera estos costos. Con el nuevo escenario de crecimiento lento y la estructura de costos reducida (fundador operando solo), el break‑even se logra entre los meses 8 y 9. Una vez se contrate al primer empleado (mes 6–8), los costos fijos aumentan y el punto de equilibrio se desplaza hacia el mes 10.
+8.4 Sensibilidad y escenarios
+Escenario optimista: la captación de clientes es un 30 % mayor y el churn es del 5 %. Se alcanzan 50 clientes en el segundo año, 150 en el tercero y 400 en el quinto; los ingresos anuales superarían 2 000 millones COP en 2031.
+Escenario conservador: la captación es un 30 % menor y el churn es del 20 %. Se necesitan 18 meses para llegar al break‑even; los ingresos en 2031 serían ~500 millones COP.
+Riesgos de tipo de cambio: si se utilizan servicios de IA facturados en USD, una devaluación del peso aumentará los costos. Se recomienda mantener reservas en dólares y fijar precios en USD a clientes fuera de Colombia.
+9. Equipo y operaciones
+9.1 Fundador
+Juan Sebastián Guerrero Rodríguez (Bogotá, Colombia). Ingeniero de sistemas con experiencia en automatización y chatbots. Fundador de MEDACCER. Ha trabajado en proyectos de n8n y GPT para automatizar procesos empresariales. Conoce la normatividad colombiana en salud y la Resolución 1888.
+9.2 Estructura organizacional inicial
+CEO/CTO (Juan S. Guerrero): gestión general, desarrollo del producto, alianzas estratégicas.
+Desarrollador de IA: responsable de la integración con Claude API, n8n y Google Calendar; mejora continua del algoritmo de notas clínicas.
+Especialista en cumplimiento: experto en normativa sanitaria y protección de datos; define procesos para el RDA y asegura la conformidad.
+Representante de ventas: encargado de captar clientes, realizar demostraciones, asistir a eventos y cerrar contratos.
+Soporte y éxito del cliente: gestiona implementaciones, formación y seguimiento de usuarios; identifica oportunidades de upselling.
+En la fase inicial (meses 0 a 6), Juan Sebastián opera como fundador único, asumiendo simultáneamente los roles de desarrollo, ventas y soporte. Esta estructura permite agilidad y un coste de nómina prácticamente nulo. La contratación del primer empleado (desarrollador o vendedor) se activará al alcanzar 15 clientes recurrentes, objetivo previsto para los meses 6–8. Durante este periodo, los roles de “Especialista en cumplimiento” y “Soporte y éxito del cliente” se cubren con IA: Claude se utiliza para preparar documentación y respuestas regulatorias y n8n para automatizar el soporte y el onboarding de usuarios.
+9.3 Proceso operativo
+Onboarding: reunión inicial con el cliente para comprender su flujo de trabajo; configuración del chatbot y conexión con Google Calendar.
+Personalización: definición de plantillas de WhatsApp, horarios, listas de servicios y precios.
+Formación: capacitación al personal administrativo y médicos sobre el uso del panel de control y las notas clínicas.
+Soporte continuo: monitoreo del bot, resolución de incidencias y entrega de reportes mensuales.
+Mejora continua: análisis del comportamiento de los usuarios, ajustes de flujos y lanzamiento de nuevas funciones (IA de triage, análisis predictivo).
+10. Roadmap de producto
+Fase 1 — La cuña (Mes 0–6)
+Posicionamiento: “El mejor asistente WhatsApp con IA para consultorios”.
+Lanzamiento beta con una decena de consultorios de odontología y estética en Bogotá para validar la propuesta de valor.
+Chatbot 24/7 + Agenda + Recordatorios + RDA: consolidar las funciones base del asistente; probar la generación automática del RDA con plantillas HL7 FHIR.
+Go‑to‑market: crear campañas educativas sobre la Resolución 1888 y los beneficios de automatizar la agenda; utilizar webinars y referidos para captar los primeros 30 clientes.
+Objetivo: lograr product‑market fit con 30 clientes que paguen entre 350 000 COP y 800 000 COP mensuales.
+Fase 2 — Expandir valor (Mes 6–12)
+Evolución: “De asistente a plataforma de gestión inteligente”.
+Dashboard y analítica: lanzar un panel de control intuitivo (“control de vuelo”) con métricas de citas, ingresos y no‑shows; gráficos fáciles de interpretar.
+Notas clínicas con IA y marketing automatizado: permitir dictar notas por voz y convertirlas en texto estructurado; implementar marketing segmentado por tipo de tratamiento y valor del paciente.
+Gestor de reseñas y lista de espera: automatizar solicitudes de reseñas en Google Maps y gestionar la lista de espera de manera inteligente.
+Objetivo: alcanzar 100 clientes y posicionarse como la solución ideal para consultorios pequeños y medianos con precios entre 800 000 COP y 2 000 000 COP mensuales.
+Fase 3 — Plataforma (Año 1–2)
+Visión: “El Dentalink de los consultorios pequeños, pero con IA nativa”.
+Historia clínica simplificada y facturación básica: integrar una ficha clínica ligera y un módulo de facturación que se adapte a las normativas colombianas (RIPS) y latinoamericanas.
+Odontograma digital y triage inteligente: añadir un odontograma interactivo que permita registrar procedimientos con códigos de colores y un sistema de triage que clasifique consultas según urgencia.
+Integración con RIPS y API de terceros: conectar con reportes de salud pública y abrir APIs para módulos de telemedicina, pagos y seguros.
+Expansión geográfica: llegar a Medellín, Cali y México; realizar pilotos en Chile y España.
+Objetivo: 300 clientes y consolidar la plataforma como líder en IA para consultorios pequeños.
+Fase 4 — Competir de frente (Año 2–3)
+Escalada: “La plataforma IA‑first que reemplaza a Dentalink”.
+Software completo con IA en cada módulo: incorporar módulos avanzados de gestión (inventarios, contabilidad, recursos humanos) potenciados con IA; implementar mercado de integraciones.
+Marketplace de integraciones: permitir a terceros construir complementos y verticales sobre MEDACCER; alianzas con empresas de seguros y laboratorios.
+Internacionalización: expansión a México, Chile y España con adaptaciones lingüísticas y regulatorias; búsqueda de inversión Serie A para acelerar el crecimiento.
+Objetivo: superar los 1 000 clientes y posicionarse como competidor directo de Dentalink en el segmento de clínicas y consultorios con IA nativa.
+11. Riesgos y mitigación
+Dependencia de proveedores externos. Claude API y WhatsApp Business pueden modificar precios o condiciones de uso. Mitigación: diversificar proveedores de IA (por ejemplo, GPT‑4) y mantener acuerdos comerciales.
+Cambios regulatorios. Nuevas leyes pueden exigir adaptaciones rápidas. Mitigación: contar con asesor legal y participar en mesas regulatorias; diseñar arquitectura modular.
+Ciberseguridad. Riesgo de filtración de datos personales. Mitigación: aplicar cifrado de extremo a extremo, auditorías de seguridad y certificación ISO 27001.
+Adopción lenta. Resistencia al cambio por parte de médicos mayores o personal administrativo. Mitigación: ofrecer formación gratuita, prueba piloto y testimonios; enfatizar ahorro de tiempo y cumplimiento normativo.
+Competencia creciente. Empresas grandes pueden replicar funciones. Mitigación: fortalecer la marca, invertir en I+D, crear barreras de entrada mediante integración profunda con RDA y alianzas con autoridades sanitarias.
+12. Métricas clave
+Métrica
+Definición y objetivo
+MRR (Monthly Recurring Revenue)
+Ingreso mensual recurrente. Objetivo: crecer 20 % mensual los primeros 6 meses y 10 % mensual después.
+Churn de clientes
+Porcentaje de clientes que cancelan su suscripción. Objetivo: mantenerlo por debajo del 10 % anual.
+Tasa de no‑shows
+Porcentaje de citas canceladas o no asistidas. Objetivo: reducir un 40 % en promedio gracias a los recordatorios[2].
+Tiempo de respuesta del bot
+Tiempo promedio en enviar la respuesta inicial; objetivo: <5 segundos[1].
+Nivel de cumplimiento RDA
+Porcentaje de resúmenes generados correctamente y enviados al sistema de interoperabilidad dentro del plazo (24 h). Objetivo: 100 %.
+CAC y LTV
+Coste de adquisición y valor de vida del cliente; se busca un ratio LTV/CAC ≥ 3[15].
+Márgenes brutos y netos
+Margen bruto objetivo >75 %, margen neto >30 %.
+13. Plan de inversión
+13.1 Necesidades de capital
+Para ejecutar el roadmap y la estrategia comercial se requiere una inversión de 1 000 millones COP (≈250 000 USD) distribuidos en:
+Desarrollo de producto (40 %): contratación de desarrolladores de IA, infraestructura en la nube, licencias de n8n, Claude API y servicios de seguridad.
+Marketing y ventas (30 %): campañas digitales (SEO/SEM), webinars, participación en ferias, creación de contenido y contratación de equipo de ventas.
+Operaciones y cumplimiento (20 %): salarios de especialistas en normatividad, certificaciones de seguridad, auditorías, asesoría legal.
+Capital de trabajo (10 %): cubrir costos fijos durante los primeros seis meses hasta alcanzar el break‑even.
+13.2 Uso de fondos y retorno
+El capital permitirá desarrollar un producto robusto y captar los primeros 100 clientes. La proyección financiera indica que, con 150 clientes en el tercer año, la empresa generaría ingresos recurrentes de más de 500 millones COP al año y una utilidad bruta de más de 450 millones COP. A partir del cuarto año, el EBITDA superaría el 35 %.
+13.3 Estrategia de salida
+Posibles salidas incluyen:
+Venta estratégica a empresas de software médico o a compañías de CRM conversacional que quieran entrar en el sector salud.
+Inversión de capital riesgo para escalar a otros mercados y consolidar la plataforma como líder regional.
+Bootstrap & dividendos: mantener el control y repartir utilidades una vez se estabilicen los ingresos.
+14. Apéndice
+14.1 Regulaciones y referencias normativas
+Ley 2015 de 2020: crea la Historia Clínica Electrónica Interoperable e impulsa la digitalización del sector salud[13].
+Resolución 866 de 2021: establece los conjuntos de datos clínicos mínimos para interoperabilidad[23].
+Resolución 1888 de 2025: adopta el Resumen Digital de Atención; otorga plazo de seis meses desde el 15 de octubre de 2025 para cumplir con la interoperabilidad[5].
+Ley 1581 de 2012: regula la protección de datos personales en Colombia[13].
+14.2 Datos de mercado adicionales
+Promedio de 2 médicos por cada 1 000 habitantes en América Latina[24].
+El mercado de salud digital en España fue valorado en 6,53 millardos USD en 2024 y proyecta llegar a 26,94 millardos USD en 2032 (CAGR 22,44 %)[25].
+La Organización Panamericana de la Salud indica que la región cuenta con 44,3 enfermeras por cada 10 000 habitantes, por debajo de la meta de 70,6[26].
+
+15. Herramientas y stack de trabajo
+El éxito de MEDACCER se apoya en un ecosistema de herramientas tecnológicas cuidadosamente seleccionado para maximizar la eficiencia y mantener costos bajos durante la fase de bootstrap. A continuación se detalla cómo se emplea cada componente del stack.
+15.1 Herramientas de desarrollo de producto
+n8n (self‑hosted). Esta plataforma de automatización de flujos es el motor que orquesta todo el producto. Permite conectar WhatsApp, la API de Claude, Google Calendar y bases de datos con total flexibilidad. Al alojarse en un VPS propio de bajo costo (6–12 USD/mes), el software en sí no tiene licencias y se adapta a las necesidades de la clínica.
+Claude API (Anthropic). Es el cerebro del chatbot. Se emplea el modelo Haiku para consultas simples (≈80 % del volumen de mensajes) y Sonnet para consultas complejas (≈18 %); los casos que la IA no puede resolver (≈2 %) se escalan a un humano. Cada conversación cuesta entre 15 y 25 COP, de manera que el coste mensual inicial es bajo y crece en función del número de pacientes atendidos.
+WhatsApp Business API. Es el canal principal de comunicación con los pacientes. Meta ofrece las primeras 1 000 conversaciones mensuales gratis; a partir de ese umbral se paga por conversación, pero el coste por consulta es inferior al ahorro generado por cada cita confirmada.
+Google Calendar API. Gestiona la disponibilidad en tiempo real y sincroniza las agendas. La API de Google no tiene coste en el nivel básico, por lo que se puede integrar sin cargo adicional.
+15.2 Herramientas de construcción y diseño
+Claude Code. Herramienta de IA para escribir código, generar workflows de n8n y construir el sitio web. Permite iterar rápidamente, depurar e implementar mejoras sin necesidad de un gran equipo de desarrollo. Tiene un coste de ≈20 USD/mes (~80 000 COP).
+ChatGPT + GitHub Agent. Se utiliza para crear la web en HTML/CSS/JS, generar imágenes con DALL·E y escribir documentación y planes de negocio. La suscripción a ChatGPT Plus está incluida en el presupuesto del fundador (~20 USD/mes), y el agente de GitHub se emplea para automatizar la publicación en GitHub Pages.
+GitHub Pages. Servicio gratuito de hosting estático donde se aloja la web de MEDACCER. Permite publicar la landing page en segundos y escalar sin coste adicional.
+15.3 Herramientas de captación de clientes
+n8n + Google Maps API. Se desarrolla un flujo de prospección que busca consultorios odontológicos por categoría y ciudad, extrae datos de contacto y analiza reseñas con IA para detectar dolores comunes. El sistema clasifica los prospectos (caliente/tibio/frío) y envía un resumen diario al equipo de ventas. El coste de llamadas a la API de Google Maps es bajo (unos 10 000 COP al mes en la fase inicial).
+Contenido educativo y NotebookLM. MEDACCER crea podcasts y vídeos educativos sobre la Resolución 1888 y las ventajas de automatizar la agenda. NotebookLM permite sintetizar artículos y guiones de forma eficiente. El contenido se publica en Instagram, TikTok y YouTube, canales que no implican coste directo pero generan autoridad.
+WhatsApp directo. El contacto personalizado, basado en la información obtenida por n8n, permite enviar mensajes adaptados al dolor detectado en las reseñas. Aprovecha las plantillas aprobadas por Meta para evitar bloqueos y mantiene un tono profesional y cercano.
+15.4 Herramientas de gestión interna
+Google Sheets. Se utiliza como CRM básico durante los primeros meses para registrar prospectos, clientes y el estado de negociación. Permite compartir información con el equipo y construir dashboards simples.
+Notion / Google Docs. Herramientas de documentación para elaborar actas de reuniones, procesos y manuales de onboarding. Notion tiene un plan gratuito para uso personal; Google Docs está incluido en Google Workspace.
+WhatsApp Business. Medio de comunicación directo con clientes actuales. Permite enviar actualizaciones, soporte y recordatorios sin cambiar de plataforma.
+Tabla resumida del stack
+Herramienta
+Función principal
+Costo mensual estimado (COP)
+Criticidad
+n8n (self‑hosted)
+Orquestación de flujos (WhatsApp ↔ IA ↔ Calendar)
+40 000 COP
+Alta
+Claude API
+Procesamiento de lenguaje natural y generación de respuestas
+20 000 COP
+Alta
+WhatsApp Business API
+Canal de mensajería con pacientes
+0 COP (primeras 1 000 conv.)
+Alta
+Google Calendar API
+Gestión y sincronización de citas
+0 COP
+Alta
+Claude Code
+Desarrollo y generación de flujos y código
+80 000 COP
+Media
+ChatGPT + GitHub Agent
+Desarrollo web, documentación y automatización de repositorios
+80 000 COP
+Media
+GitHub Pages
+Hosting estático de la landing page
+0 COP
+Media
+n8n + Google Maps API
+Prospección y clasificación de consultorios
+10 000 COP
+Media
+NotebookLM
+Generación de contenido educativo
+0 COP
+Baja
+Redes sociales (Instagram, TikTok)
+Difusión de contenido y captación orgánica
+0 COP
+Media
+Google Sheets
+CRM básico y dashboards iniciales
+0 COP
+Media
+Notion / Google Docs
+Documentación interna
+20 000 COP
+Baja
+WhatsApp Business
+Comunicación y soporte a clientes
+0 COP
+Alta
+Siguiente paso recomendado: Documentar el uso de cada herramienta en Notion, definir responsables y revisar trimestralmente los costos y la criticidad para optimizar el stack.
+15.5 Estado del MVP (abril 2026)
+El MVP de MEDACCER se construyó inicialmente en la nube de n8n el 16 de abril de 2026, alineado con el Día 1 del calendario de ejecución. El producto aún no cuenta con acceso autorizado a la WhatsApp Business API de Meta, por lo que opera mediante un webhook en entorno de pruebas. A continuación se describen la arquitectura y las capacidades actuales:
+Arquitectura técnica. El flujo principal utiliza más de 40 nodos en n8n. Incluye un nodo webhook conectado a la API de WhatsApp Cloud, un módulo de clasificación de intención con Claude AI (nueve categorías: agendar cita, cancelar, reagendar, confirmar, precios, horarios, emergencia, lista de espera y consultas generales), un switch de enrutamiento inteligente, integraciones con Google Calendar (lectura y escritura de eventos), conexión con Google Sheets como base de datos de pacientes, recordatorios programados mediante un nodo Cron a las 8 a.m. diarios y un nodo de reporte semanal.
+Multimedia como ventaja competitiva. El MVP procesa mensajes de audio mediante transcripción con Whisper (OpenAI) y permite interpretar imágenes y radiografías con Claude Vision. También puede analizar documentos PDF, lo que facilita la recepción de órdenes médicas y presupuestos. Estas capacidades diferencian a MEDACCER de los chatbots que solo manejan texto.
+Flujos implementados. El prototipo actual integra once flujos: (1) agendamiento de citas; (2) cancelación con oferta de reagendamiento; (3) confirmación de citas; (4) consulta de precios; (5) consulta de horarios; (6) detección y escalamiento de emergencias; (7) gestión de lista de espera; (8) escalamiento a humano; (9) respuesta conversacional general; (10) recordatorios automáticos 24 h antes; y (11) reporte semanal para el doctor.
+Tareas pendientes (Semanas 2–3). Se planifica implementar un flujo multi‑paso para el agendamiento que consulte la disponibilidad y ofrezca opciones de horario al paciente; incorporar un sistema de manejo de estados para conservar el contexto de la conversación; desarrollar un módulo de notas clínicas con IA (dictado de voz → texto estructurado); automatizar el seguimiento de presupuestos y pacientes inactivos; crear un gestor de reseñas Google; implementar el generador de RDA según la Resolución 1888; y construir un dashboard de rentabilidad para el paquete Premium.
+Coste de infraestructura del MVP. El flujo actual utiliza la versión Cloud de n8n (20 € al mes, ~88 000 COP), un consumo mensual estimado de 20 000–40 000 COP de la API de Claude (Haiku y Sonnet) y la WhatsApp Cloud API gratuita para las primeras 1 000 conversaciones. Las APIs de Google (Calendar y Sheets) no generan costos significativos. En total, el MVP funciona con aproximadamente 128 000 COP/mes de infraestructura.
+Siguiente paso recomendado: Asegurar la aprobación de Meta para utilizar WhatsApp Business API en producción, integrar el flujo completo de agendamiento multi‑paso y realizar pruebas con pacientes reales para refinar el lenguaje y corregir errores antes de comercializar. También se debe traducir todo el contenido a un español formal coherente con el público profesional y garantizar la trazabilidad de los datos para el RDA.
+16. Investigación de prospectos y mercado real
+Si bien las cifras de TAM y SAM ofrecen una visión macro, la ejecución comercial exige identificar clientes potenciales reales. Esta sección detalla el perfil del prospecto ideal, cuantifica el mercado en Bogotá, analiza los canales de prospección y presenta ejemplos de prospectos para los primeros contactos.
+16.1 Perfil del prospecto ideal (ICP)
+El cliente ideal de MEDACCER es un odontólogo independiente en Bogotá, de 35–55 años, con un consultorio de 1 a 2 sillas y facturación mensual entre 5 y 20 millones COP. Utiliza WhatsApp personal para gestionar citas y, en el mejor de los casos, lleva un registro en Excel o cuaderno. Tiene 50–200 reseñas en Google Maps y trabaja con un auxiliar o sin secretaria. Sus principales dolores son la pérdida de tiempo atendiendo WhatsApp, la elevada tasa de no‑shows y el temor a sanciones por la Resolución 1888. No utiliza software dental o considera que las soluciones existentes son caras y complejas. Se localiza en barrios de estratos 4 a 6 como Chapinero, Usaquén, Cedritos, Chicó, Santa Bárbara, Suba o Colina y suele invertir en campañas en redes sociales para atraer pacientes. Este perfil valora la agilidad y el cumplimiento normativo sobre la cantidad de funcionalidades.
+16.2 Cuantificación del mercado por zona en Bogotá
+Para estimar el número de consultorios odontológicos potenciales en cada localidad se combinan los datos de población por localidad[27] con la densidad de odontólogos de Bogotá (21 odontólogos por cada 10 000 habitantes, la cifra más alta del país[28]). Se asume que el 70 % de los odontólogos ejercen de forma independiente y que, en promedio, un consultorio atiende a dos odontólogos. Las cifras se redondean a números enteros para ilustrar el tamaño del mercado.
+Localidad
+Población (2024)
+Odontólogos estimados (2,1 ‰)
+Independientes (70 %)
+Consultorios independientes estimados
+Usaquén
+501 999
+1 054
+738
+369
+Chapinero
+139 701
+293
+205
+103
+Suba
+1 246 636
+2 618
+1 833
+916
+Kennedy
+1 088 443
+2 286
+1 600
+800
+Engativá
+887 080
+1 863
+1 304
+652
+Fontibón
+394 648
+829
+580
+290
+Teusaquillo
+153 025
+321
+225
+112
+Interpretación. Bogotá podría tener alrededor de 3 240 consultorios independientes en estas siete localidades prioritarias. La mayor concentración se da en Suba y Kennedy por su alta población, pero barrios como Chapinero y Usaquén tienen un mayor poder adquisitivo. Estas cifras permiten establecer cuotas de mercado realistas (por ejemplo, captar el 1 % de los consultorios de Usaquén equivaldría a 3–4 clientes).
+16.3 Análisis de prospectos por canal
+Google Maps. Una búsqueda de “odontólogo + barrio” en Google Maps arroja entre 150 y 300 resultados por localidad; por ejemplo, “odontólogo Chapinero” lista más de 200 consultorios, mientras que “odontólogo Suba” supera los 300. La mayoría de los perfiles tienen de 50 a 200 reseñas y calificaciones superiores a 4 estrellas, datos que se pueden usar para clasificar el dolor (reseñas que mencionan demoras o cancelaciones).
+Instagram. Se estima que hay 1 500 dentistas en Bogotá con cuentas activas en Instagram (usando hashtags como #odontologíaBogotá). Muchos publican antes y después, promociones y horarios. Estas cuentas son ideales para campañas de contenido educativo y mensajes directos.
+Directorios médicos. Sitios como Doctoralia, 1doc3 y TopDoctors Colombia suman más de 600 perfiles de odontólogos en Bogotá. Estos directorios incluyen datos de contacto y especialidad, pero no facilitan la automatización de mensajes, por lo que se usarán principalmente como verificación cruzada.
+16.4 Cómo se verían los primeros 30 prospectos
+La prospección automatizada genera una base de datos con campos clave para priorizar leads. A continuación se muestra una tabla de 10 ejemplos ficticios (los datos son ilustrativos):
+#
+Nombre del consultorio
+Zona
+Teléfono
+Reseñas Google
+Rating
+Dolor detectado
+Clasificación
+Estado
+1
+Sonrisas Chapinero
+Chapinero
+310 555 1234
+87
+4,5
+Quejas por demoras en agendar
+Caliente
+Sin contacto
+2
+Dental Cedritos
+Usaquén
+315 321 4567
+143
+4,6
+Pacientes comentan cancelaciones
+Tibio
+Sin contacto
+3
+Clínica Odonto Chicó
+Chicó
+310 234 9876
+210
+4,7
+Solicitan recordatorios automáticos
+Caliente
+Contactado
+4
+Odontología Santa Bárbara
+Santa Bárbara
+311 876 5432
+56
+4,2
+Usan WhatsApp personal
+Frío
+Sin contacto
+5
+Estética Dental Colina
+Colina
+320 777 6543
+98
+4,3
+Problemas con no‑shows
+Caliente
+Contactado
+6
+Sonrisa Perfecta Suba
+Suba
+317 555 6789
+175
+4,8
+Exceso de llamadas por WhatsApp
+Tibio
+Sin contacto
+7
+Odontología Integral Usaquén
+Usaquén
+321 111 2222
+65
+4,1
+Reseñas sobre falta de respuesta
+Caliente
+Sin contacto
+8
+Clínica Dental La Carrera
+Engativá
+314 999 3333
+120
+4,5
+Quejas por citas perdidas
+Tibio
+Sin contacto
+9
+Dental Fontibón
+Fontibón
+311 222 4444
+45
+4,0
+Uso de Excel para la agenda
+Tibio
+Sin contacto
+10
+Odonto Teusaquillo
+Teusaquillo
+312 666 7890
+102
+4,6
+Preocupación por la Resolución 1888
+Caliente
+Contactado
+Interpretación. La clasificación “Caliente” indica prospectos con reseñas que evidencian dolor fuerte (quejas sobre agenda, cancelaciones, interés en recordatorios). “Tibio” se asigna a clínicas con algunos problemas pero sin urgencia manifiesta, y “Frío” a aquellas con pocos dolores visibles. El estado refleja si ya se ha hecho contacto.
+16.5 Análisis de la competencia local en Bogotá
+La competencia local especializada en automatización odontológica en Bogotá es reducida. Existen algunas agencias de marketing digital que ofrecen chatbots genéricos para citas médicas, pero ninguna combina generación de RDA, IA conversacional avanzada y enfoque en consultorios pequeños.
+Agencias de automatización: empresas como ColombiaRED implementan chatbots de WhatsApp para clínicas y call centers. Un caso citado indica que una clínica en Laureles automatizó el 70 % de las citas y otra red de clínicas en el norte de Bogotá redujo el 40 % de las llamadas después de usar un chatbot[29]. Sin embargo, estos servicios son proyectos ad hoc que pueden costar 1 a 3 millones COP por implementación y no incluyen RDA ni IA clínica.
+Plataformas genéricas: competidores globales como ManyChat o Landbot venden chatbots por suscripción, pero no se adaptan a la normativa colombiana ni ofrecen triage o odontogramas.
+Software dental tradicional: Dentalink, Dentidesk y otros se orientan a clínicas medianas o grandes y requieren inversiones iniciales altas. Estas plataformas no suelen ofrecer automatización conversacional de WhatsApp nativa.
+Siguiente paso recomendado: Implementar el workflow de prospección en n8n, crear la primera base de 50 consultorios en Google Sheets e iniciar contactos piloto para validar mensajes y tasas de respuesta.
+17. Calendario de ejecución — primeros 30 días
+El siguiente cronograma detalla las actividades día por día desde el 16 de abril de 2026 hasta el 15 de mayo de 2026. El fundador, Juan Sebastián Guerrero, trabaja a tiempo completo (8–10 horas diarias) y asume todas las tareas. Las estimaciones son realistas y contemplan dependencias entre actividades.
+Fecha
+Tarea principal
+Herramienta asociada
+Tiempo estimado
+Entregable/resultado
+Dependencias
+16/04
+Registrar dominio medaccer.com y configurar correo corporativo
+Registro de dominios (Namecheap/GoDaddy)
+2 h
+Dominio adquirido y correo hola@medaccer.com configurado
+Ninguna
+17/04
+Finalizar diseño de la web (estructuras y estilos)
+Claude Code, GitHub Agent
+6 h
+Página HTML/CSS/JS lista; repositorio actualizado
+Dominio registrado
+18/04
+Instalar n8n local y seguir tutoriales básicos
+Terminal, n8n
+6 h
+Instancia de n8n corriendo localmente con acceso al panel
+Ninguna
+19/04
+Crear cuentas: Meta Business, WhatsApp Cloud API, Claude API, Google Cloud
+Navegador, formularios de inscripción
+4 h
+Cuentas operativas y credenciales almacenadas de forma segura
+Ninguna
+20/04
+Diseñar logo definitivo de MEDACCER
+Herramienta de diseño (Figma/Canva)
+3 h
+Logo en vectores y favicon generados
+Ninguna
+21/04
+Crear perfiles en redes sociales (Instagram, LinkedIn, TikTok)
+Redes sociales
+3 h
+Cuentas creadas y branding aplicado
+Logo finalizado
+22/04
+Subir la web a GitHub Pages y activar analytics
+GitHub Pages, Google Analytics
+4 h
+Sitio publicado y con seguimiento de visitas
+Diseño web finalizado
+23/04
+Conectar WhatsApp webhook → n8n → Claude API
+n8n, WhatsApp API, Claude API
+6 h
+Flujo básico: mensaje entrante → IA → respuesta
+Cuentas API creadas
+24/04
+Implementar agendamiento automático con Google Calendar
+n8n, Google Calendar API
+4 h
+Bot consulta disponibilidad y reserva espacios
+Flujo básico funcionando
+25/04
+Añadir recordatorios automáticos (24 h antes)
+n8n, WhatsApp API
+3 h
+Tareas programadas para enviar recordatorios
+Agendamiento implementado
+26/04
+Agregar flujo de confirmación/cancelación
+n8n, WhatsApp API
+3 h
+Bot gestiona respuestas “Sí/No” y ajusta la agenda
+Recordatorios integrados
+27/04
+Configurar generación de notas clínicas y RDA con IA
+n8n, Claude API
+5 h
+Prueba de dictado → transcripción → RDA exportado
+Flujos anteriores funcionando
+28/04
+Pruebas intensivas simulando pacientes; ajustar tiempos de respuesta
+Equipo de prueba
+6 h
+Bot responde en <5 s y registra correctamente la agenda
+Todos los flujos activos
+29/04
+Grabar video demo (60 s) mostrando el bot en acción
+Herramienta de grabación (OBS/Zoom)
+4 h
+Video listo para compartir; subido a YouTube
+Bot estable
+30/04
+Publicar web definitiva con mejoras de usabilidad
+GitHub Pages
+2 h
+Web final revisada; modales y CTA funcionando
+Video demo listo
+01/05
+Crear 5 piezas de contenido educativo sobre la Resolución 1888
+Claude Code, Canva, NotebookLM
+6 h
+Posts e infografías listos para redes
+Web definitiva publicada
+02/05
+Generar primer podcast/video educativo en NotebookLM
+NotebookLM, Audacity
+4 h
+Audio/video sobre automatización y RDA publicado
+Cuenta NotebookLM creada
+03/05
+Montar n8n en VPS (DigitalOcean) para producción
+VPS, n8n
+5 h
+Instancia en nube operando 24/7 con seguridad básica
+n8n probado localmente
+04/05
+Configurar workflow de prospección (Google Maps → Sheets)
+n8n, Google Maps API, Google Sheets
+6 h
+Script que extrae 50 prospectos por zona al día
+n8n en VPS
+05/05
+Publicar primer contenido en Instagram y TikTok
+Redes sociales
+3 h
+Post e historia publicados; interacción inicial
+Contenido creado
+06/05
+Revisar analytics y ajustar campaña de contenido
+Google Analytics, Meta Insights
+3 h
+Informe de interacción y optimización de hashtags
+Primer contenido publicado
+07/05
+Ejecutar prospección: identificar 50 consultorios en Bogotá
+n8n, Google Maps API
+6 h
+Lista de 50 prospectos en Google Sheets
+Workflow de prospección listo
+08/05
+Redactar mensajes personalizados para contactos
+Claude Code, WhatsApp templates
+4 h
+Scripts de mensajes adaptados al dolor detectado
+Lista de prospectos disponible
+09/05
+Enviar video demo a los primeros 20 prospectos
+WhatsApp Business
+3 h
+20 mensajes enviados con enlace al video y CTA
+Mensajes redactados
+10/05
+Enviar video demo a los siguientes 20 prospectos
+WhatsApp Business
+3 h
+Otros 20 mensajes enviados
+Día anterior completado
+11/05
+Agendar demos en vivo con los interesados (3–5 demos)
+Calendly/Google Calendar
+4 h
+Citas programadas con prospectos; recordatorios enviados
+Mensajes enviados
+12/05
+Realizar la primera demo en vivo (virtual o presencial)
+Zoom/Google Meet
+3 h
+Feedback capturado y dudas resueltas
+Demos agendadas
+13/05
+Ofrecer piloto beta gratuito al primer interesado (2 semanas)
+WhatsApp Business, n8n
+3 h
+Propuesta enviada y aceptada
+Demo realizada
+14/05
+Afinar el MVP y preparar piloto beta (sin cliente confirmado)
+n8n, Claude API, Google Calendar
+6 h
+MVP 100 % funcional listo para prueba con consultorio piloto
+Piloto propuesto
+15/05
+Recopilar métricas y prospectar: 50 prospectos contactados, 3–5 demos y al menos 1 piloto en conversación
+n8n, Google Sheets, WhatsApp Business
+4 h
+Métricas del MVP, lista de prospectos contactados y demos realizadas; piloto en negociación
+MVP afinado
+Interpretación. El calendario combina tareas técnicas (instalación y configuración), creativas (diseño de logo y contenido), comerciales (prospección y demos) y administrativas (registro de dominio y cuentas). La carga diaria es equilibrada para permitir aprendizaje y iteración y reconoce que en un plazo de 30 días puede no concretarse aún un cliente de pago. La meta al finalizar este periodo es tener el MVP 100 % funcional, haber contactado 50 prospectos, realizado 3–5 demostraciones y tener al menos un piloto beta en conversación. Si se logra cerrar un primer cliente en 30 días será un éxito rotundo; de no ser así, convertir el primer cliente entre los días 45 y 60 es perfectamente normal para un SaaS B2B.
+Siguiente paso recomendado: Al finalizar los 30 días, recopilar métricas de interacción (número de leads contactados, demos realizadas, problemas detectados), evaluar la calidad del MVP y la receptividad de los prospectos, ajustar el flujo de ventas y preparar una propuesta de valor mejorada para el mes siguiente.
+18. Escenario de bootstrap (sin inversión externa)
+MEDACCER arranca con recursos propios del fundador y sin inversión externa. El objetivo es validar el producto, generar ingresos iniciales y demostrar tracción antes de buscar capital.
+18.1 Costos reales del mes 1
+Concepto
+Detalle y justificación
+Costo (COP)
+Dominio medaccer.com
+Registro anual en proveedor internacional; primer pago se realiza al inicio.
+40 000
+VPS (DigitalOcean) para n8n
+Servidor de 1 vCPU y 1 GB RAM suficiente para alojar n8n; permite autoescalado a futuro.
+40 000
+Claude API
+Consumo estimado de 800 conversaciones (inicio) a 20 COP c/u.
+16 000
+Google Maps API
+1 000 llamadas para prospección; Google ofrece 200 USD de crédito, por lo que el costo inicial es bajo.
+10 000
+Notion (plan personal)
+Herramienta de documentación; plan mensual si se elige versión plus.
+20 000
+Otros (imprevistos)
+Licencias menores, imágenes de stock, pequeñas integraciones.
+10 000
+Total mes 1
+Suma de todos los costos.
+136 000
+El uso de WhatsApp Business API y Google Calendar no genera costo durante el primer mes (hasta 1 000 conversaciones y uso básico de la API), y la suscripción a ChatGPT y Claude Pro ya está cubierta por el presupuesto personal del fundador.
+18.2 Cuándo se necesita dinero real
+Contratación de personal. Al alcanzar 20–30 clientes recurrentes (mes 6–8), será necesario contratar a un desarrollador de IA y a un ejecutivo de ventas para escalar la operación. El coste mensual adicional rondará los 5 a 7 millones COP.
+Costos de API. Si el bot supera las 3 000 conversaciones mensuales, los cargos de WhatsApp y Claude se incrementarán. Se estima que a partir del mes 5 se pagarán 50 000–100 000 COP mensuales por WhatsApp y 100 000 COP por Claude. Se deben ajustar los precios o segmentar conversaciones.
+Formalización como SAS. Cuando haya 5–10 clientes pagos se recomienda constituir la empresa como SAS para abrir cuentas bancarias, facturar legalmente y acceder a beneficios tributarios. Los costos notariales y administrativos son alrededor de 1 millón COP.
+Búsqueda de inversión. Tras lograr el product‑market fit (30 clientes y churn <10 %), se puede buscar inversión semilla (~250 000 USD) para acelerar marketing y desarrollo. Esto podría ocurrir entre los meses 8 y 12.
+18.3 Ruta bootstrap vs inversión
+Opción
+Ventajas
+Desventajas
+Bootstrap
+Control total del negocio, dilución nula; aprendizaje profundo de clientes y del mercado; permite pivotar rápidamente.
+Crecimiento más lento; mayor carga de trabajo para el fundador; riesgo de saturación ante una demanda alta.
+Inversión externa
+Acelera la expansión y el desarrollo; acceso a redes y mentoría de inversores; permite contratar equipo y escalar marketing.
+Dilución accionaria; presión por hitos de crecimiento; los inversores pueden condicionar la estrategia.
+¿Cuál es mejor?. En la etapa actual (producto en desarrollo y sin clientes), la mejor ruta es el bootstrap. Permite validar la propuesta con pocos recursos, ajustar precios y funcionalidades y construir una base de testimonios. Una vez se alcancen 30 clientes y se demuestre la viabilidad económica, se recomienda evaluar una ronda semilla para escalar rápidamente en Colombia y entrar a México y Chile.
+Siguiente paso recomendado: Controlar cuidadosamente los gastos mes a mes y preparar un pitch deck para inversionistas que resuma las métricas clave y la tracción obtenida. Esto permitirá iniciar conversaciones con potenciales inversores cuando se logre el product‑market fit.
+19. Elevator Pitch (60 segundos)
+«Doctor, ¿cuántas citas perdió este mes porque el paciente no contestó la llamada? ¿Cuántas horas pasó su auxiliar respondiendo WhatsApp?
+MEDACCER conecta un asistente de inteligencia artificial a su WhatsApp. El paciente escribe, la IA agenda la cita en su calendario, envía un recordatorio 24 horas antes y confirma automáticamente. Esto reduce las inasistencias en 40 %. Además, genera el RDA que exige la Resolución 1888; si no lo está generando, su consultorio puede recibir multas de hasta $10 400 millones[6].
+No necesita cambiar su software ni aprender nada nuevo. En 48 horas su WhatsApp responde solo.
+Desde 350 000 COP al mes. ¿Le gustaría ver una demo de 5 minutos?»
+Siguiente paso recomendado: Practicar este pitch en llamadas con prospectos y ajustar el guion según las objeciones más frecuentes para maximizar la tasa de conversión.
+20. Actualización del producto — MEDACCER v0.1 (MVP)
+Esta sección resume el estado funcional del producto a fecha de abril de 2026 y las etapas pendientes para las versiones Profesional y Premium.
+20.1 MEDACCER v0.1 — Día 1 (MVP)
+Status: El primer workflow funcional se completó en n8n Cloud el 16 de abril de 2026. Actualmente no se cuenta con conexión a la WhatsApp Business API real; el bot opera mediante un webhook de pruebas mientras se tramita la aprobación de Meta.
+Lo que funciona hoy:
+✅ El bot responde mensajes vía webhook.
+✅ Clasifica 9 tipos de intención (agendar, cancelar, reagendar, confirmar, precios, horarios, emergencias, lista de espera, preguntas generales).
+✅ Responde consultas de precios y horarios y maneja emergencias (con escalado a humano).
+✅ Escala a humano cuando la IA no puede resolver la petición o detecta una situación crítica.
+✅ Procesa audio, imágenes y documentos PDF, convirtiéndolos en texto mediante Whisper y Claude Vision.
+✅ Envía recordatorios automáticos 24 horas antes de la cita.
+✅ Genera un reporte semanal para el doctor (número de citas, no‑shows, consultas).
+Lo que falta para lanzar (2–3 semanas):
+⏳ Aprobación de la cuenta de Meta Business para usar la WhatsApp Business API en producción.
+⏳ Implementar el flujo completo de agendamiento multi‑paso: consultar calendario → proponer varias opciones → confirmar y crear evento.
+⏳ Incorporar un sistema de manejo de estado para mantener el contexto entre mensajes y flujos.
+⏳ Realizar tests con pacientes reales (beta cerrada) y ajustar la UX conversacional.
+⏳ Homogeneizar el contenido a un español formal en todos los mensajes, adaptado al público médico.
+20.2 Etapas para MEDACCER v0.2 (Plan Profesional)
+Para la versión Profesional, programada para el mes 2 post‑lanzamiento, se desarrollarán:
+⏳ Notas clínicas con IA: permitir dictar notas por voz y estructurarlas automáticamente.
+⏳ Lista de espera inteligente: gestionar turnos y ofrecer huecos disponibles a pacientes en cola.
+⏳ Seguimiento de presupuestos: monitorizar tratamientos planificados y recordatorios para cerrar ventas.
+⏳ Marketing automatizado: enviar campañas segmentadas a pacientes inactivos o con presupuestos pendientes.
+⏳ Gestor de reseñas Google: solicitar reseñas a pacientes satisfechos de manera automática.
+20.3 Etapas para MEDACCER v0.3 (Plan Premium)
+La versión Premium, estimada para el mes 3, añadirá funcionalidades avanzadas:
+⏳ Generador de RDA: creación automática del Resumen Digital de Atención, empaquetado en formato HL7 FHIR y envío al sistema de interoperabilidad.
+⏳ Triage inteligente: clasificación de pacientes según gravedad y priorización en agenda.
+⏳ Dashboard de rentabilidad: métricas en tiempo real sobre ingresos, costos y no‑shows.
+⏳ Seguimiento post‑operatorio 24/7: mensajes de control y alertas para pacientes en recuperación.
+Siguiente paso recomendado: mantener al día un registro de los avances del producto en Notion y comunicar a los clientes prospectos las funcionalidades actuales y la hoja de ruta, reforzando la percepción de innovación continua.
+Conclusión. MEDACCER se posiciona como una solución de automatización integral para consultorios médicos y odontológicos en un contexto regulatorio exigente y de rápido crecimiento de la salud digital. Con un producto especializado, un mercado amplio y una estructura de negocio escalable, la empresa tiene el potencial de convertirse en líder regional en automatización médica basada en IA.
+
+[1] [10] WhatsApp as a Healthcare Channel: Why LATAM Leads This Revolution | Blog Davix
+https://davix.ai/en/blog/whatsapp-canal-salud-latam/
+[2] Text appointment reminders reduce no-shows by 38%
+https://www.klara.com/blog/text-message-appointment-reminders-reduce-no-shows-by-38-study-finds
+[3]  Colombia Has 122,800 Doctors Serving the General Population 
+https://www.minsalud.gov.co/English/Paginas/Colombia-Has-122,800-Doctors-Serving-the-General-Population.aspx
+[4] ¿Más médicos? - Academia Nacional de Medicina de Colombia
+https://anmdecolombia.org.co/mas-medicos/
+[5] [7] [13] [23] Cómo implementar el Resumen Digital de Atención (RDA)
+https://conexia.com/blog/como-implementar-el-resumen-digital-de-atencion/
+[6] [11] ¿Qué pasa si tu clínica no cumple con la Resolución 1888 de 2025?: Sanciones y riesgos - Clinova - Software Médico
+https://clinova24.com/uncategorized/que-pasa-si-tu-clinica-no-cumple-con-la-resolucion-1888-de-2025/
+[8] [16] Latin America Digital Health Market Growth & Analysis, 2033
+https://www.marketdataforecast.com/market-reports/latin-america-digital-health-market
+[9] [17] Latin America AI in Healthcare Market Size, Share, Trends, and Growth Report to 2033
+https://blog.libero.it/wp/researchmapping/2025/12/31/latin-america-ai-healthcare-market-size-share-trends-and-growth-report-to-2033/
+[12] [26] Reducing shortage of nurses key to better respond to the next pandemic - PAHO/WHO | Pan American Health Organization
+https://www.paho.org/en/news/12-5-2023-reducing-shortage-nurses-key-better-respond-next-pandemic
+[14] [15] CAC Trends for Growth-Stage Companies 2025 - Phoenix Strategy Group
+https://www.phoenixstrategy.group/blog/cac-trends-growth-stage-companies-2025
+[18] B2Chat Careers, Perks + Culture | Built In
+https://builtin.com/company/b2chat
+[19] AI Agent & Chatbot Builder for WhatsApp + Website | Landbot
+https://landbot.io/
+[20] [22] Best Automation Platforms for WhatsApp 2025: Complete Guide
+https://www.aurorainbox.com/en/2026/02/01/best-whatsapp-automation-platforms/
+[21]  IA para PYMES y Agencias | Software de Gestión y Marketing 
+https://www.bewe.io/
+[24] Doctors: Health at a Glance: Latin America and the Caribbean 2023 | OECD
+https://www.oecd.org/en/publications/health-at-a-glance-latin-america-and-the-caribbean-2023_532b0e2d-en/full-report/component-49.html
+[25] Spain Digital Health Market Size, Trends and Forecast to 2032
+https://www.databridgemarketresearch.com/nucleus/spain-digital-health-market?srsltid=AfmBOopua4AVS7zYskW3HaohKixjCu0BvXfhFZMQf28OuQEKWYl7zPWk
+[27] Bogotá - Wikipedia, la enciclopedia libre
+https://es.wikipedia.org/wiki/Bogot%C3%A1
+[28] Implementación del Registro Único Nacional del Talento Humano en Salud (ReTHUS)
+https://www.udea.edu.co/wps/wcm/connect/udea/abeb4654-0a47-494c-a078-6eef33c81b2c/5.+Indicadores+odontolog%C3%ADa+Minsalud.pdf?MOD=AJPERES
+[29] Chatbot WhatsApp Para Clínicas Y Call Centers: Automatización Inteligente En Medellín Y Bogotá - ColombiaRED Sms Masivos, Pbx, Telefonia Ip 2026
+https://colombiared.com.co/chatbot-whatsapp-para-clinicas-y-call-centers/

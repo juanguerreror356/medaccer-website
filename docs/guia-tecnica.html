@@ -1,0 +1,2832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEDACCER — Guía técnica de implementación</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #FDFCF8;
+  --cream: #FBF8F2;
+  --ink-900: #0E1116;
+  --ink-800: #1A1F28;
+  --ink-700: #2F3742;
+  --ink-600: #4A5361;
+  --ink-500: #6B7480;
+  --ink-400: #8B93A0;
+  --ink-300: #B5BBC5;
+  --ink-200: #D8DCE2;
+  --ink-100: #ECEEF2;
+  --ink-50:  #F4F5F8;
+  --m-blue: #0A6BBF;
+  --m-blue-50: #E8F2FB;
+  --m-blue-100: #CFE4F6;
+  --m-teal: #10B981;
+  --m-teal-50: #E6F9F3;
+  --m-amber: #F59E0B;
+  --m-red: #DC2626;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Inter Tight', -apple-system, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-800);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+/* SIDEBAR */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--cream);
+  border-right: 1px solid var(--ink-100);
+  padding: 28px 22px;
+  overflow-y: auto;
+}
+.logo {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--ink-900);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.logo-sub {
+  font-size: 11px;
+  color: var(--ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 28px;
+}
+.toc { list-style: none; padding: 0; margin: 0; }
+.toc-section {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-400);
+  margin: 22px 0 8px;
+  padding: 0 8px;
+}
+.toc-section:first-child { margin-top: 0; }
+.toc a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 6px;
+  color: var(--ink-700);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 1px;
+  transition: all 0.12s;
+}
+.toc a:hover { background: var(--ink-50); color: var(--ink-900); }
+.toc a.active { background: var(--m-blue-50); color: var(--m-blue); }
+
+/* MAIN */
+.main {
+  max-width: 860px;
+  padding: 60px 72px 120px;
+}
+h1 {
+  font-family: var(--serif);
+  font-size: 56px;
+  line-height: 1.05;
+  font-weight: 400;
+  color: var(--ink-900);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+h1 em {
+  font-style: italic;
+  color: var(--m-blue);
+}
+.subtitle {
+  font-size: 18px;
+  color: var(--ink-500);
+  margin-bottom: 48px;
+  max-width: 640px;
+}
+h2 {
+  font-family: var(--serif);
+  font-size: 36px;
+  line-height: 1.15;
+  font-weight: 400;
+  color: var(--ink-900);
+  margin: 72px 0 8px;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 40px;
+}
+h2 em { font-style: italic; color: var(--m-blue); }
+h2 .num {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-400);
+  font-style: normal;
+  display: block;
+  margin-bottom: 8px;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin: 36px 0 10px;
+  letter-spacing: -0.005em;
+}
+h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-800);
+  margin: 24px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+p { margin: 0 0 14px; color: var(--ink-700); }
+p strong { color: var(--ink-900); font-weight: 600; }
+a { color: var(--m-blue); text-decoration: none; border-bottom: 1px solid var(--m-blue-100); }
+a:hover { border-bottom-color: var(--m-blue); }
+
+ul, ol { margin: 0 0 16px; padding-left: 22px; color: var(--ink-700); }
+li { margin-bottom: 6px; }
+li code { font-size: 13px; }
+
+code {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--ink-50);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--ink-800);
+  border: 1px solid var(--ink-100);
+}
+pre {
+  background: var(--ink-900);
+  color: #E6EAF0;
+  padding: 20px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 18px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+}
+pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+}
+pre .kw { color: #FF7B72; }
+pre .str { color: #A5D6FF; }
+pre .fn { color: #D2A8FF; }
+pre .cm { color: #8B949E; font-style: italic; }
+pre .num { color: #79C0FF; }
+
+/* CALLOUT */
+.callout {
+  background: var(--m-blue-50);
+  border-left: 3px solid var(--m-blue);
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+  margin: 18px 0;
+  font-size: 14px;
+}
+.callout.warn { background: #FEF3C7; border-color: var(--m-amber); }
+.callout.warn strong { color: #92400E; }
+.callout.danger { background: #FEE2E2; border-color: var(--m-red); }
+.callout.danger strong { color: #991B1B; }
+.callout.ok { background: var(--m-teal-50); border-color: var(--m-teal); }
+.callout.ok strong { color: #047857; }
+.callout .tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--m-blue);
+  color: white;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.callout.warn .tag { background: var(--m-amber); color: #1A1F28; }
+.callout.danger .tag { background: var(--m-red); }
+.callout.ok .tag { background: var(--m-teal); }
+
+/* GLOSSARY */
+.glossary { margin: 16px 0 24px; }
+.glossary dt {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--m-blue);
+  margin-top: 14px;
+}
+.glossary dd {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--ink-700);
+  line-height: 1.55;
+}
+
+/* API TABLE */
+.api-table code { font-size: 12px; }
+.api-pub {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--m-teal-50);
+  color: #047857;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* TABLE */
+.table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--ink-100); border-radius: 10px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  text-align: left;
+  padding: 12px 16px;
+  background: var(--cream);
+  font-weight: 600;
+  color: var(--ink-800);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--ink-100);
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ink-100);
+  color: var(--ink-700);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+td.num { font-family: var(--mono); text-align: right; color: var(--ink-900); font-weight: 500; }
+td.total { font-weight: 700; color: var(--ink-900); background: var(--ink-50); }
+
+/* CARDS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+.card {
+  background: white;
+  border: 1px solid var(--ink-100);
+  border-radius: 10px;
+  padding: 18px;
+}
+.card h4 { margin: 0 0 8px; text-transform: none; letter-spacing: 0; font-size: 14px; }
+.card p { font-size: 13px; margin: 0; color: var(--ink-600); }
+.card .ico {
+  width: 36px;
+  height: 36px;
+  background: var(--m-blue-50);
+  color: var(--m-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* ARCH DIAGRAM */
+.arch {
+  background: var(--cream);
+  border: 1px solid var(--ink-100);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 24px 0;
+}
+.arch-layer {
+  background: white;
+  border: 1px solid var(--ink-100);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+}
+.arch-layer .lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-400);
+  font-weight: 600;
+  min-width: 90px;
+}
+.arch-layer .items { display: flex; gap: 8px; flex-wrap: wrap; }
+.arch-pill {
+  background: var(--ink-50);
+  border: 1px solid var(--ink-100);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink-700);
+  font-weight: 500;
+}
+.arch-pill.blue { background: var(--m-blue-50); color: var(--m-blue); border-color: var(--m-blue-100); }
+.arch-pill.teal { background: var(--m-teal-50); color: #047857; border-color: rgba(16,185,129,0.2); }
+.arch-pill.amber { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+.arch-arrow { text-align: center; color: var(--ink-400); font-size: 20px; margin: -2px 0; }
+
+/* TIMELINE */
+.timeline { margin: 24px 0; border-left: 2px solid var(--ink-100); padding-left: 24px; }
+.tl-item { margin-bottom: 28px; position: relative; }
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--m-blue);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--m-blue);
+}
+.tl-week {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--m-blue);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.tl-title { font-size: 16px; font-weight: 600; color: var(--ink-900); margin-bottom: 4px; }
+.tl-desc { font-size: 13px; color: var(--ink-600); }
+
+/* STEP BLOCK */
+.step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  margin: 18px 0;
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--ink-100);
+  border-radius: 10px;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--m-blue);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-body h4 { margin: 2px 0 4px; font-size: 14px; text-transform: none; letter-spacing: 0; }
+.step-body p { font-size: 13px; margin: 0 0 6px; color: var(--ink-600); }
+.step-meta { font-size: 11px; color: var(--ink-400); font-family: var(--mono); }
+
+/* COST */
+.cost-total {
+  background: linear-gradient(135deg, var(--ink-900), var(--ink-800));
+  color: white;
+  padding: 24px 28px;
+  border-radius: 12px;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+.cost-total .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-300); margin-bottom: 4px; }
+.cost-total .val { font-family: var(--serif); font-size: 42px; font-style: italic; line-height: 1; }
+.cost-total .note { font-size: 12px; color: var(--ink-300); margin-top: 6px; }
+
+/* NAV TOP */
+.topnav {
+  position: sticky;
+  top: 0;
+  background: rgba(253,252,248,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ink-100);
+  padding: 14px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  margin: -60px -72px 48px;
+  padding-left: 72px;
+  padding-right: 72px;
+}
+.topnav .crumb { font-size: 13px; color: var(--ink-500); }
+.topnav .crumb strong { color: var(--ink-900); }
+.topnav .actions { display: flex; gap: 10px; }
+.btn {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--ink-200);
+  background: white;
+  color: var(--ink-800);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink-200);
+}
+.btn:hover { background: var(--ink-50); border-bottom-color: var(--ink-200); }
+.btn.primary { background: var(--ink-900); color: white; border-color: var(--ink-900); }
+.btn.primary:hover { background: var(--ink-800); }
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .main { padding: 40px 24px 80px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 28px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .topnav { margin: -40px -24px 32px; padding: 14px 24px; }
+}
+
+/* DETAILS */
+details {
+  background: white;
+  border: 1px solid var(--ink-100);
+  border-radius: 10px;
+  margin: 14px 0;
+  overflow: hidden;
+}
+details summary {
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink-900);
+  font-size: 14px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+details summary::after {
+  content: '+';
+  font-size: 20px;
+  color: var(--ink-400);
+  font-weight: 300;
+  transition: transform 0.15s;
+}
+details[open] summary::after { transform: rotate(45deg); }
+details summary::-webkit-details-marker { display: none; }
+details .body { padding: 0 18px 18px; border-top: 1px solid var(--ink-100); }
+
+/* FOLDER TREE */
+.tree {
+  background: var(--ink-900);
+  color: #E6EAF0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  padding: 22px 24px;
+  border-radius: 10px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.tree .dir { color: #7EE787; }
+.tree .file { color: #E6EAF0; }
+.tree .cmt { color: #8B949E; }
+
+kbd {
+  background: var(--ink-50);
+  border: 1px solid var(--ink-200);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-800);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--ink-100);
+  color: var(--ink-700);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge.done { background: var(--m-teal-50); color: #047857; }
+.badge.todo { background: #FEF3C7; color: #92400E; }
+.badge.hard { background: #FEE2E2; color: #991B1B; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">MEDACCER<em style="color:var(--m-blue)">.</em></div>
+    <div class="logo-sub">Guía técnica · v1.0</div>
+
+    <nav>
+      <ul class="toc">
+        <li class="toc-section">Contexto</li>
+        <li><a href="#overview">Resumen ejecutivo</a></li>
+        <li><a href="#qué-se-construyó">Qué se construyó (prototipo)</a></li>
+
+        <li class="toc-section">Arquitectura</li>
+        <li><a href="#arquitectura">Arquitectura del sistema</a></li>
+        <li><a href="#stack">Stack tecnológico</a></li>
+        <li><a href="#estructura">Estructura del monorepo</a></li>
+        <li><a href="#modelo-datos">Modelo de datos</a></li>
+
+        <li class="toc-section">Del prototipo a producción</li>
+        <li><a href="#migracion">Plan de migración</a></li>
+        <li><a href="#landing-prod">Landing en producción</a></li>
+        <li><a href="#crm-prod">CRM en producción</a></li>
+        <li><a href="#ia-agente">El agente de IA (real)</a></li>
+
+        <li class="toc-section">Integraciones</li>
+        <li><a href="#whatsapp">WhatsApp Business API</a></li>
+        <li><a href="#n8n">n8n</a></li>
+        <li><a href="#gcal">Google Calendar</a></li>
+        <li><a href="#wompi">Wompi (pagos)</a></li>
+        <li><a href="#minsalud">MinSalud RDA (FHIR)</a></li>
+        <li><a href="#otros">Otras integraciones</a></li>
+
+        <li class="toc-section">Seguridad y legal</li>
+        <li><a href="#compliance">Ley 1581 y compliance</a></li>
+        <li><a href="#seguridad">Seguridad técnica</a></li>
+
+        <li class="toc-section">Operación</li>
+        <li><a href="#costos">Costos de infraestructura</a></li>
+        <li><a href="#roadmap">Roadmap a MVP</a></li>
+        <li><a href="#equipo">Equipo y presupuesto</a></li>
+        <li><a href="#deploy">Deploy a producción</a></li>
+        <li><a href="#cicd">CI/CD y observabilidad</a></li>
+        <li><a href="#testing">Testing y QA</a></li>
+        <li><a href="#runbooks">Runbooks operacionales</a></li>
+
+        <li class="toc-section">Profundizando</li>
+        <li><a href="#schemas-especialidad">Schemas SQL por especialidad</a></li>
+        <li><a href="#prompts-ia">Prompts del agente IA</a></li>
+        <li><a href="#webhook-codigo">Webhook WhatsApp (código)</a></li>
+        <li><a href="#fhir-bundle">FHIR Bundle real (RDA)</a></li>
+        <li><a href="#api-reference">API reference</a></li>
+        <li><a href="#metricas-dashboards">Métricas y dashboards</a></li>
+        <li><a href="#glosario">Glosario</a></li>
+
+        <li class="toc-section">Cierre</li>
+        <li><a href="#proximos-pasos">Próximos pasos</a></li>
+        <li><a href="#anexos">Anexos</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <nav class="topnav">
+      <div class="crumb">Documentación · <strong>Guía técnica de implementación</strong></div>
+      <div class="actions">
+        <a href="../index.html" class="btn">← Ver prototipo</a>
+        <button class="btn primary" onclick="window.print()">Imprimir / PDF</button>
+      </div>
+    </nav>
+
+    <h1 id="overview">Guía técnica de<br/><em>implementación</em></h1>
+    <p class="subtitle">
+      Este documento describe cómo se construyó el prototipo actual de MEDACCER, qué piezas son reales, qué es placeholder, y exactamente qué se necesita para llevarlo a producción: arquitectura, integraciones paso a paso, costos y cronograma.
+    </p>
+
+    <!-- ========== RESUMEN ========== -->
+
+    <h2><span class="num">00 — Resumen</span>Resumen <em>ejecutivo</em></h2>
+
+    <p><strong>MEDACCER</strong> es un CRM y agente conversacional (WhatsApp) para consultorios médicos en Colombia. El producto combina tres capas:</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="ico">🤖</div>
+        <h4>Agente IA</h4>
+        <p>Atiende WhatsApp 24/7, agenda citas, cobra, confirma, hace triage, recuerda controles.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📋</div>
+        <h4>CRM médico</h4>
+        <p>Panel para consultorio: pacientes, citas, conversaciones, historia clínica, facturación, RDA.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🔌</div>
+        <h4>Integraciones</h4>
+        <p>WhatsApp, Google Calendar, Wompi, MinSalud FHIR, n8n, ERP (Siigo/Alegra).</p>
+      </div>
+    </div>
+
+    <div class="callout ok">
+      <span class="tag">Estado</span><strong>Prototipo completo, navegable y realista.</strong> Todo el frontend (landing + CRM + onboarding + checkout + blog) está funcional con datos mock. El siguiente paso es conectar el backend real siguiendo esta guía.
+    </div>
+
+    <!-- ========== QUÉ SE CONSTRUYÓ ========== -->
+
+    <h2><span class="num">01 — Prototipo</span>Qué se <em>construyó</em></h2>
+
+    <p>El prototipo actual es una aplicación <strong>single-page</strong> en React 18, servida desde un único <code>index.html</code>, con routing por hash (<code>#home</code>, <code>#crm</code>, <code>#blog</code>, etc). Todos los datos son mock (arrays en memoria).</p>
+
+    <h3>Landing pública <span class="badge done">Completa</span></h3>
+    <ul>
+      <li><strong>Hero</strong> con phone mockup animado (3 escenarios: agendamiento, cobro, control)</li>
+      <li><strong>Selector de especialidades</strong> con demos únicos por categoría (medicina general, estética, odontología, pediatría, psicología, etc)</li>
+      <li><strong>Sección Módulos</strong> con preview de cada pieza del producto</li>
+      <li><strong>Cómo funciona</strong> (3 pasos)</li>
+      <li><strong>Pricing</strong> (3 planes con billing mensual/anual)</li>
+      <li><strong>Calculadora ROI</strong> interactiva</li>
+      <li><strong>Integraciones</strong> (con página detallada)</li>
+      <li><strong>FAQ</strong> con preguntas reales médicos</li>
+      <li><strong>Blog</strong> con 10+ posts largos sobre Resolución 1888, IA médica, agendamiento, etc</li>
+      <li><strong>Resolución 1888</strong> sección dedicada</li>
+    </ul>
+
+    <h3>Flujo de onboarding <span class="badge done">Completo</span></h3>
+    <ul>
+      <li>Signup → Checkout (pasarela pago) → Onboarding multi-step</li>
+      <li>Modal Google OAuth mockeado (visualmente idéntico al real)</li>
+      <li>Ley 1581 consent en signup</li>
+    </ul>
+
+    <h3>CRM autenticado <span class="badge done">Completo</span></h3>
+    <ul>
+      <li><strong>Inicio</strong>: KPIs, agenda de hoy, actividad reciente</li>
+      <li><strong>Pacientes</strong>: lista, ficha individual con timeline</li>
+      <li><strong>Agenda</strong>: vista semana/día/mes</li>
+      <li><strong>Conversaciones</strong>: inbox estilo WhatsApp</li>
+      <li><strong>Automatizaciones</strong>: editor visual de flujos</li>
+      <li><strong>Finanzas</strong>: ingresos, pagos, facturación</li>
+      <li><strong>RDA MinSalud</strong>: cola de envíos, histórico</li>
+      <li><strong>Vista móvil del CRM</strong>: interfaz optimizada para doctor en consulta</li>
+      <li><strong>Ajustes</strong>: equipo, integraciones, modo oscuro, seguridad, zona peligrosa</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="tag">Placeholder</span><strong>Todo lo anterior es visual.</strong> No hay API, no hay base de datos, no hay llamadas reales a WhatsApp/OpenAI/Wompi. El CRM vive en memoria: si recargas pierdes los datos. Este documento explica cómo hacerlo real.
+    </div>
+
+    <!-- ========== ARQUITECTURA ========== -->
+
+    <h2><span class="num">02 — Arquitectura</span>Arquitectura del <em>sistema</em></h2>
+
+    <p>La arquitectura recomendada es <strong>multi-tenant SaaS</strong>: un único backend sirve a múltiples consultorios, aislados por <code>consultorio_id</code> en cada query. Cada consultorio puede tener múltiples usuarios con roles (owner, doctor, recepcionista).</p>
+
+    <div class="arch">
+      <div class="arch-layer">
+        <div class="lbl">Cliente</div>
+        <div class="items">
+          <span class="arch-pill blue">Web (React)</span>
+          <span class="arch-pill blue">PWA móvil</span>
+          <span class="arch-pill teal">WhatsApp (Meta)</span>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="lbl">Edge</div>
+        <div class="items">
+          <span class="arch-pill">Cloudflare CDN + WAF</span>
+          <span class="arch-pill">AWS ALB</span>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="lbl">API</div>
+        <div class="items">
+          <span class="arch-pill blue">NestJS (api-gateway)</span>
+          <span class="arch-pill blue">Auth0 / Clerk</span>
+          <span class="arch-pill">Rate limit</span>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="lbl">Workers</div>
+        <div class="items">
+          <span class="arch-pill amber">worker-whatsapp</span>
+          <span class="arch-pill amber">worker-ai</span>
+          <span class="arch-pill amber">worker-billing</span>
+          <span class="arch-pill amber">worker-fhir</span>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="lbl">Datos</div>
+        <div class="items">
+          <span class="arch-pill teal">PostgreSQL (RDS)</span>
+          <span class="arch-pill teal">Redis (ElastiCache)</span>
+          <span class="arch-pill teal">S3 (audio, PDFs)</span>
+          <span class="arch-pill teal">OpenSearch (logs)</span>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-layer">
+        <div class="lbl">Externos</div>
+        <div class="items">
+          <span class="arch-pill">OpenAI GPT-4o</span>
+          <span class="arch-pill">Anthropic Claude</span>
+          <span class="arch-pill">Meta WhatsApp API</span>
+          <span class="arch-pill">Google Calendar</span>
+          <span class="arch-pill">Wompi</span>
+          <span class="arch-pill">MinSalud FHIR</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="stack">Stack tecnológico</h3>
+
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Capa</th><th>Tecnología</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Frontend</strong></td><td>React 18 + Vite + TypeScript</td><td>Lo que ya tienes, solo migras a build real</td></tr>
+        <tr><td>Routing</td><td>React Router 6</td><td>Reemplaza el hash router del prototipo</td></tr>
+        <tr><td>State</td><td>Zustand + TanStack Query</td><td>Liviano, sin boilerplate</td></tr>
+        <tr><td>UI</td><td>Radix UI + CSS vars actuales</td><td>Componentes accesibles, diseño ya hecho</td></tr>
+        <tr><td><strong>Backend API</strong></td><td>NestJS (Node 20, TypeScript)</td><td>Estructura modular, decoradores, DI, validación</td></tr>
+        <tr><td>ORM</td><td>Prisma</td><td>Type-safe, migraciones versionadas</td></tr>
+        <tr><td>Base de datos</td><td>PostgreSQL 16</td><td>Row Level Security para multi-tenancy</td></tr>
+        <tr><td>Cache / colas</td><td>Redis 7 + BullMQ</td><td>Rate limiting, sesiones, jobs asíncronos</td></tr>
+        <tr><td>Auth</td><td>Clerk ó Auth0</td><td>MFA, SSO, magic links — no reinventar la rueda</td></tr>
+        <tr><td>Storage</td><td>AWS S3</td><td>Audio de RDA, PDFs, imágenes de pacientes</td></tr>
+        <tr><td><strong>IA</strong></td><td>OpenAI GPT-4o-mini + Claude Haiku</td><td>Dos proveedores, fallback automático</td></tr>
+        <tr><td>Voz</td><td>OpenAI Whisper API</td><td>Transcripción de notas del doctor</td></tr>
+        <tr><td>Embeddings</td><td>OpenAI text-embedding-3-small</td><td>Búsqueda semántica en servicios, historias</td></tr>
+        <tr><td><strong>Infra</strong></td><td>AWS (sa-east-1 São Paulo)</td><td>Latencia baja desde Colombia, datos en LATAM</td></tr>
+        <tr><td>Compute</td><td>ECS Fargate</td><td>Containers sin gestionar servidores</td></tr>
+        <tr><td>CDN / WAF</td><td>Cloudflare Pro</td><td>DDoS, cache, reglas de seguridad</td></tr>
+        <tr><td>Observability</td><td>Sentry + Datadog APM</td><td>Errores + trazas distribuidas</td></tr>
+        <tr><td>CI/CD</td><td>GitHub Actions + Terraform</td><td>Infra as code, deploy automático</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="estructura">Estructura del monorepo</h3>
+
+    <div class="tree">
+<span class="dir">medaccer/</span>
+├── <span class="dir">apps/</span>
+│   ├── <span class="dir">web/</span>                    <span class="cmt"># Landing + CRM (migración del prototipo actual)</span>
+│   │   ├── src/
+│   │   │   ├── pages/           <span class="cmt"># landing, crm, blog, checkout, onboarding</span>
+│   │   │   ├── components/      <span class="cmt"># ui kit, panels, icons</span>
+│   │   │   ├── hooks/           <span class="cmt"># useAuth, useConsultorio, useAgent</span>
+│   │   │   └── main.tsx
+│   │   ├── vite.config.ts
+│   │   └── package.json
+│   │
+│   ├── <span class="dir">api/</span>                    <span class="cmt"># NestJS REST + GraphQL</span>
+│   │   ├── src/
+│   │   │   ├── modules/
+│   │   │   │   ├── auth/
+│   │   │   │   ├── consultorios/
+│   │   │   │   ├── patients/
+│   │   │   │   ├── appointments/
+│   │   │   │   ├── conversations/
+│   │   │   │   ├── agents/       <span class="cmt"># orquestador IA</span>
+│   │   │   │   ├── billing/
+│   │   │   │   ├── fhir/         <span class="cmt"># MinSalud RDA</span>
+│   │   │   │   └── webhooks/     <span class="cmt"># WhatsApp, Wompi, Google</span>
+│   │   │   ├── prisma/
+│   │   │   │   └── schema.prisma
+│   │   │   └── main.ts
+│   │   └── package.json
+│   │
+│   └── <span class="dir">workers/</span>                <span class="cmt"># jobs asíncronos</span>
+│       ├── whatsapp-consumer/
+│       ├── ai-orchestrator/
+│       ├── billing-processor/
+│       └── fhir-sender/
+│
+├── <span class="dir">packages/</span>
+│   ├── <span class="dir">shared/</span>                 <span class="cmt"># tipos TS compartidos front/back</span>
+│   ├── <span class="dir">ui/</span>                     <span class="cmt"># componentes reutilizables</span>
+│   ├── <span class="dir">ai-sdk/</span>                 <span class="cmt"># wrapper OpenAI + Anthropic con fallback</span>
+│   └── <span class="dir">fhir-sdk/</span>               <span class="cmt"># cliente HL7 FHIR para MinSalud</span>
+│
+├── <span class="dir">infra/</span>                      <span class="cmt"># Terraform</span>
+│   ├── aws/
+│   ├── cloudflare/
+│   └── environments/
+│       ├── dev.tfvars
+│       ├── staging.tfvars
+│       └── production.tfvars
+│
+├── <span class="dir">docs/</span>                       <span class="cmt"># este archivo vive aquí</span>
+├── turbo.json                  <span class="cmt"># monorepo con Turborepo</span>
+├── pnpm-workspace.yaml
+└── README.md
+    </div>
+
+    <h3 id="modelo-datos">Modelo de datos (esquema Prisma)</h3>
+
+    <pre><code><span class="cm">// Multi-tenant: cada tabla lleva consultorio_id + RLS en Postgres</span>
+
+<span class="kw">model</span> <span class="fn">Consultorio</span> {
+  id            <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  nombre        <span class="kw">String</span>
+  nit           <span class="kw">String?</span>  <span class="fn">@unique</span>
+  especialidad  <span class="kw">String</span>
+  planId        <span class="kw">String</span>   <span class="cm">// essential | pro | enterprise</span>
+  createdAt     <span class="kw">DateTime</span> <span class="fn">@default</span>(now())
+  users         <span class="kw">User</span>[]
+  patients      <span class="kw">Patient</span>[]
+  appointments  <span class="kw">Appointment</span>[]
+  integrations  <span class="kw">Integration</span>[]
+}
+
+<span class="kw">model</span> <span class="fn">User</span> {
+  id             <span class="kw">String</span>  <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId  <span class="kw">String</span>
+  email          <span class="kw">String</span>  <span class="fn">@unique</span>
+  role           <span class="kw">Role</span>    <span class="cm">// OWNER | DOCTOR | RECEPTIONIST | ADMIN</span>
+  clerkId        <span class="kw">String?</span> <span class="fn">@unique</span>
+  consultorio    <span class="kw">Consultorio</span> <span class="fn">@relation</span>(fields: [consultorioId], references: [id])
+}
+
+<span class="kw">model</span> <span class="fn">Patient</span> {
+  id            <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId <span class="kw">String</span>
+  nombre        <span class="kw">String</span>
+  documento     <span class="kw">String</span>   <span class="cm">// cédula</span>
+  documentoTipo <span class="kw">String</span>   <span class="cm">// CC | TI | CE | PA</span>
+  telefono      <span class="kw">String</span>
+  email         <span class="kw">String?</span>
+  nacimiento    <span class="kw">DateTime?</span>
+  eps           <span class="kw">String?</span>
+  consentLey1581 <span class="kw">Boolean</span> <span class="fn">@default</span>(false)
+  consentDate   <span class="kw">DateTime?</span>
+  metadata      <span class="kw">Json?</span>    <span class="cm">// alergias, medicamentos, flags</span>
+  appointments  <span class="kw">Appointment</span>[]
+  conversations <span class="kw">Conversation</span>[]
+  records       <span class="kw">ClinicalRecord</span>[]
+
+  <span class="fn">@@index</span>([consultorioId, documento])
+  <span class="fn">@@index</span>([consultorioId, telefono])
+}
+
+<span class="kw">model</span> <span class="fn">Appointment</span> {
+  id            <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId <span class="kw">String</span>
+  patientId     <span class="kw">String</span>
+  doctorId      <span class="kw">String</span>
+  inicio        <span class="kw">DateTime</span>
+  fin           <span class="kw">DateTime</span>
+  estado        <span class="kw">AppointmentStatus</span>  <span class="cm">// SCHEDULED | CONFIRMED | CANCELLED | NO_SHOW | COMPLETED</span>
+  googleEventId <span class="kw">String?</span>  <span class="cm">// sync con Google Calendar</span>
+  notas         <span class="kw">String?</span>
+  servicioId    <span class="kw">String</span>
+}
+
+<span class="kw">model</span> <span class="fn">Conversation</span> {
+  id            <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId <span class="kw">String</span>
+  patientId     <span class="kw">String?</span>
+  channel       <span class="kw">Channel</span>  <span class="cm">// WHATSAPP | WEB | SMS</span>
+  externalId    <span class="kw">String</span>   <span class="cm">// wa phone number or session id</span>
+  status        <span class="kw">String</span>   <span class="cm">// active | resolved | escalated</span>
+  messages      <span class="kw">Message</span>[]
+}
+
+<span class="kw">model</span> <span class="fn">Message</span> {
+  id             <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  conversationId <span class="kw">String</span>
+  role           <span class="kw">String</span>   <span class="cm">// user | assistant | system | tool</span>
+  content        <span class="kw">String</span>
+  toolCalls      <span class="kw">Json?</span>
+  createdAt      <span class="kw">DateTime</span> <span class="fn">@default</span>(now())
+
+  <span class="fn">@@index</span>([conversationId, createdAt])
+}
+
+<span class="kw">model</span> <span class="fn">ClinicalRecord</span> {
+  id            <span class="kw">String</span>   <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId <span class="kw">String</span>
+  patientId     <span class="kw">String</span>
+  appointmentId <span class="kw">String?</span>
+  audioS3Key    <span class="kw">String?</span>  <span class="cm">// nota de voz del doctor</span>
+  transcripcion <span class="kw">String?</span>  <span class="cm">// Whisper</span>
+  diagnostico   <span class="kw">String?</span>  <span class="cm">// CIE-10</span>
+  procedimientos <span class="kw">Json?</span>   <span class="cm">// CUPS</span>
+  rdaStatus     <span class="kw">RdaStatus</span> <span class="fn">@default</span>(PENDING)  <span class="cm">// PENDING | SENT | ACCEPTED | REJECTED</span>
+  rdaResponse   <span class="kw">Json?</span>
+  createdAt     <span class="kw">DateTime</span> <span class="fn">@default</span>(now())
+}
+
+<span class="kw">model</span> <span class="fn">Integration</span> {
+  id            <span class="kw">String</span>  <span class="fn">@id</span> <span class="fn">@default</span>(cuid())
+  consultorioId <span class="kw">String</span>
+  tipo          <span class="kw">String</span>  <span class="cm">// whatsapp | gcal | wompi | siigo | n8n | minsalud</span>
+  credentials   <span class="kw">Json</span>    <span class="cm">// tokens cifrados con AWS KMS</span>
+  status        <span class="kw">String</span>  <span class="cm">// active | disconnected | error</span>
+  lastSyncAt    <span class="kw">DateTime?</span>
+
+  <span class="fn">@@unique</span>([consultorioId, tipo])
+}</code></pre>
+
+    <div class="callout">
+      <span class="tag">RLS</span> Activa Row Level Security en Postgres para que ningún query pueda leer datos de otro consultorio, incluso si hay un bug en la API. Política: <code>USING (consultorio_id = current_setting('app.consultorio_id')::uuid)</code>.
+    </div>
+
+    <!-- ========== MIGRACIÓN ========== -->
+
+    <h2><span class="num">03 — Migración</span>Del prototipo a <em>producción</em></h2>
+
+    <p>El código actual vive en <code>index.html</code> + archivos <code>.jsx</code> cargados por Babel en el browser. Esto sirve para prototipar pero no escala. Pasos para migrar:</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Crear el monorepo con Turborepo</h4>
+        <p>Estructura definida arriba. Permite compartir tipos TS entre front y back, deploys atómicos y un solo <code>pnpm install</code>.</p>
+        <div class="step-meta">~2 días · 1 senior</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Migrar <code>.jsx</code> → <code>.tsx</code> con Vite</h4>
+        <p>Copiar cada archivo del prototipo a <code>apps/web/src/pages/</code>. Añadir tipos. Reemplazar hash router por React Router. Los componentes visuales (landing, phone mockup, CRM) se reutilizan 95%.</p>
+        <div class="step-meta">~5 días · 1 frontend senior</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Setup NestJS + Prisma + Postgres</h4>
+        <p>Scaffold con <code>nest new</code>, añadir Prisma, definir schema del punto anterior, correr migraciones. Montar Auth con Clerk.</p>
+        <div class="step-meta">~3 días · 1 backend senior</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Conectar CRM a API real</h4>
+        <p>Reemplazar los <code>useState</code> con datos mock por TanStack Query calls. Empezar por <code>/patients</code>, <code>/appointments</code>, <code>/conversations</code>. Cada pantalla del CRM ya tiene su estructura de datos clara en el prototipo — solo hay que reemplazar el origen.</p>
+        <div class="step-meta">~2 semanas · 1 full-stack</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Montar workers con BullMQ</h4>
+        <p>Un worker por integración. Cada uno consume una queue de Redis. Separados para escalar independientemente.</p>
+        <div class="step-meta">~3 días · 1 backend</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Deploy a AWS con Terraform</h4>
+        <p>Infra as code desde el día uno. Tres ambientes: dev (costo ~$80/mes), staging (~$200/mes), production.</p>
+        <div class="step-meta">~1 semana · 1 devops</div>
+      </div>
+    </div>
+
+    <h3 id="landing-prod">Landing en producción</h3>
+
+    <p>La landing actual es estática excepto por:</p>
+    <ul>
+      <li>Formulario de signup → POST a <code>/api/auth/signup</code></li>
+      <li>Calculadora ROI → solo frontend, ya está lista</li>
+      <li>Blog posts → mover a Contentful ó MDX files en el repo</li>
+      <li>Botón "Agendar demo" → crea lead en CRM interno (puedes usar el mismo sistema)</li>
+    </ul>
+
+    <p><strong>Hosting</strong>: Vercel es ideal. Deploy en <code>medaccer.com</code>. Preview deployments automáticos por PR.</p>
+
+    <h3 id="crm-prod">CRM en producción</h3>
+
+    <p>El CRM actual tiene toda la UX resuelta. El trabajo de conectarlo es mecánico:</p>
+
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pantalla</th><th>Endpoint</th><th>Complejidad</th></tr></thead>
+      <tbody>
+        <tr><td>Inicio (dashboard)</td><td><code>GET /api/dashboard/overview</code></td><td><span class="badge done">Baja</span></td></tr>
+        <tr><td>Pacientes</td><td><code>GET/POST /api/patients</code></td><td><span class="badge done">Baja</span></td></tr>
+        <tr><td>Ficha de paciente</td><td><code>GET /api/patients/:id + /records + /appointments</code></td><td><span class="badge todo">Media</span></td></tr>
+        <tr><td>Agenda</td><td><code>GET /api/appointments?from=&to=</code></td><td><span class="badge todo">Media</span></td></tr>
+        <tr><td>Conversaciones</td><td><code>WS /api/conversations/stream</code> (WebSocket)</td><td><span class="badge hard">Alta</span></td></tr>
+        <tr><td>Automatizaciones</td><td><code>GET/POST /api/workflows</code></td><td><span class="badge todo">Media</span></td></tr>
+        <tr><td>Finanzas</td><td><code>GET /api/billing</code></td><td><span class="badge todo">Media</span></td></tr>
+        <tr><td>RDA MinSalud</td><td><code>POST /api/fhir/submit</code></td><td><span class="badge hard">Alta</span></td></tr>
+        <tr><td>Ajustes → Integraciones</td><td><code>POST /api/integrations/:tipo/connect</code></td><td><span class="badge hard">Alta</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="ia-agente">El agente de IA (la pieza central)</h3>
+
+    <p>Esta es <strong>la parte más crítica del producto</strong>. En el prototipo es mock. Así se implementa real:</p>
+
+    <h4>Arquitectura del agente</h4>
+
+    <pre><code><span class="cm">// packages/ai-sdk/src/agent.ts</span>
+<span class="kw">import</span> OpenAI <span class="kw">from</span> <span class="str">'openai'</span>;
+<span class="kw">import</span> Anthropic <span class="kw">from</span> <span class="str">'@anthropic-ai/sdk'</span>;
+
+<span class="kw">export class</span> <span class="fn">MedaccerAgent</span> {
+  <span class="kw">constructor</span>(<span class="kw">private</span> consultorioId: <span class="kw">string</span>) {}
+
+  <span class="kw">async</span> <span class="fn">handleMessage</span>(msg: IncomingMessage): <span class="kw">Promise</span>&lt;AgentResponse&gt; {
+    <span class="cm">// 1. Cargar contexto del paciente + consultorio</span>
+    <span class="kw">const</span> ctx = <span class="kw">await</span> <span class="fn">this.loadContext</span>(msg.from);
+
+    <span class="cm">// 2. RAG: buscar servicios, precios, políticas relevantes</span>
+    <span class="kw">const</span> rag = <span class="kw">await</span> <span class="fn">this.retrieveKnowledge</span>(msg.text, ctx);
+
+    <span class="cm">// 3. Construir system prompt con guardrails</span>
+    <span class="kw">const</span> system = <span class="fn">buildSystemPrompt</span>({
+      consultorio: ctx.consultorio,
+      especialidad: ctx.consultorio.especialidad,
+      patient: ctx.patient,
+      knowledge: rag,
+      tools: AVAILABLE_TOOLS,
+    });
+
+    <span class="cm">// 4. Llamar LLM con function calling</span>
+    <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">this.llm.complete</span>({
+      model: <span class="str">'gpt-4o-mini'</span>,
+      system,
+      messages: ctx.history,
+      tools: [
+        <span class="fn">checkAvailability</span>,
+        <span class="fn">bookAppointment</span>,
+        <span class="fn">cancelAppointment</span>,
+        <span class="fn">sendPaymentLink</span>,
+        <span class="fn">escalateToHuman</span>,
+        <span class="fn">searchPatient</span>,
+      ],
+    });
+
+    <span class="cm">// 5. Ejecutar tool calls (si los hay)</span>
+    <span class="kw">if</span> (response.toolCalls?.length) {
+      <span class="kw">for</span> (<span class="kw">const</span> call <span class="kw">of</span> response.toolCalls) {
+        <span class="kw">await</span> <span class="fn">this.executeTool</span>(call, ctx);
+      }
+    }
+
+    <span class="cm">// 6. Guardar en BD + responder por WhatsApp</span>
+    <span class="kw">await</span> <span class="fn">this.persistMessage</span>(response);
+    <span class="kw">return</span> response;
+  }
+}</code></pre>
+
+    <h4>Tools que debe tener el agente</h4>
+
+    <div class="grid-2">
+      <div class="card"><h4>checkAvailability</h4><p>Consulta Google Calendar + reglas del consultorio. Devuelve slots disponibles.</p></div>
+      <div class="card"><h4>bookAppointment</h4><p>Crea cita en BD, evento en Calendar, envía confirmación al paciente.</p></div>
+      <div class="card"><h4>sendPaymentLink</h4><p>Genera link Wompi, lo envía, escucha webhook de confirmación.</p></div>
+      <div class="card"><h4>escalateToHuman</h4><p>Marca conversación como escalada. Notifica recepcionista. Pausa el agente.</p></div>
+      <div class="card"><h4>searchPatient</h4><p>Por cédula, teléfono o nombre. Devuelve ficha con consentimiento Ley 1581 validado.</p></div>
+      <div class="card"><h4>requestMedicalRecord</h4><p>Adjunta últimos N encuentros relevantes para que el agente tenga contexto clínico.</p></div>
+    </div>
+
+    <h4>Guardrails obligatorios</h4>
+    <ul>
+      <li><strong>No dar diagnósticos</strong>: el system prompt debe prohibirlo explícitamente. Escala a humano si el paciente insiste.</li>
+      <li><strong>No recetar medicamentos</strong>: nunca sugerir dosis, marcas o sustitutos.</li>
+      <li><strong>Validar consentimiento Ley 1581</strong> antes de almacenar o procesar cualquier dato personal.</li>
+      <li><strong>Detección de urgencias</strong>: palabras clave ("dolor de pecho", "sangrado", "suicidio") → respuesta inmediata con número de emergencia + escalamiento.</li>
+      <li><strong>Validación de outputs</strong>: cada tool call pasa por Zod schema antes de ejecutarse.</li>
+      <li><strong>Auditoría</strong>: cada interacción guardada con timestamp, modelo usado, tokens consumidos, costo.</li>
+    </ul>
+
+    <!-- ========== INTEGRACIONES ========== -->
+
+    <h2><span class="num">04 — Integraciones</span>Integraciones <em>paso a paso</em></h2>
+
+    <h3 id="whatsapp">WhatsApp Business Cloud API <span class="badge hard">3-5 días</span></h3>
+
+    <p>Meta provee una API oficial (gratis hasta 1.000 conversaciones/mes, luego ~$0.05 USD por conversación iniciada por el negocio en Colombia). Las iniciadas por el usuario en las últimas 24h son gratis.</p>
+
+    <details open>
+      <summary>Pasos de implementación</summary>
+      <div class="body">
+        <ol>
+          <li><strong>Crear Meta Business Account</strong> en <a href="https://business.facebook.com" target="_blank">business.facebook.com</a>. Verificar el negocio con NIT, cámara de comercio, dominio <code>medaccer.com</code>.</li>
+          <li><strong>Crear WhatsApp Business Account (WABA)</strong> dentro del Business Manager.</li>
+          <li><strong>Agregar número</strong>. Cada consultorio puede traer el suyo (Bring Your Own Number) o comprar uno via Twilio.</li>
+          <li><strong>Aprobar "Display Name"</strong>: el nombre que verá el paciente. Meta lo revisa en 1-2 días.</li>
+          <li><strong>Embedded Signup Flow</strong>: integra un flujo en tu app donde el consultorio autoriza con su cuenta de Facebook y le llega el permiso a MEDACCER. Ver <a href="https://developers.facebook.com/docs/whatsapp/embedded-signup" target="_blank">docs oficiales</a>.</li>
+          <li><strong>Registrar webhook</strong>: endpoint <code>https://api.medaccer.com/webhooks/whatsapp/:consultorioId</code>. Meta envía un challenge GET — responder con <code>hub.challenge</code>.</li>
+          <li><strong>Aprobar plantillas</strong> de mensajes (para iniciar conversaciones fuera de ventana 24h): "Recordatorio de cita", "Confirmación", "Link de pago". Revisión 24h.</li>
+          <li><strong>Verificar firma HMAC-SHA256</strong> en cada payload entrante:</li>
+        </ol>
+        <pre><code><span class="kw">import</span> crypto <span class="kw">from</span> <span class="str">'crypto'</span>;
+
+<span class="kw">function</span> <span class="fn">verifyMetaSignature</span>(rawBody: Buffer, signature: <span class="kw">string</span>, appSecret: <span class="kw">string</span>) {
+  <span class="kw">const</span> expected = <span class="str">'sha256='</span> + crypto
+    .<span class="fn">createHmac</span>(<span class="str">'sha256'</span>, appSecret)
+    .<span class="fn">update</span>(rawBody)
+    .<span class="fn">digest</span>(<span class="str">'hex'</span>);
+  <span class="kw">return</span> crypto.<span class="fn">timingSafeEqual</span>(
+    Buffer.<span class="fn">from</span>(signature),
+    Buffer.<span class="fn">from</span>(expected)
+  );
+}</code></pre>
+        <p><strong>Enviar mensajes</strong>: POST a <code>graph.facebook.com/v19.0/{PHONE_NUMBER_ID}/messages</code> con el access token del consultorio.</p>
+      </div>
+    </details>
+
+    <div class="callout warn">
+      <span class="tag">Gotcha</span><strong>Rate limits</strong>: Meta limita a 80 mensajes/segundo por número en Tier 1. Si creces, subes de tier automáticamente. Diseña la queue con backoff exponencial.
+    </div>
+
+    <h3 id="n8n">n8n <span class="badge todo">2 días</span></h3>
+
+    <p>n8n es open source. Dos opciones:</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>Self-hosted</h4>
+        <p>Docker en AWS ECS. $20-40/mes. Control total. Recomendado para MEDACCER porque puedes publicar nodos custom sin pagar plan Enterprise.</p>
+      </div>
+      <div class="card">
+        <h4>Cloud (n8n.io)</h4>
+        <p>$20/mes Starter. Más rápido de montar. Pero no puedes publicar nodos custom privados.</p>
+      </div>
+    </div>
+
+    <h4>Crear nodo custom de MEDACCER</h4>
+
+    <p>Publicas un paquete npm <code>n8n-nodes-medaccer</code> que los usuarios instalan en su n8n. El nodo habla con tu API:</p>
+
+    <pre><code><span class="cm">// n8n-nodes-medaccer/nodes/Medaccer.node.ts</span>
+<span class="kw">export class</span> <span class="fn">Medaccer</span> <span class="kw">implements</span> INodeType {
+  description: INodeTypeDescription = {
+    displayName: <span class="str">'MEDACCER'</span>,
+    name: <span class="str">'medaccer'</span>,
+    icon: <span class="str">'file:medaccer.svg'</span>,
+    group: [<span class="str">'transform'</span>],
+    version: <span class="num">1</span>,
+    credentials: [{ name: <span class="str">'medaccerApi'</span>, required: <span class="kw">true</span> }],
+    properties: [
+      {
+        displayName: <span class="str">'Resource'</span>,
+        name: <span class="str">'resource'</span>,
+        type: <span class="str">'options'</span>,
+        options: [
+          { name: <span class="str">'Patient'</span>, value: <span class="str">'patient'</span> },
+          { name: <span class="str">'Appointment'</span>, value: <span class="str">'appointment'</span> },
+          { name: <span class="str">'Conversation'</span>, value: <span class="str">'conversation'</span> },
+        ],
+      },
+      <span class="cm">// ...operations</span>
+    ],
+  };
+}</code></pre>
+
+    <p>Eventos que MEDACCER puede <strong>emitir</strong> a n8n (webhooks outbound):</p>
+    <ul>
+      <li><code>appointment.created</code> / <code>updated</code> / <code>cancelled</code></li>
+      <li><code>patient.created</code></li>
+      <li><code>conversation.escalated</code></li>
+      <li><code>payment.received</code></li>
+      <li><code>no_show.detected</code></li>
+    </ul>
+
+    <h3 id="gcal">Google Calendar API <span class="badge todo">2 días</span></h3>
+
+    <details>
+      <summary>Pasos de implementación</summary>
+      <div class="body">
+        <ol>
+          <li>Crear proyecto en <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a>.</li>
+          <li>Habilitar Google Calendar API.</li>
+          <li>Crear OAuth 2.0 Client ID (Web application). Redirect URI: <code>https://app.medaccer.com/oauth/google/callback</code>.</li>
+          <li>Solicitar verificación del app (para scopes sensitive) — Google tarda 1-3 semanas. Mientras, el app funciona con hasta 100 test users.</li>
+          <li>Scopes: <code>https://www.googleapis.com/auth/calendar.events</code>.</li>
+          <li>Guardar refresh token cifrado. Access token expira cada hora — refresh automático.</li>
+          <li>Usar <strong>Calendar Push Notifications</strong> (webhooks) para detectar cambios que hace el doctor manualmente en su Calendar.</li>
+        </ol>
+      </div>
+    </details>
+
+    <h3 id="wompi">Wompi (pagos Colombia) <span class="badge hard">5-7 días</span></h3>
+
+    <details>
+      <summary>Pasos de implementación</summary>
+      <div class="body">
+        <ol>
+          <li><strong>Registro</strong> en <a href="https://comercios.wompi.co" target="_blank">comercios.wompi.co</a>. Requiere cuenta Bancolombia empresarial.</li>
+          <li><strong>Sandbox keys</strong> inmediatas. Probar todo el flujo antes de producción.</li>
+          <li><strong>Documentación legal</strong>: RUT, cámara de comercio, certificación bancaria, documento del representante legal. Aprobación ~5 días hábiles.</li>
+          <li><strong>Integración</strong>: Widget (más rápido) o API directa (más control). Recomendado: API directa para que el paciente no salga del flujo.</li>
+          <li><strong>Webhook</strong> a <code>/webhooks/wompi</code>. Validar firma con event secret.</li>
+          <li><strong>Estados posibles</strong>: <code>APPROVED | DECLINED | VOIDED | ERROR | PENDING</code>. Polling opcional si el webhook tarda.</li>
+          <li><strong>Comisión</strong>: 2.65% + $900 COP por transacción. Factible cargar al consultorio o descontar del producto.</li>
+        </ol>
+      </div>
+    </details>
+
+    <p>Alternativas: <strong>Mercado Pago</strong> (más fácil pero menos local), <strong>ePayco</strong>, <strong>PayU</strong>.</p>
+
+    <h3 id="minsalud">MinSalud RDA — HL7 FHIR <span class="badge hard">4-6 semanas</span></h3>
+
+    <p>La integración más compleja. Resolución 1888 obliga reporte de RDA (Registro Diario de Atenciones). Detalle:</p>
+
+    <details>
+      <summary>Pasos de implementación</summary>
+      <div class="body">
+        <ol>
+          <li><strong>Registrar el prestador</strong> en la plataforma de interoperabilidad del MinSalud.</li>
+          <li><strong>Obtener certificado digital</strong> (Certicámara o Andes SCD). ~$200 USD/año por cada prestador. Puede ser individual o corporativo.</li>
+          <li><strong>Implementar FHIR R4</strong>: recursos Patient, Encounter, Condition (CIE-10), Observation, Procedure (CUPS), Practitioner, Organization.</li>
+          <li><strong>Construir Bundle</strong> con todos los recursos de una atención:</li>
+        </ol>
+        <pre><code>{
+  <span class="str">"resourceType"</span>: <span class="str">"Bundle"</span>,
+  <span class="str">"type"</span>: <span class="str">"transaction"</span>,
+  <span class="str">"entry"</span>: [
+    { <span class="str">"resource"</span>: { <span class="str">"resourceType"</span>: <span class="str">"Patient"</span>, ... } },
+    { <span class="str">"resource"</span>: { <span class="str">"resourceType"</span>: <span class="str">"Encounter"</span>, ... } },
+    { <span class="str">"resource"</span>: { <span class="str">"resourceType"</span>: <span class="str">"Condition"</span>, <span class="str">"code"</span>: { <span class="str">"coding"</span>: [{ <span class="str">"system"</span>: <span class="str">"http://hl7.org/fhir/sid/icd-10"</span>, <span class="str">"code"</span>: <span class="str">"J00"</span> }] } },
+    ...
+  ]
+}</code></pre>
+        <ol start="5">
+          <li><strong>Firmar digitalmente</strong> el Bundle con el certificado del prestador.</li>
+          <li><strong>Autenticación OAuth 2.0 client credentials</strong> contra el endpoint del MinSalud.</li>
+          <li><strong>POST</strong> al endpoint FHIR del MinSalud. Respuesta: <code>OperationOutcome</code> con aceptación o errores.</li>
+          <li><strong>Reintentos exponenciales</strong>: la plataforma del MinSalud se cae seguido. Queue con backoff: 1min, 5min, 30min, 2h, 12h.</li>
+          <li><strong>Dashboard de cola</strong>: el CRM ya tiene la pantalla <code>RDA MinSalud</code> — solo conectar al estado real.</li>
+        </ol>
+        <p><strong>Librería recomendada</strong>: <code>@medplum/core</code> en npm. Implementación FHIR open source robusta.</p>
+      </div>
+    </details>
+
+    <div class="callout danger">
+      <span class="tag">Crítico</span><strong>Multas por no reportar</strong>: entre 2.4M y 120M COP por vigencia. El incumplimiento es acumulativo. Este es el <em>killer feature</em> del producto.
+    </div>
+
+    <h3 id="otros">Otras integraciones</h3>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>Siigo / Alegra (ERP)</h4>
+        <p>API REST bien documentada. Sync de facturas, clientes, productos. <span class="badge todo">3 días</span></p>
+      </div>
+      <div class="card">
+        <h4>Microsoft Outlook Calendar</h4>
+        <p>Microsoft Graph API. Similar a Google. <span class="badge todo">2 días</span></p>
+      </div>
+      <div class="card">
+        <h4>Twilio SMS (fallback)</h4>
+        <p>Para cuando el paciente no tiene WhatsApp. <span class="badge done">1 día</span></p>
+      </div>
+      <div class="card">
+        <h4>Postmark (email transaccional)</h4>
+        <p>Confirmaciones, recordatorios, facturas. <span class="badge done">1 día</span></p>
+      </div>
+    </div>
+
+    <!-- ========== COMPLIANCE ========== -->
+
+    <h2><span class="num">05 — Compliance</span>Seguridad y <em>legal</em></h2>
+
+    <h3 id="compliance">Ley 1581 de 2012 (datos personales Colombia)</h3>
+
+    <p>MEDACCER maneja <strong>datos sensibles de salud</strong>. La Ley 1581 y su decreto reglamentario (1377/2013) son obligatorios.</p>
+
+    <h4>Obligaciones concretas</h4>
+    <ul>
+      <li><strong>Registrar la base de datos personales en la SIC</strong> (Superintendencia de Industria y Comercio) via <a href="https://www.sic.gov.co/registro-nacional-de-bases-de-datos" target="_blank">RNBD</a>. Obligatorio para empresas con activos &gt;100.000 UVT.</li>
+      <li><strong>Política de tratamiento de datos</strong> publicada y aceptada por el titular antes de recopilar. El prototipo ya lo muestra en signup y en el primer mensaje del bot.</li>
+      <li><strong>Consentimiento expreso</strong> para datos sensibles (salud). No vale aceptación tácita.</li>
+      <li><strong>Finalidad específica</strong>: no se puede usar el dato para algo distinto a lo informado.</li>
+      <li><strong>Derecho de habeas data</strong>: el titular puede consultar, actualizar, rectificar, suprimir sus datos. Responder en &lt;10 días hábiles.</li>
+      <li><strong>Oficial de Protección de Datos</strong>: persona designada. Puede ser interno o contratar servicio externo.</li>
+      <li><strong>Reporte de incidentes</strong>: si hay una fuga, notificar a la SIC y a los titulares afectados en &lt;15 días.</li>
+    </ul>
+
+    <h3 id="seguridad">Seguridad técnica</h3>
+
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Capa</th><th>Control</th><th>Herramienta</th></tr></thead>
+      <tbody>
+        <tr><td>Cifrado reposo</td><td>AES-256</td><td>AWS KMS + RDS encryption + S3 SSE-KMS</td></tr>
+        <tr><td>Cifrado tránsito</td><td>TLS 1.3 obligatorio</td><td>Cloudflare + ALB</td></tr>
+        <tr><td>Secrets</td><td>Nunca en código</td><td>AWS Secrets Manager + rotación 90d</td></tr>
+        <tr><td>Credenciales integraciones</td><td>Cifradas per-consultorio</td><td>Envelope encryption con KMS</td></tr>
+        <tr><td>Auth</td><td>MFA obligatorio para owners</td><td>Clerk + TOTP</td></tr>
+        <tr><td>RBAC</td><td>Roles granulares</td><td>NestJS Guards + Prisma middleware</td></tr>
+        <tr><td>Audit log</td><td>Cada acceso a historia clínica</td><td>Tabla <code>audit_events</code> + CloudTrail</td></tr>
+        <tr><td>Backup</td><td>Point-in-time recovery 35d</td><td>RDS automated + snapshot semanal a región DR</td></tr>
+        <tr><td>DDoS</td><td>Mitigación automática</td><td>Cloudflare Pro</td></tr>
+        <tr><td>WAF</td><td>OWASP Top 10</td><td>Cloudflare Rules + AWS WAF</td></tr>
+        <tr><td>Pen test</td><td>Anual</td><td>Contratar firma externa (~$5k USD)</td></tr>
+        <tr><td>SOC 2</td><td>Tier 2 a 18 meses</td><td>Vanta o Drata</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- ========== COSTOS ========== -->
+
+    <h2><span class="num">06 — Costos</span>Costos de <em>infraestructura</em></h2>
+
+    <p>Escenario: <strong>100 consultorios activos</strong>, ~25.000 pacientes en total, ~15.000 mensajes WhatsApp/mes, ~5M tokens IA/mes.</p>
+
+    <h3>Mensual recurrente</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Servicio</th><th>Dimensión</th><th>USD/mes</th></tr></thead>
+      <tbody>
+        <tr><td>AWS ECS Fargate</td><td>3 servicios × 2 tasks × 0.5 vCPU</td><td class="num">180</td></tr>
+        <tr><td>AWS RDS Postgres</td><td>db.t4g.medium Multi-AZ</td><td class="num">120</td></tr>
+        <tr><td>AWS ElastiCache Redis</td><td>cache.t4g.small</td><td class="num">40</td></tr>
+        <tr><td>AWS S3 + transfer</td><td>~500 GB + 2 TB egress</td><td class="num">30</td></tr>
+        <tr><td>Cloudflare Pro</td><td>WAF + DDoS + analytics</td><td class="num">20</td></tr>
+        <tr><td>Vercel Pro (web)</td><td>1 proyecto</td><td class="num">20</td></tr>
+        <tr><td>Clerk</td><td>Pro, ~500 MAU</td><td class="num">50</td></tr>
+        <tr><td>OpenAI GPT-4o-mini</td><td>5M input + 2M output</td><td class="num">200</td></tr>
+        <tr><td>Anthropic Claude Haiku</td><td>~500k tokens (fallback)</td><td class="num">50</td></tr>
+        <tr><td>OpenAI Whisper</td><td>2000 min audio</td><td class="num">12</td></tr>
+        <tr><td>Meta WhatsApp conversations</td><td>~3000 iniciadas por negocio</td><td class="num">150</td></tr>
+        <tr><td>Twilio SMS fallback</td><td>~500 SMS/mes</td><td class="num">50</td></tr>
+        <tr><td>Postmark</td><td>50k emails</td><td class="num">45</td></tr>
+        <tr><td>Sentry</td><td>Team plan</td><td class="num">29</td></tr>
+        <tr><td>Datadog APM</td><td>3 hosts</td><td class="num">100</td></tr>
+        <tr class="total"><td colspan="2">TOTAL infraestructura mensual</td><td class="num">~1.046 USD</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Costos únicos / anuales</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Concepto</th><th>Tipo</th><th>USD</th></tr></thead>
+      <tbody>
+        <tr><td>Certificado digital MinSalud (Certicámara)</td><td>Anual</td><td class="num">200</td></tr>
+        <tr><td>Registro marca MEDACCER en SIC</td><td>Único</td><td class="num">250</td></tr>
+        <tr><td>Abogado: términos, privacidad, habeas data</td><td>Único</td><td class="num">1.500</td></tr>
+        <tr><td>Constitución SAS + contador</td><td>Único / mensual</td><td class="num">800 + 150/mes</td></tr>
+        <tr><td>Pen test anual</td><td>Anual</td><td class="num">5.000</td></tr>
+        <tr><td>SOC 2 Type II (con Vanta)</td><td>Anual</td><td class="num">15.000</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="cost-total">
+      <div>
+        <div class="lbl">Break-even</div>
+        <div class="val">7 consultorios</div>
+        <div class="note">A $200 USD/mes por consultorio (~$800k COP) cubres infra fija con 6 clientes. A partir del 7º → margen bruto ~85%.</div>
+      </div>
+    </div>
+
+    <!-- ========== ROADMAP ========== -->
+
+    <h2><span class="num">07 — Roadmap</span>Roadmap a <em>MVP</em></h2>
+
+    <p>Cronograma realista para un equipo de 3-4 personas full-time. 12 semanas hasta MVP productivo con 5-10 consultorios beta.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-week">Semana 1-2</div>
+        <div class="tl-title">Fundaciones</div>
+        <div class="tl-desc">Setup AWS (Terraform), CI/CD (GitHub Actions), monorepo Turbo, auth con Clerk, dominios, DNS.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 3-4</div>
+        <div class="tl-title">API core + migración frontend</div>
+        <div class="tl-desc">NestJS + Prisma + Postgres. CRUD consultorios, pacientes, citas, usuarios, RBAC. Migrar prototipo React → Vite TS.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 5-6</div>
+        <div class="tl-title">WhatsApp + IA</div>
+        <div class="tl-desc">Integración Meta Cloud API, embedded signup, webhook, firma HMAC. Orquestador del agente con tools básicos (availability, booking).</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 7-8</div>
+        <div class="tl-title">Google Calendar + agenda</div>
+        <div class="tl-desc">OAuth Google, sync bidireccional, push notifications. Cerrar flujo completo: mensaje → IA → slot → confirmación.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 9</div>
+        <div class="tl-title">Pagos Wompi</div>
+        <div class="tl-desc">Integración, webhooks, link de pago en WhatsApp, cobro de consulta.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 10</div>
+        <div class="tl-title">MinSalud FHIR</div>
+        <div class="tl-desc">RDA con certificado digital. Cola de envíos, reintentos, dashboard.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 11</div>
+        <div class="tl-title">Onboarding + CRM completo</div>
+        <div class="tl-desc">Flujo de activación del consultorio de punta a punta. Cada pantalla del CRM conectada a API real.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-week">Semana 12</div>
+        <div class="tl-title">Beta cerrada</div>
+        <div class="tl-desc">QA, pen test básico, seed de 5-10 consultorios piloto. Monitoring. Playbook de soporte.</div>
+      </div>
+    </div>
+
+    <h3 id="equipo">Equipo mínimo y presupuesto</h3>
+
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rol</th><th>Dedicación</th><th>Salario mensual LATAM (USD)</th><th>3 meses</th></tr></thead>
+      <tbody>
+        <tr><td>Tech Lead / Fullstack Senior</td><td>100%</td><td class="num">5.500</td><td class="num">16.500</td></tr>
+        <tr><td>Frontend Senior (React)</td><td>100%</td><td class="num">4.500</td><td class="num">13.500</td></tr>
+        <tr><td>Backend Senior (Node + integraciones)</td><td>100%</td><td class="num">4.500</td><td class="num">13.500</td></tr>
+        <tr><td>DevOps / SRE</td><td>50%</td><td class="num">2.500</td><td class="num">7.500</td></tr>
+        <tr><td>Product Designer</td><td>50%</td><td class="num">2.000</td><td class="num">6.000</td></tr>
+        <tr><td>Infraestructura dev/staging</td><td>—</td><td class="num">300</td><td class="num">900</td></tr>
+        <tr><td>Legal + contable</td><td>—</td><td class="num">400</td><td class="num">2.000</td></tr>
+        <tr class="total"><td colspan="3">TOTAL 3 meses a MVP</td><td class="num">~60.000 USD</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3 id="deploy">Deploy a producción</h3>
+
+    <pre><code><span class="cm"># 1. Provisionar infra</span>
+cd infra/aws
+terraform init
+terraform plan -var-file=environments/production.tfvars
+terraform apply
+
+<span class="cm"># 2. Build imágenes Docker y push a ECR</span>
+<span class="cm"># Vía GitHub Actions en cada merge a main</span>
+
+<span class="cm"># 3. Deploy servicios</span>
+aws ecs update-service --cluster medaccer-prod --service api-gateway --force-new-deployment
+aws ecs update-service --cluster medaccer-prod --service worker-whatsapp --force-new-deployment
+<span class="cm"># ...</span>
+
+<span class="cm"># 4. Migraciones Prisma</span>
+pnpm --filter api prisma migrate deploy
+
+<span class="cm"># 5. Smoke tests</span>
+pnpm --filter api test:e2e:prod
+
+<span class="cm"># 6. Frontend → Vercel (automático por push a main)</span></code></pre>
+
+    <!-- ========== PRÓXIMOS PASOS ========== -->
+
+    <h2 id="proximos-pasos"><span class="num">08 — Acción</span>Próximos <em>pasos</em></h2>
+
+    <p>En este orden. Las primeras 4 cosas se pueden hacer en paralelo y no requieren al equipo técnico aún.</p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Constituir la SAS</h4>
+        <p>Cámara de comercio, NIT, RUT, cuenta bancaria empresarial. ~2 semanas.</p>
+        <div class="step-meta">Legal · ~$800 USD</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Registrar base de datos en SIC</h4>
+        <p>Obligatorio por Ley 1581 antes de procesar el primer dato.</p>
+        <div class="step-meta">Legal · ~1 día · $50 USD</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Crear Meta Business Account y solicitar WhatsApp API</h4>
+        <p>Mientras más rápido empieces, más rápido te aprueban. El proceso de verificación demora 3-5 días.</p>
+        <div class="step-meta">~1 hora setup + espera</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Contratar certificado digital</h4>
+        <p>Certicámara o Andes SCD para firmar los envíos al MinSalud. ~1 semana de proceso.</p>
+        <div class="step-meta">~$200 USD/año</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Subir prototipo a GitHub + deploy público</h4>
+        <p>Este ZIP en un repo. Conectar a Vercel → <code>medaccer.com</code> vivo en 10 minutos. Usa la landing para capturar leads reales mientras construyes el backend.</p>
+        <div class="step-meta">~2 horas</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>10 entrevistas a consultorios reales</h4>
+        <p>Valida features, precios, willingness to pay. NO construyas nada sin esto.</p>
+        <div class="step-meta">2 semanas</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h4>Contratar equipo inicial</h4>
+        <p>Empieza con 2 seniors (fullstack + frontend). Agrega backend y devops en la semana 4.</p>
+        <div class="step-meta">Recruiting en LinkedIn / Torre / Get on Board</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <h4>Arrancar roadmap de 12 semanas</h4>
+        <p>Según el calendario de la sección 07.</p>
+      </div>
+    </div>
+
+    <!-- ========== CI/CD ========== -->
+
+    <h2 id="cicd"><span class="num">09 — DevOps</span>CI/CD y <em>observabilidad</em></h2>
+
+    <p>Sin CI/CD automatizado, los deploys serán manuales, lentos y propensos a romper cosas. Con observabilidad, sabrás qué falla antes de que un cliente te escriba enojado.</p>
+
+    <h3>Pipeline de CI/CD recomendado (GitHub Actions)</h3>
+    <p>Cada push a <code>main</code> dispara: lint → tests → build → deploy a staging. Cada tag <code>v*</code> dispara deploy a producción con aprobación manual. Tiempo total: ~6-8 minutos.</p>
+
+    <pre><code><span class="cm"># .github/workflows/deploy.yml</span>
+name: <span class="str">CI/CD MEDACCER</span>
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: <span class="str">'pnpm'</span> }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test --coverage
+      - uses: codecov/codecov-action@v4
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t medaccer-api:${{ github.sha }} -f apps/api/Dockerfile .
+      - run: docker push registry.medaccer.com/api:${{ github.sha }}
+
+  deploy-staging:
+    needs: build
+    if: github.ref == <span class="str">'refs/heads/main'</span>
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: railway-app/railway-deploy@v1
+        with:
+          service: medaccer-api-staging
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+  deploy-prod:
+    needs: build
+    if: startsWith(github.ref, <span class="str">'refs/tags/v'</span>)
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: railway up --service medaccer-api --environment production
+      - uses: getsentry/action-release@v1
+        with:
+          environment: production
+          version: ${{ github.ref_name }}</code></pre>
+
+    <h3>Stack de observabilidad</h3>
+    <table>
+      <thead><tr><th>Capa</th><th>Herramienta</th><th>Para qué</th><th>Costo/mes</th></tr></thead>
+      <tbody>
+        <tr><td>Errores backend</td><td>Sentry</td><td>Stack traces, breadcrumbs, alertas en tiempo real</td><td>$26 (Team)</td></tr>
+        <tr><td>Logs estructurados</td><td>Better Stack / Logtail</td><td>Búsqueda y filtros sobre todos los logs JSON</td><td>$24</td></tr>
+        <tr><td>APM (latencia)</td><td>Datadog APM o Grafana</td><td>p50/p95/p99 por endpoint, tracing distribuido</td><td>$31/host (Datadog) o $0 (Grafana self-hosted)</td></tr>
+        <tr><td>Métricas custom</td><td>Prometheus + Grafana</td><td>KPIs de negocio (mensajes/min, no-shows, etc.)</td><td>$0 (self-hosted en Railway)</td></tr>
+        <tr><td>Uptime monitoring</td><td>Better Uptime</td><td>Pings cada 30s a /health, status page público</td><td>$18</td></tr>
+        <tr><td>Frontend errors</td><td>Sentry Browser SDK</td><td>JS errors en el CRM real, source maps</td><td>incluido</td></tr>
+        <tr><td>Session replay</td><td>PostHog</td><td>Ver sesiones de usuarios para debug UX</td><td>$0-$50</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Métricas críticas a monitorear (alertas en PagerDuty)</h3>
+    <ul>
+      <li><strong>P0 — Wake-up call:</strong> caída de webhook WhatsApp &gt; 2 min, error rate API &gt; 5%, queue de mensajes &gt; 500 acumulados</li>
+      <li><strong>P1 — Slack:</strong> latencia API p95 &gt; 1s, fallos de FHIR push &gt; 10%, costo OpenAI/h &gt; $20</li>
+      <li><strong>P2 — Email:</strong> uso de DB &gt; 80%, certificado MinSalud expira &lt; 30 días, no-shows del día &gt; 30%</li>
+    </ul>
+
+    <h3>Health check endpoint (ejemplo Express)</h3>
+    <pre><code><span class="cm">// apps/api/src/routes/health.ts</span>
+<span class="kw">import</span> { Router } <span class="kw">from</span> <span class="str">'express'</span>;
+<span class="kw">import</span> { db, redis, queue } <span class="kw">from</span> <span class="str">'../infra'</span>;
+
+<span class="kw">export const</span> healthRouter = Router();
+
+healthRouter.get(<span class="str">'/health'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> checks = <span class="kw">await</span> Promise.allSettled([
+    db.query(<span class="str">'SELECT 1'</span>),
+    redis.ping(),
+    queue.checkHealth(),
+  ]);
+  <span class="kw">const</span> ok = checks.every(c => c.status === <span class="str">'fulfilled'</span>);
+  res.status(ok ? <span class="num">200</span> : <span class="num">503</span>).json({
+    status: ok ? <span class="str">'healthy'</span> : <span class="str">'degraded'</span>,
+    checks: { db: checks[0].status, redis: checks[1].status, queue: checks[2].status },
+    version: process.env.GIT_SHA,
+    uptime: process.uptime(),
+  });
+});</code></pre>
+
+    <!-- ========== TESTING ========== -->
+
+    <h2 id="testing"><span class="num">10 — Testing</span>Testing y <em>QA</em></h2>
+
+    <p>Un consultorio médico no perdona bugs. Si el bot agenda mal una cita o si la RDA falla, pierdes clientes y arriesgas multas. Estrategia de testing en pirámide:</p>
+
+    <table>
+      <thead><tr><th>Tipo</th><th>Tool</th><th>% del total</th><th>Qué cubre</th></tr></thead>
+      <tbody>
+        <tr><td>Unit tests</td><td>Vitest</td><td>70%</td><td>Funciones puras: parsers, formatters, validators, lógica de slots</td></tr>
+        <tr><td>Integration tests</td><td>Vitest + Testcontainers</td><td>20%</td><td>API endpoints contra Postgres real, queues, integraciones mock</td></tr>
+        <tr><td>E2E tests</td><td>Playwright</td><td>8%</td><td>Flujos críticos: signup, agendar cita, conversación bot completa</td></tr>
+        <tr><td>Smoke tests prod</td><td>Playwright + cron</td><td>2%</td><td>Cada 15min en prod: verifica login, send-message, fetch-agenda</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Casos de prueba críticos (no negociables)</h3>
+    <ol>
+      <li><strong>Bot agenda cita en slot disponible</strong> → Google Calendar evento creado, paciente recibe confirmación</li>
+      <li><strong>Bot rechaza slot ocupado</strong> → ofrece 2 alternativas reales (no inventadas)</li>
+      <li><strong>Pago Wompi exitoso</strong> → factura electrónica generada, paciente notificado</li>
+      <li><strong>Pago Wompi fallido</strong> → cita NO se confirma, paciente recibe nuevo link en 5min</li>
+      <li><strong>RDA push exitoso</strong> → estado en BD = <code>aceptado</code>, ID de MinSalud guardado</li>
+      <li><strong>RDA push rechazado</strong> → reintentar 3x con backoff, alertar al sysadmin si falla</li>
+      <li><strong>Mensaje de paciente con tono de alarma</strong> → escala a doctor en &lt; 30s</li>
+      <li><strong>Multi-tenant aislamiento</strong> → consultorio A nunca ve pacientes de consultorio B (incluye SQL injection)</li>
+      <li><strong>Habeas data delete</strong> → borrado completo en &lt; 7 días, audit log conservado</li>
+      <li><strong>Rate limiting</strong> → 100 msgs/min por consultorio, 429 al exceder</li>
+    </ol>
+
+    <h3>Ejemplo Playwright — flujo crítico de agendamiento</h3>
+    <pre><code><span class="cm">// tests/e2e/agendar-cita.spec.ts</span>
+<span class="kw">import</span> { test, expect } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+test(<span class="str">'paciente agenda cita por WhatsApp y aparece en Google Calendar'</span>, <span class="kw">async</span> ({ page, request }) => {
+  <span class="cm">// 1. Simular mensaje WhatsApp entrante (webhook)</span>
+  <span class="kw">const</span> webhookRes = <span class="kw">await</span> request.post(<span class="str">'/api/webhooks/whatsapp'</span>, {
+    data: {
+      entry: [{
+        changes: [{
+          value: {
+            messages: [{
+              from: <span class="str">'573001234567'</span>,
+              text: { body: <span class="str">'Quiero cita el jueves 3pm'</span> },
+              type: <span class="str">'text'</span>,
+              timestamp: <span class="str">'1735000000'</span>,
+            }],
+            metadata: { phone_number_id: <span class="str">'PHONE_TEST'</span> },
+          },
+        }],
+      }],
+    },
+  });
+  expect(webhookRes.status()).toBe(<span class="num">200</span>);
+
+  <span class="cm">// 2. Verificar respuesta del bot llegó a outbox</span>
+  <span class="kw">await</span> page.waitForTimeout(<span class="num">2000</span>); <span class="cm">// dar tiempo al worker</span>
+  <span class="kw">const</span> outbox = <span class="kw">await</span> request.get(<span class="str">'/api/test/outbox/573001234567'</span>);
+  <span class="kw">const</span> msgs = <span class="kw">await</span> outbox.json();
+  expect(msgs).toContainEqual(expect.objectContaining({
+    body: expect.stringContaining(<span class="str">'jueves'</span>),
+  }));
+
+  <span class="cm">// 3. Verificar evento en Google Calendar mock</span>
+  <span class="kw">const</span> events = <span class="kw">await</span> request.get(<span class="str">'/api/test/gcal/events?date=2026-04-25'</span>);
+  <span class="kw">const</span> body = <span class="kw">await</span> events.json();
+  expect(body.events).toHaveLength(<span class="num">1</span>);
+  expect(body.events[<span class="num">0</span>].start).toContain(<span class="str">'15:00'</span>);
+});</code></pre>
+
+    <!-- ========== RUNBOOKS ========== -->
+
+    <h2 id="runbooks"><span class="num">11 — Operación</span>Runbooks <em>operacionales</em></h2>
+
+    <p>Cuando algo falle a las 3am, no quieres reinventar el procedimiento. Estos son los 6 incidentes más probables y cómo resolverlos paso a paso.</p>
+
+    <h3>RB-01 — Webhook WhatsApp no responde</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> alertas de Better Uptime · pacientes no reciben respuesta · queue acumulando.<br/>
+      <strong>Diagnóstico (5 min):</strong>
+      <ol>
+        <li><code>railway logs --service api | grep webhook</code> — buscar errores recientes</li>
+        <li><code>curl https://api.medaccer.com/health</code> — verificar API arriba</li>
+        <li>Meta Business Manager → WhatsApp → Configuration → Webhook → "Test"</li>
+        <li>Verificar <code>META_VERIFY_TOKEN</code> en env vars (no rotó accidentalmente)</li>
+      </ol>
+      <strong>Solución:</strong>
+      <ol>
+        <li>Si API caído: <code>railway up --detach</code></li>
+        <li>Si verify token rotó: re-suscribir webhook desde Meta Business Manager</li>
+        <li>Si Meta side: revisar <a href="https://metastatus.com/" target="_blank">metastatus.com</a></li>
+      </ol>
+      <strong>Postmortem template:</strong> <code>docs/postmortems/YYYY-MM-DD-webhook-down.md</code>
+    </div>
+
+    <h3>RB-02 — RDA push a MinSalud fallando masivamente</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> dashboard de RDA muestra &gt; 20% rechazados en 1h.<br/>
+      <strong>Diagnóstico:</strong>
+      <ol>
+        <li>Verificar fecha expiración cert: <code>openssl pkcs12 -in cert.p12 -nokeys | openssl x509 -noout -dates</code></li>
+        <li>Validar bundle JSON contra <a href="https://validator.fhir.org/" target="_blank">validator.fhir.org</a></li>
+        <li>Revisar status MinSalud: <a href="https://prestadores.minsalud.gov.co/" target="_blank">prestadores.minsalud.gov.co</a></li>
+      </ol>
+      <strong>Solución:</strong>
+      <ol>
+        <li>Si certificado expiró: renovar en Certicámara (1 día). Mientras, pausar push y notificar consultorios.</li>
+        <li>Si bundle inválido: revisar último cambio del prompt IA, posible regresión en estructura</li>
+        <li>Si MinSalud caído: encolar en DLQ, reintentar cada 30min</li>
+      </ol>
+    </div>
+
+    <h3>RB-03 — Costo OpenAI disparado</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> alerta de Datadog: gasto/hora &gt; $20.<br/>
+      <strong>Diagnóstico:</strong> probable bucle infinito o un consultorio enviando spam.
+      <ol>
+        <li>Query: <code>SELECT consultorio_id, SUM(tokens) FROM ai_calls WHERE created_at &gt; NOW() - INTERVAL '1 hour' GROUP BY 1 ORDER BY 2 DESC LIMIT 5</code></li>
+        <li>Identificar consultorio outlier</li>
+      </ol>
+      <strong>Solución:</strong>
+      <ol>
+        <li>Activar rate limit temporal: <code>UPDATE consultorios SET ai_max_tokens_hour = 5000 WHERE id = 'xxx'</code></li>
+        <li>Contactar al cliente, investigar (¿hijo del doctor jugando con el bot? ¿bot de spam atacando?)</li>
+        <li>Si es ataque: bloquear número en Meta + agregar a denylist</li>
+      </ol>
+    </div>
+
+    <h3>RB-04 — Base de datos lenta (queries &gt; 1s)</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> p95 latencia API disparada.<br/>
+      <strong>Diagnóstico:</strong>
+      <ol>
+        <li><code>SELECT * FROM pg_stat_activity WHERE state = 'active' ORDER BY query_start</code></li>
+        <li>Buscar queries lentas en <code>pg_stat_statements</code></li>
+        <li>Verificar índices: <code>EXPLAIN ANALYZE</code> de las queries top 5</li>
+      </ol>
+      <strong>Solución:</strong>
+      <ol>
+        <li>Kill queries colgadas: <code>SELECT pg_terminate_backend(pid)</code></li>
+        <li>Agregar índices faltantes (post-mortem en docs)</li>
+        <li>Si DB saturada: scale up Railway plan (1 click) o agregar read replica</li>
+      </ol>
+    </div>
+
+    <h3>RB-05 — Paciente reporta brecha de privacidad</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> usuario dice "vi mensajes de otro paciente".<br/>
+      <strong>Acción inmediata (P0, todo el equipo):</strong>
+      <ol>
+        <li>Pausar el consultorio afectado: <code>UPDATE consultorios SET status = 'paused' WHERE id = 'xxx'</code></li>
+        <li>Capturar logs y screenshots — evidencia legal</li>
+        <li>Identificar root cause: query sin <code>WHERE consultorio_id</code>, bug de cache, error de Clerk session</li>
+        <li>Notificar SIC en &lt; 15 días si confirmamos brecha (Ley 1581 art. 17)</li>
+        <li>Contactar al paciente afectado en &lt; 24h con explicación + qué se hizo</li>
+        <li>Patch deployment + audit completo</li>
+      </ol>
+    </div>
+
+    <h3>RB-06 — Pérdida total de DB primaria</h3>
+    <div class="callout">
+      <strong>Síntoma:</strong> Railway DB inaccesible &gt; 5 min.<br/>
+      <strong>Plan B:</strong>
+      <ol>
+        <li>RTO objetivo: 1 hora · RPO objetivo: 5 min (snapshot continuo)</li>
+        <li>Promote read replica → primary (<code>railway db promote &lt;replica-id&gt;</code>)</li>
+        <li>Update <code>DATABASE_URL</code> en env vars</li>
+        <li>Redeploy: <code>railway up</code></li>
+        <li>Verificar: hacer un mensaje de prueba</li>
+      </ol>
+      <strong>Backups:</strong> snapshots automáticos cada 24h en S3 (retención 30 días) + WAL streaming continuo a réplica.
+    </div>
+
+    <!-- ========== SCHEMAS POR ESPECIALIDAD ========== -->
+
+    <h2 id="schemas-especialidad"><span class="num">12 — Datos</span>Schemas SQL por <em>especialidad</em></h2>
+
+    <p>Cada especialidad tiene campos específicos. La tabla <code>pacientes</code> tiene los campos universales; los específicos van en JSONB tipado o en tablas-extensión por especialidad. Aquí los schemas reales:</p>
+
+    <h3>Tabla universal — pacientes</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> pacientes (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  consultorio_id  UUID <span class="kw">NOT NULL REFERENCES</span> consultorios(id),
+  documento_tipo  <span class="kw">VARCHAR</span>(<span class="num">10</span>),  <span class="cm">-- CC, TI, RC, CE, PA</span>
+  documento_num   <span class="kw">VARCHAR</span>(<span class="num">20</span>),
+  nombres         <span class="kw">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  apellidos       <span class="kw">VARCHAR</span>(<span class="num">100</span>) <span class="kw">NOT NULL</span>,
+  fecha_nacimiento DATE,
+  sexo            <span class="kw">VARCHAR</span>(<span class="num">10</span>),  <span class="cm">-- M, F, otro</span>
+  telefono_e164   <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">NOT NULL</span>,  <span class="cm">-- +573001234567</span>
+  email           <span class="kw">VARCHAR</span>(<span class="num">200</span>),
+  direccion       JSONB,  <span class="cm">-- { street, city, dept, postal_code }</span>
+  eps             <span class="kw">VARCHAR</span>(<span class="num">100</span>),
+  consent_lopd    BOOLEAN <span class="kw">NOT NULL DEFAULT FALSE</span>,  <span class="cm">-- Ley 1581</span>
+  consent_lopd_at TIMESTAMPTZ,
+  consent_text_v  <span class="kw">VARCHAR</span>(<span class="num">10</span>),  <span class="cm">-- versión del texto firmado</span>
+  consent_marketing BOOLEAN <span class="kw">DEFAULT FALSE</span>,
+  metadata        JSONB <span class="kw">DEFAULT</span> <span class="str">'{}'</span>,  <span class="cm">-- campos custom por especialidad</span>
+  created_at      TIMESTAMPTZ <span class="kw">DEFAULT NOW</span>(),
+  updated_at      TIMESTAMPTZ <span class="kw">DEFAULT NOW</span>(),
+  deleted_at      TIMESTAMPTZ,  <span class="cm">-- soft delete (retención legal)</span>
+  <span class="kw">UNIQUE</span> (consultorio_id, telefono_e164),
+  <span class="kw">UNIQUE</span> (consultorio_id, documento_tipo, documento_num)
+);
+<span class="kw">CREATE INDEX</span> ix_pacientes_consultorio <span class="kw">ON</span> pacientes(consultorio_id);
+<span class="kw">CREATE INDEX</span> ix_pacientes_telefono <span class="kw">ON</span> pacientes(telefono_e164);
+<span class="kw">CREATE INDEX</span> ix_pacientes_search <span class="kw">ON</span> pacientes
+  <span class="kw">USING</span> gin(to_tsvector(<span class="str">'spanish'</span>, nombres || <span class="str">' '</span> || apellidos));</code></pre>
+
+    <h3>Extensión — Odontología (paquetes y tratamientos)</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> odonto_tratamientos (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  paciente_id     UUID <span class="kw">REFERENCES</span> pacientes(id),
+  tipo            <span class="kw">VARCHAR</span>(<span class="num">50</span>),  <span class="cm">-- limpieza, ortodoncia, endodoncia, implante, diseño_sonrisa</span>
+  estado          <span class="kw">VARCHAR</span>(<span class="num">20</span>),  <span class="cm">-- propuesto, aceptado, en_curso, completado, cancelado</span>
+  presupuesto_cop NUMERIC(<span class="num">12</span>,<span class="num">2</span>),
+  abonado_cop     NUMERIC(<span class="num">12</span>,<span class="num">2</span>) <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  cuotas_total    INT,
+  cuotas_pagadas  INT <span class="kw">DEFAULT</span> <span class="num">0</span>,
+  fecha_inicio    DATE,
+  fecha_fin_estimada DATE,
+  odontograma     JSONB,  <span class="cm">-- { "11": "caries", "12": "obturado", ... } 32 piezas</span>
+  fotos           UUID[] <span class="kw">REFERENCES</span> media(id),
+  notas           TEXT,
+  proximo_control DATE,
+  created_at      TIMESTAMPTZ <span class="kw">DEFAULT NOW</span>()
+);
+
+<span class="cm">-- Brackets/ortodoncia: control cada 21 días</span>
+<span class="kw">CREATE TABLE</span> odonto_ortodoncia_controles (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  tratamiento_id  UUID <span class="kw">REFERENCES</span> odonto_tratamientos(id),
+  fecha           DATE,
+  asistio         BOOLEAN,
+  ajustes         TEXT,  <span class="cm">-- "cambió arco, agregó elásticos clase II"</span>
+  proxima_cita    DATE
+);</code></pre>
+
+    <h3>Extensión — Cirugía plástica (post-op crítico)</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> cx_procedimientos (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  paciente_id     UUID <span class="kw">REFERENCES</span> pacientes(id),
+  cirugia         <span class="kw">VARCHAR</span>(<span class="num">100</span>),  <span class="cm">-- rinoplastia, lipo, mamoplastia, abdominoplastia, blefaroplastia</span>
+  fecha_cirugia   TIMESTAMPTZ,
+  duracion_min    INT,
+  hospital        <span class="kw">VARCHAR</span>(<span class="num">200</span>),
+  anestesiologo   <span class="kw">VARCHAR</span>(<span class="num">200</span>),
+  protocolo_postop_id UUID <span class="kw">REFERENCES</span> postop_protocolos(id),
+  notas_op        TEXT,
+  riesgo_score    INT,  <span class="cm">-- 1-10, calculado por IA en seguimiento</span>
+  created_at      TIMESTAMPTZ <span class="kw">DEFAULT NOW</span>()
+);
+
+<span class="kw">CREATE TABLE</span> postop_seguimientos (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  procedimiento_id UUID <span class="kw">REFERENCES</span> cx_procedimientos(id),
+  dia_postop      INT,  <span class="cm">-- 1, 3, 7, 15, 30, 60, 90</span>
+  enviado_at      TIMESTAMPTZ,
+  respondido_at   TIMESTAMPTZ,
+  respuesta_score INT,  <span class="cm">-- 1=excelente, 5=alarma</span>
+  fotos           UUID[] <span class="kw">REFERENCES</span> media(id),
+  alerta_ia       BOOLEAN <span class="kw">DEFAULT FALSE</span>,  <span class="cm">-- IA detectó complicación</span>
+  alerta_motivo   TEXT,  <span class="cm">-- "asimetría visible en ojo derecho"</span>
+  escalado        BOOLEAN <span class="kw">DEFAULT FALSE</span>
+);</code></pre>
+
+    <h3>Extensión — Pediatría (esquema PAI Colombia)</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> ped_vacunas_aplicadas (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  paciente_id     UUID <span class="kw">REFERENCES</span> pacientes(id),
+  vacuna_codigo   <span class="kw">VARCHAR</span>(<span class="num">50</span>),  <span class="cm">-- BCG, HepB_RN, Pentavalente_2m, etc.</span>
+  fecha_aplicacion DATE,
+  lote            <span class="kw">VARCHAR</span>(<span class="num">50</span>),
+  fabricante      <span class="kw">VARCHAR</span>(<span class="num">100</span>),
+  via             <span class="kw">VARCHAR</span>(<span class="num">20</span>),  <span class="cm">-- IM, SC, oral</span>
+  sitio           <span class="kw">VARCHAR</span>(<span class="num">50</span>),  <span class="cm">-- deltoides_izq, muslo_der</span>
+  reaccion_adversa BOOLEAN <span class="kw">DEFAULT FALSE</span>
+);
+
+<span class="cm">-- Vista materializada con próximas vacunas pendientes según edad</span>
+<span class="kw">CREATE MATERIALIZED VIEW</span> ped_vacunas_pendientes <span class="kw">AS</span>
+<span class="kw">SELECT</span> p.id <span class="kw">AS</span> paciente_id,
+       p.consultorio_id,
+       v.codigo <span class="kw">AS</span> vacuna_pendiente,
+       v.edad_meses_min,
+       v.edad_meses_max,
+       AGE(<span class="kw">NOW</span>(), p.fecha_nacimiento) <span class="kw">AS</span> edad_actual
+<span class="kw">FROM</span> pacientes p
+<span class="kw">CROSS JOIN</span> esquema_pai v
+<span class="kw">WHERE NOT EXISTS</span> (
+  <span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> ped_vacunas_aplicadas a
+  <span class="kw">WHERE</span> a.paciente_id = p.id <span class="kw">AND</span> a.vacuna_codigo = v.codigo
+)
+<span class="kw">AND</span> EXTRACT(MONTH <span class="kw">FROM</span> AGE(<span class="kw">NOW</span>(), p.fecha_nacimiento)) <span class="kw">BETWEEN</span> v.edad_meses_min <span class="kw">AND</span> v.edad_meses_max + <span class="num">2</span>;
+
+<span class="kw">CREATE INDEX</span> ix_vacunas_pend_consult <span class="kw">ON</span> ped_vacunas_pendientes(consultorio_id);
+<span class="cm">-- Refresh diario: REFRESH MATERIALIZED VIEW CONCURRENTLY ped_vacunas_pendientes;</span></code></pre>
+
+    <h3>Extensión — Ginecología (timeline embarazo)</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> gineco_embarazos (
+  id              UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  paciente_id     UUID <span class="kw">REFERENCES</span> pacientes(id),
+  fum             DATE <span class="kw">NOT NULL</span>,  <span class="cm">-- fecha última menstruación</span>
+  fpp             DATE <span class="kw">GENERATED ALWAYS AS</span> (fum + INTERVAL <span class="str">'280 days'</span>) STORED,
+  semanas_actual  INT <span class="kw">GENERATED ALWAYS AS</span> (
+    EXTRACT(DAY <span class="kw">FROM</span> <span class="kw">NOW</span>() - fum) / <span class="num">7</span>
+  ) STORED,
+  estado          <span class="kw">VARCHAR</span>(<span class="num">20</span>) <span class="kw">DEFAULT</span> <span class="str">'activo'</span>,
+  riesgo          <span class="kw">VARCHAR</span>(<span class="num">20</span>),  <span class="cm">-- bajo, medio, alto</span>
+  patologias      TEXT[],  <span class="cm">-- ['diabetes_gestacional', 'preeclampsia']</span>
+  controles       JSONB,  <span class="cm">-- array de eventos: { tipo, semana, fecha, resultado }</span>
+  parto_info      JSONB,  <span class="cm">-- al cerrar: { fecha, tipo, peso_rn, talla_rn, apgar }</span>
+  created_at      TIMESTAMPTZ <span class="kw">DEFAULT NOW</span>()
+);</code></pre>
+
+    <!-- ========== PROMPTS IA ========== -->
+
+    <h2 id="prompts-ia"><span class="num">13 — IA</span>Prompts del agente <em>IA</em></h2>
+
+    <p>El agente conversacional usa un patrón de <strong>system prompt + tools + memoria</strong>. El system prompt cambia según la especialidad del consultorio. Aquí los prompts reales (versión simplificada):</p>
+
+    <h3>Sistema base (común a todas las especialidades)</h3>
+    <pre><code>Eres <span class="str">{nombre_asistente}</span>, asistente virtual del consultorio <span class="str">{nombre_consultorio}</span>.
+Trabajas para <span class="str">{nombre_profesional}</span>, <span class="str">{titulo_profesional}</span> en <span class="str">{especialidad}</span>.
+
+REGLAS INVIOLABLES:
+1. NUNCA das diagnósticos. Si te lo piden, responde: "Eso lo puede evaluar mejor el/la <span class="str">{titulo}</span> en consulta."
+2. NUNCA recomiendas tratamientos farmacológicos no prescritos por <span class="str">{nombre_profesional}</span>.
+3. Si detectas señales de URGENCIA MÉDICA, escalas inmediatamente y le dices al paciente: "Esto necesita atención inmediata. Por favor vaya a urgencias o llámenos al <span class="str">{telefono_urgencias}</span>."
+4. NUNCA inventas precios, horarios, o disponibilidad. Solo usas la información de las tools que tienes.
+5. NUNCA respondes nada que no esté en tu base de conocimiento. Prefieres "déjeme verificarlo" antes que inventar.
+
+TONO:
+- Profesional pero cálido. Ni robot, ni demasiado familiar.
+- Vouseo en Colombia (usar "usted" por defecto). Tutear solo si el paciente tutea primero.
+- Frases cortas. Bullets cuando hay opciones.
+- Emojis suaves: 📅 🩺 ✅ 💊 — máximo 1-2 por mensaje.
+- Si el paciente escribe en mayúsculas o con tono de ansiedad, baja el ritmo y muestra empatía.
+
+CAPACIDADES:
+- Consultar agenda real (Google Calendar) → tool `get_available_slots`
+- Agendar/reagendar/cancelar → tools `book_slot`, `reschedule`, `cancel`
+- Mostrar precios → tool `get_pricing` (siempre real, nunca inventado)
+- Cobrar abonos → tool `create_payment_link`
+- Triage básico de síntomas → tool `triage` (solo categoriza, no diagnostica)
+- Adjuntar fotos a ficha → tool `attach_media`
+- Escalar al humano → tool `escalate_to_human` con razón
+
+DATOS DEL CONSULTORIO:
+- Horario: <span class="str">{horario_atencion}</span>
+- Dirección: <span class="str">{direccion}</span>
+- Teléfono urgencias: <span class="str">{telefono_urgencias}</span>
+- Teléfono administrativo: <span class="str">{telefono_admin}</span>
+- Servicios: <span class="str">{servicios_lista}</span>
+
+CONTEXTO DEL PACIENTE:
+<span class="str">{ficha_paciente_resumida}</span>  <span class="cm">// historial, alergias, tratamientos activos</span>
+
+HISTORIAL DE LA CONVERSACIÓN:
+<span class="str">{ultimos_10_mensajes}</span></code></pre>
+
+    <h3>Overlay específico — Cirugía plástica (modo post-op)</h3>
+    <pre><code><span class="cm">// Se concatena al system prompt cuando paciente está en seguimiento post-op</span>
+ESTÁS EN MODO POST-OPERATORIO.
+
+El paciente <span class="str">{nombre}</span> tuvo <span class="str">{cirugia}</span> el <span class="str">{fecha_cirugia}</span>.
+Hoy es día <span class="str">{dia_postop}</span> de recuperación.
+
+OBJETIVOS:
+1. Verificar adherencia al protocolo (vendajes, medicamentos, restricciones).
+2. Detectar SEÑALES DE ALARMA:
+   - Dolor &gt; 7/10 sostenido
+   - Sangrado activo
+   - Fiebre &gt; 38°C
+   - Asimetría súbita
+   - Mal olor en herida
+   - Dehiscencia (apertura de sutura)
+   - Hinchazón unilateral creciente
+
+ACCIÓN:
+- Si paciente envía foto: invocar `analyze_postop_photo` (modelo de visión)
+- Si IA visión retorna risk_score &gt; 0.6: ESCALAR INMEDIATAMENTE
+- Mensaje al paciente: "Marcó la consulta como prioritaria, el/la <span class="str">{titulo}</span> le contactará en los próximos <span class="str">{tiempo_respuesta}</span>."
+- Crear evento en agenda: revisión urgente del cirujano.
+
+NUNCA digas "no es nada" o "es normal" si no estás 100% seguro. Mejor escalas.</code></pre>
+
+    <h3>Overlay específico — Psicología (modo confidencial)</h3>
+    <pre><code>ESTÁS EN MODO PSICOLOGÍA. PROTOCOLO DE CONFIDENCIALIDAD MÁXIMA.
+
+REGLAS ADICIONALES:
+1. NO almacenes contenido emocional/clínico en tu memoria. Solo logística (citas, pagos).
+2. Los recordatorios NUNCA mencionan motivos: "Su cita con la Psi. <span class="str">{apellido}</span>" — punto.
+3. Si el paciente comparte algo emocional, valida ("gracias por compartirlo", "eso suena difícil"), pero NUNCA opines, aconsejes ni interpretes.
+4. Si detectas IDEACIÓN SUICIDA o autolesión:
+   - Responde con calma y validación
+   - Comparte línea: <span class="str">"Línea 106 (Bogotá) o 123 — funciona 24/7, gratuito"</span>
+   - Escala al psicólogo de inmediato (independiente del horario)
+   - Marca el caso como `priority=critical`
+5. Si paciente pide cancelar repetidamente sin razón: respeta, no presiones, solo nota al psicólogo.
+
+TONO:
+- Suave. Más pausas. Frases más cortas.
+- "¿Quiere agendar?" en lugar de "Le agendo".
+- Permites silencios — si el paciente escribió y luego no responde 5 min, no insistas. La presencia ya es suficiente.
+
+PROHIBIDO:
+- Diagnósticos psicológicos
+- Recomendar técnicas terapéuticas
+- Interpretar emociones del paciente
+- Mencionar terceros (familia, pareja) por iniciativa propia</code></pre>
+
+    <h3>Tool definitions (Anthropic format)</h3>
+    <pre><code>[
+  {
+    <span class="str">"name"</span>: <span class="str">"get_available_slots"</span>,
+    <span class="str">"description"</span>: <span class="str">"Consulta los slots disponibles en el calendario para los próximos N días"</span>,
+    <span class="str">"input_schema"</span>: {
+      <span class="str">"type"</span>: <span class="str">"object"</span>,
+      <span class="str">"properties"</span>: {
+        <span class="str">"days_ahead"</span>: { <span class="str">"type"</span>: <span class="str">"integer"</span>, <span class="str">"default"</span>: <span class="num">7</span> },
+        <span class="str">"duration_min"</span>: { <span class="str">"type"</span>: <span class="str">"integer"</span>, <span class="str">"default"</span>: <span class="num">30</span> },
+        <span class="str">"preferred_time"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span>, <span class="str">"enum"</span>: [<span class="str">"morning"</span>, <span class="str">"afternoon"</span>, <span class="str">"evening"</span>, <span class="str">"any"</span>] }
+      }
+    }
+  },
+  {
+    <span class="str">"name"</span>: <span class="str">"book_slot"</span>,
+    <span class="str">"description"</span>: <span class="str">"Reserva un slot. Crea evento en Calendar y registro en BD"</span>,
+    <span class="str">"input_schema"</span>: {
+      <span class="str">"type"</span>: <span class="str">"object"</span>,
+      <span class="str">"required"</span>: [<span class="str">"slot_iso"</span>, <span class="str">"servicio_id"</span>, <span class="str">"paciente_id"</span>],
+      <span class="str">"properties"</span>: {
+        <span class="str">"slot_iso"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span>, <span class="str">"format"</span>: <span class="str">"date-time"</span> },
+        <span class="str">"servicio_id"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> },
+        <span class="str">"paciente_id"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> },
+        <span class="str">"notas"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> }
+      }
+    }
+  },
+  {
+    <span class="str">"name"</span>: <span class="str">"escalate_to_human"</span>,
+    <span class="str">"description"</span>: <span class="str">"Marca la conversación para revisión humana. Notifica vía push al equipo del consultorio"</span>,
+    <span class="str">"input_schema"</span>: {
+      <span class="str">"type"</span>: <span class="str">"object"</span>,
+      <span class="str">"required"</span>: [<span class="str">"motivo"</span>, <span class="str">"prioridad"</span>],
+      <span class="str">"properties"</span>: {
+        <span class="str">"motivo"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> },
+        <span class="str">"prioridad"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span>, <span class="str">"enum"</span>: [<span class="str">"normal"</span>, <span class="str">"alta"</span>, <span class="str">"critica"</span>] },
+        <span class="str">"resumen_caso"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> }
+      }
+    }
+  }
+]</code></pre>
+
+    <h3>Configuración del modelo</h3>
+    <table>
+      <thead><tr><th>Parámetro</th><th>Valor</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td>Modelo principal</td><td>Claude Sonnet 4 (anthropic)</td><td>Mejor razonamiento clínico, menor alucinación</td></tr>
+        <tr><td>Modelo fallback</td><td>GPT-4o-mini</td><td>Si Anthropic cae, fallback automático</td></tr>
+        <tr><td>Modelo visión (fotos post-op)</td><td>Claude Opus 4</td><td>Mejor análisis multimodal médico</td></tr>
+        <tr><td>Temperature</td><td>0.3</td><td>Bajo — queremos predictibilidad, no creatividad</td></tr>
+        <tr><td>Max tokens</td><td>1024</td><td>Mensajes WhatsApp cortos</td></tr>
+        <tr><td>Context window</td><td>10 mensajes + ficha</td><td>Suficiente sin disparar costos</td></tr>
+        <tr><td>Streaming</td><td>Sí</td><td>El "typing..." se siente natural</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== WEBHOOK CÓDIGO ========== -->
+
+    <h2 id="webhook-codigo"><span class="num">14 — Código</span>Webhook WhatsApp <em>completo</em></h2>
+
+    <p>El webhook es el corazón del producto. Recibe mensajes, los desencola, llama al agente IA, responde. Implementación con Express + BullMQ:</p>
+
+    <h3>Verificación inicial (GET) — Meta lo pide al suscribir</h3>
+    <pre><code><span class="cm">// apps/api/src/webhooks/whatsapp.ts</span>
+<span class="kw">import</span> { Router } <span class="kw">from</span> <span class="str">'express'</span>;
+<span class="kw">import</span> crypto <span class="kw">from</span> <span class="str">'crypto'</span>;
+<span class="kw">import</span> { messageQueue } <span class="kw">from</span> <span class="str">'../queues'</span>;
+<span class="kw">import</span> { logger } <span class="kw">from</span> <span class="str">'../infra/logger'</span>;
+
+<span class="kw">export const</span> waRouter = Router();
+
+<span class="cm">// 1. Verificación del webhook (al conectar inicial)</span>
+waRouter.get(<span class="str">'/webhook'</span>, (req, res) => {
+  <span class="kw">const</span> mode = req.query[<span class="str">'hub.mode'</span>];
+  <span class="kw">const</span> token = req.query[<span class="str">'hub.verify_token'</span>];
+  <span class="kw">const</span> challenge = req.query[<span class="str">'hub.challenge'</span>];
+
+  <span class="kw">if</span> (mode === <span class="str">'subscribe'</span> &amp;&amp; token === process.env.META_VERIFY_TOKEN) {
+    logger.info(<span class="str">'WA webhook verified'</span>);
+    res.status(<span class="num">200</span>).send(challenge);
+  } <span class="kw">else</span> {
+    res.sendStatus(<span class="num">403</span>);
+  }
+});</code></pre>
+
+    <h3>Recepción de mensajes (POST) — con verificación HMAC</h3>
+    <pre><code><span class="cm">// 2. Mensajes entrantes (debe responder &lt; 20s o Meta reintenta)</span>
+waRouter.post(<span class="str">'/webhook'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="cm">// Validar firma HMAC SHA256 (X-Hub-Signature-256)</span>
+  <span class="kw">const</span> signature = req.headers[<span class="str">'x-hub-signature-256'</span>] <span class="kw">as</span> string;
+  <span class="kw">const</span> expected = <span class="str">'sha256='</span> + crypto
+    .createHmac(<span class="str">'sha256'</span>, process.env.META_APP_SECRET!)
+    .update(JSON.stringify(req.body))
+    .digest(<span class="str">'hex'</span>);
+
+  <span class="kw">if</span> (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
+    logger.warn({ headers: req.headers }, <span class="str">'WA invalid signature'</span>);
+    <span class="kw">return</span> res.sendStatus(<span class="num">401</span>);
+  }
+
+  <span class="cm">// Respuesta inmediata (Meta penaliza si tardamos &gt; 20s)</span>
+  res.sendStatus(<span class="num">200</span>);
+
+  <span class="cm">// Procesar async via queue (BullMQ + Redis)</span>
+  <span class="kw">try</span> {
+    <span class="kw">const</span> entries = req.body.entry || [];
+    <span class="kw">for</span> (<span class="kw">const</span> entry <span class="kw">of</span> entries) {
+      <span class="kw">for</span> (<span class="kw">const</span> change <span class="kw">of</span> entry.changes || []) {
+        <span class="kw">const</span> messages = change.value?.messages || [];
+        <span class="kw">const</span> phoneNumberId = change.value?.metadata?.phone_number_id;
+
+        <span class="kw">for</span> (<span class="kw">const</span> msg <span class="kw">of</span> messages) {
+          <span class="kw">await</span> messageQueue.add(<span class="str">'incoming'</span>, {
+            phoneNumberId,
+            from: msg.from,
+            messageId: msg.id,
+            type: msg.type,  <span class="cm">// text, image, audio, document, location, button</span>
+            content: extractContent(msg),
+            timestamp: parseInt(msg.timestamp) * <span class="num">1000</span>,
+            raw: msg,
+          }, {
+            attempts: <span class="num">3</span>,
+            backoff: { type: <span class="str">'exponential'</span>, delay: <span class="num">2000</span> },
+            removeOnComplete: { age: <span class="num">3600</span>, count: <span class="num">1000</span> },
+            removeOnFail: { age: <span class="num">86400</span> },  <span class="cm">// 24h en DLQ</span>
+          });
+        }
+      }
+    }
+  } <span class="kw">catch</span> (err) {
+    logger.error({ err, body: req.body }, <span class="str">'WA webhook processing error'</span>);
+    <span class="cm">// No re-throw: ya respondimos 200, error tracking via Sentry</span>
+  }
+});
+
+<span class="kw">function</span> extractContent(msg: any): string {
+  <span class="kw">switch</span> (msg.type) {
+    <span class="kw">case</span> <span class="str">'text'</span>: <span class="kw">return</span> msg.text.body;
+    <span class="kw">case</span> <span class="str">'image'</span>: <span class="kw">return</span> <span class="str">`[IMAGE:</span>${msg.image.id}<span class="str">]`</span>;
+    <span class="kw">case</span> <span class="str">'audio'</span>: <span class="kw">return</span> <span class="str">`[AUDIO:</span>${msg.audio.id}<span class="str">]`</span>;
+    <span class="kw">case</span> <span class="str">'document'</span>: <span class="kw">return</span> <span class="str">`[DOC:</span>${msg.document.id}<span class="str">]`</span>;
+    <span class="kw">case</span> <span class="str">'button'</span>: <span class="kw">return</span> msg.button.text;
+    <span class="kw">case</span> <span class="str">'interactive'</span>: <span class="kw">return</span> msg.interactive.button_reply?.title || msg.interactive.list_reply?.title;
+    <span class="kw">default</span>: <span class="kw">return</span> <span class="str">'[UNSUPPORTED]'</span>;
+  }
+}</code></pre>
+
+    <h3>Worker — procesamiento del mensaje</h3>
+    <pre><code><span class="cm">// apps/worker/src/processors/incoming.ts</span>
+<span class="kw">import</span> { Worker } <span class="kw">from</span> <span class="str">'bullmq'</span>;
+<span class="kw">import</span> { agentRespond } <span class="kw">from</span> <span class="str">'../ai/agent'</span>;
+<span class="kw">import</span> { sendWhatsApp } <span class="kw">from</span> <span class="str">'../channels/whatsapp'</span>;
+<span class="kw">import</span> { db } <span class="kw">from</span> <span class="str">'../infra'</span>;
+
+<span class="kw">new</span> Worker(<span class="str">'incoming'</span>, <span class="kw">async</span> (job) => {
+  <span class="kw">const</span> { phoneNumberId, from, messageId, content, type } = job.data;
+
+  <span class="cm">// 1. Identificar consultorio por phone_number_id</span>
+  <span class="kw">const</span> consultorio = <span class="kw">await</span> db.consultorios.findByWaPhoneId(phoneNumberId);
+  <span class="kw">if</span> (!consultorio) <span class="kw">throw new</span> Error(<span class="str">'Unknown phone_number_id'</span>);
+
+  <span class="cm">// 2. Identificar o crear paciente</span>
+  <span class="kw">let</span> paciente = <span class="kw">await</span> db.pacientes.findByTelefono(consultorio.id, from);
+  <span class="kw">if</span> (!paciente) {
+    paciente = <span class="kw">await</span> db.pacientes.create({
+      consultorio_id: consultorio.id,
+      telefono_e164: <span class="str">'+'</span> + from,
+      nombres: <span class="str">'Pendiente'</span>,
+      apellidos: <span class="str">'Pendiente'</span>,
+      consent_lopd: <span class="kw">false</span>,  <span class="cm">// se obtendrá en primera interacción</span>
+    });
+  }
+
+  <span class="cm">// 3. Guardar mensaje entrante</span>
+  <span class="kw">await</span> db.mensajes.create({
+    consultorio_id: consultorio.id,
+    paciente_id: paciente.id,
+    direccion: <span class="str">'in'</span>,
+    canal: <span class="str">'whatsapp'</span>,
+    tipo: type,
+    contenido: content,
+    wa_message_id: messageId,
+  });
+
+  <span class="cm">// 4. Verificar consentimiento LOPD (si no lo tiene, pedirlo primero)</span>
+  <span class="kw">if</span> (!paciente.consent_lopd) {
+    <span class="kw">await</span> sendWhatsApp(consultorio, from, {
+      type: <span class="str">'interactive'</span>,
+      interactive: {
+        type: <span class="str">'button'</span>,
+        body: { text: <span class="str">`Hola 👋 Soy </span>${consultorio.nombre_asistente}<span class="str">.</span>
+<span class="str">Antes de empezar, necesito tu autorización para tratar tus datos personales según la Ley 1581 de Colombia. ¿Aceptas?`</span> },
+        action: {
+          buttons: [
+            { type: <span class="str">'reply'</span>, reply: { id: <span class="str">'lopd_yes'</span>, title: <span class="str">'Sí, acepto'</span> } },
+            { type: <span class="str">'reply'</span>, reply: { id: <span class="str">'lopd_no'</span>, title: <span class="str">'Quiero saber más'</span> } },
+          ],
+        },
+      },
+    });
+    <span class="kw">return</span>;
+  }
+
+  <span class="cm">// 5. Llamar al agente IA</span>
+  <span class="kw">const</span> response = <span class="kw">await</span> agentRespond({
+    consultorio,
+    paciente,
+    mensaje: content,
+    tipo: type,
+  });
+
+  <span class="cm">// 6. Enviar respuesta</span>
+  <span class="kw">await</span> sendWhatsApp(consultorio, from, response);
+}, {
+  concurrency: <span class="num">10</span>,
+  connection: { host: process.env.REDIS_HOST },
+});</code></pre>
+
+    <!-- ========== FHIR BUNDLE ========== -->
+
+    <h2 id="fhir-bundle"><span class="num">15 — RDA</span>FHIR Bundle <em>real</em> (RDA)</h2>
+
+    <p>El Resumen Digital de Atención (RDA) que MinSalud exige cumple HL7 FHIR R4. Es un Bundle JSON con varios recursos. Aquí un ejemplo real de una consulta de medicina general:</p>
+
+    <pre><code>{
+  <span class="str">"resourceType"</span>: <span class="str">"Bundle"</span>,
+  <span class="str">"id"</span>: <span class="str">"rda-2026-04-25-a1b2c3"</span>,
+  <span class="str">"meta"</span>: {
+    <span class="str">"profile"</span>: [<span class="str">"https://terminology.minsalud.gov.co/StructureDefinition/RDA-CO"</span>],
+    <span class="str">"lastUpdated"</span>: <span class="str">"2026-04-25T15:42:00-05:00"</span>
+  },
+  <span class="str">"type"</span>: <span class="str">"document"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-25T15:42:00-05:00"</span>,
+  <span class="str">"entry"</span>: [
+    {
+      <span class="str">"fullUrl"</span>: <span class="str">"urn:uuid:composition-1"</span>,
+      <span class="str">"resource"</span>: {
+        <span class="str">"resourceType"</span>: <span class="str">"Composition"</span>,
+        <span class="str">"id"</span>: <span class="str">"composition-1"</span>,
+        <span class="str">"status"</span>: <span class="str">"final"</span>,
+        <span class="str">"type"</span>: {
+          <span class="str">"coding"</span>: [{
+            <span class="str">"system"</span>: <span class="str">"http://loinc.org"</span>,
+            <span class="str">"code"</span>: <span class="str">"34108-1"</span>,
+            <span class="str">"display"</span>: <span class="str">"Outpatient Note"</span>
+          }]
+        },
+        <span class="str">"subject"</span>: { <span class="str">"reference"</span>: <span class="str">"Patient/pat-1"</span> },
+        <span class="str">"date"</span>: <span class="str">"2026-04-25T15:30:00-05:00"</span>,
+        <span class="str">"author"</span>: [{ <span class="str">"reference"</span>: <span class="str">"Practitioner/prac-1"</span> }],
+        <span class="str">"title"</span>: <span class="str">"Resumen de atención ambulatoria"</span>,
+        <span class="str">"section"</span>: [
+          {
+            <span class="str">"title"</span>: <span class="str">"Motivo de consulta"</span>,
+            <span class="str">"text"</span>: { <span class="str">"status"</span>: <span class="str">"generated"</span>, <span class="str">"div"</span>: <span class="str">"&lt;div&gt;Cefalea persistente 3 días&lt;/div&gt;"</span> }
+          },
+          {
+            <span class="str">"title"</span>: <span class="str">"Plan"</span>,
+            <span class="str">"text"</span>: { <span class="str">"status"</span>: <span class="str">"generated"</span>, <span class="str">"div"</span>: <span class="str">"&lt;div&gt;Acetaminofén 500mg c/8h x 3 días, control si persiste&lt;/div&gt;"</span> }
+          }
+        ]
+      }
+    },
+    {
+      <span class="str">"fullUrl"</span>: <span class="str">"urn:uuid:patient-1"</span>,
+      <span class="str">"resource"</span>: {
+        <span class="str">"resourceType"</span>: <span class="str">"Patient"</span>,
+        <span class="str">"id"</span>: <span class="str">"pat-1"</span>,
+        <span class="str">"identifier"</span>: [{
+          <span class="str">"system"</span>: <span class="str">"https://terminology.minsalud.gov.co/CodeSystem/CC"</span>,
+          <span class="str">"value"</span>: <span class="str">"1023456789"</span>
+        }],
+        <span class="str">"name"</span>: [{ <span class="str">"family"</span>: <span class="str">"Pérez"</span>, <span class="str">"given"</span>: [<span class="str">"María"</span>, <span class="str">"José"</span>] }],
+        <span class="str">"gender"</span>: <span class="str">"female"</span>,
+        <span class="str">"birthDate"</span>: <span class="str">"1985-03-12"</span>,
+        <span class="str">"telecom"</span>: [
+          { <span class="str">"system"</span>: <span class="str">"phone"</span>, <span class="str">"value"</span>: <span class="str">"+573001234567"</span> },
+          { <span class="str">"system"</span>: <span class="str">"email"</span>, <span class="str">"value"</span>: <span class="str">"maria@email.co"</span> }
+        ]
+      }
+    },
+    {
+      <span class="str">"fullUrl"</span>: <span class="str">"urn:uuid:practitioner-1"</span>,
+      <span class="str">"resource"</span>: {
+        <span class="str">"resourceType"</span>: <span class="str">"Practitioner"</span>,
+        <span class="str">"id"</span>: <span class="str">"prac-1"</span>,
+        <span class="str">"identifier"</span>: [{
+          <span class="str">"system"</span>: <span class="str">"https://terminology.minsalud.gov.co/CodeSystem/RM"</span>,
+          <span class="str">"value"</span>: <span class="str">"RM-12345"</span>
+        }],
+        <span class="str">"name"</span>: [{ <span class="str">"family"</span>: <span class="str">"Ramírez"</span>, <span class="str">"given"</span>: [<span class="str">"Carlos"</span>] }],
+        <span class="str">"qualification"</span>: [{
+          <span class="str">"code"</span>: { <span class="str">"text"</span>: <span class="str">"Médico General"</span> }
+        }]
+      }
+    },
+    {
+      <span class="str">"fullUrl"</span>: <span class="str">"urn:uuid:condition-1"</span>,
+      <span class="str">"resource"</span>: {
+        <span class="str">"resourceType"</span>: <span class="str">"Condition"</span>,
+        <span class="str">"id"</span>: <span class="str">"condition-1"</span>,
+        <span class="str">"clinicalStatus"</span>: { <span class="str">"coding"</span>: [{ <span class="str">"system"</span>: <span class="str">"http://terminology.hl7.org/CodeSystem/condition-clinical"</span>, <span class="str">"code"</span>: <span class="str">"active"</span> }] },
+        <span class="str">"code"</span>: {
+          <span class="str">"coding"</span>: [{
+            <span class="str">"system"</span>: <span class="str">"http://hl7.org/fhir/sid/icd-10"</span>,
+            <span class="str">"code"</span>: <span class="str">"R51"</span>,
+            <span class="str">"display"</span>: <span class="str">"Cefalea"</span>
+          }]
+        },
+        <span class="str">"subject"</span>: { <span class="str">"reference"</span>: <span class="str">"Patient/pat-1"</span> }
+      }
+    },
+    {
+      <span class="str">"fullUrl"</span>: <span class="str">"urn:uuid:medication-1"</span>,
+      <span class="str">"resource"</span>: {
+        <span class="str">"resourceType"</span>: <span class="str">"MedicationRequest"</span>,
+        <span class="str">"id"</span>: <span class="str">"medreq-1"</span>,
+        <span class="str">"status"</span>: <span class="str">"active"</span>,
+        <span class="str">"intent"</span>: <span class="str">"order"</span>,
+        <span class="str">"medicationCodeableConcept"</span>: {
+          <span class="str">"coding"</span>: [{
+            <span class="str">"system"</span>: <span class="str">"https://terminology.minsalud.gov.co/CodeSystem/CUM"</span>,
+            <span class="str">"code"</span>: <span class="str">"19957966"</span>,
+            <span class="str">"display"</span>: <span class="str">"Acetaminofén 500mg tableta"</span>
+          }]
+        },
+        <span class="str">"subject"</span>: { <span class="str">"reference"</span>: <span class="str">"Patient/pat-1"</span> },
+        <span class="str">"dosageInstruction"</span>: [{
+          <span class="str">"text"</span>: <span class="str">"1 tableta cada 8 horas por 3 días"</span>,
+          <span class="str">"timing"</span>: { <span class="str">"repeat"</span>: { <span class="str">"frequency"</span>: <span class="num">3</span>, <span class="str">"period"</span>: <span class="num">1</span>, <span class="str">"periodUnit"</span>: <span class="str">"d"</span> } }
+        }]
+      }
+    }
+  ]
+}</code></pre>
+
+    <h3>Validación previa al envío</h3>
+    <p>Antes de mandar a MinSalud, validar contra el validador oficial:</p>
+    <pre><code><span class="cm">// apps/api/src/rda/validator.ts</span>
+<span class="kw">import</span> axios <span class="kw">from</span> <span class="str">'axios'</span>;
+
+<span class="kw">export async function</span> validateBundle(bundle: any): Promise&lt;ValidationResult&gt; {
+  <span class="kw">const</span> response = <span class="kw">await</span> axios.post(
+    <span class="str">'https://validator.fhir.org/validate'</span>,
+    bundle,
+    {
+      headers: {
+        <span class="str">'Content-Type'</span>: <span class="str">'application/fhir+json'</span>,
+        <span class="str">'Accept'</span>: <span class="str">'application/fhir+json'</span>,
+      },
+      params: { profile: <span class="str">'https://terminology.minsalud.gov.co/StructureDefinition/RDA-CO'</span> },
+      timeout: <span class="num">10000</span>,
+    }
+  );
+  <span class="kw">const</span> issues = response.data.issue || [];
+  <span class="kw">return</span> {
+    valid: issues.every((i: any) =&gt; i.severity !== <span class="str">'error'</span> &amp;&amp; i.severity !== <span class="str">'fatal'</span>),
+    errors: issues.filter((i: any) =&gt; i.severity === <span class="str">'error'</span>),
+    warnings: issues.filter((i: any) =&gt; i.severity === <span class="str">'warning'</span>),
+  };
+}</code></pre>
+
+    <h3>Push firmado a MinSalud</h3>
+    <pre><code><span class="kw">import</span> https <span class="kw">from</span> <span class="str">'https'</span>;
+<span class="kw">import</span> fs <span class="kw">from</span> <span class="str">'fs'</span>;
+<span class="kw">import</span> axios <span class="kw">from</span> <span class="str">'axios'</span>;
+
+<span class="kw">const</span> agent = <span class="kw">new</span> https.Agent({
+  pfx: fs.readFileSync(process.env.MINSALUD_CERT_PATH!),
+  passphrase: process.env.MINSALUD_CERT_PASSWORD,
+  rejectUnauthorized: <span class="kw">true</span>,
+});
+
+<span class="kw">export async function</span> pushRDA(bundle: any): Promise&lt;PushResult&gt; {
+  <span class="cm">// 1. Validar antes de mandar</span>
+  <span class="kw">const</span> validation = <span class="kw">await</span> validateBundle(bundle);
+  <span class="kw">if</span> (!validation.valid) {
+    <span class="kw">throw new</span> RDAValidationError(validation.errors);
+  }
+
+  <span class="cm">// 2. Push con cert mTLS</span>
+  <span class="kw">const</span> response = <span class="kw">await</span> axios.post(
+    <span class="str">'https://prestadores.minsalud.gov.co/api/rda/v1/Bundle'</span>,
+    bundle,
+    {
+      httpsAgent: agent,
+      headers: {
+        <span class="str">'Content-Type'</span>: <span class="str">'application/fhir+json'</span>,
+        <span class="str">'Authorization'</span>: <span class="str">`Bearer </span>${<span class="kw">await</span> getMinsaludToken()}<span class="str">`</span>,
+      },
+      timeout: <span class="num">30000</span>,
+    }
+  );
+
+  <span class="kw">return</span> {
+    estado: <span class="str">'aceptado'</span>,
+    minsalud_id: response.data.id,
+    fecha_push: <span class="kw">new</span> Date(),
+  };
+}</code></pre>
+
+    <!-- ========== API REFERENCE ========== -->
+
+    <h2 id="api-reference"><span class="num">16 — API</span>API <em>reference</em></h2>
+
+    <p>Endpoints REST principales del backend. Todos requieren <code>Authorization: Bearer &lt;jwt&gt;</code> excepto los marcados como públicos. Base URL: <code>https://api.medaccer.com/v1</code>.</p>
+
+    <h3>Autenticación</h3>
+    <table class="api-table">
+      <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="api-pub">POST</span></td><td><code>/auth/signup</code></td><td>Crear cuenta de consultorio. Body: <code>{ email, password, consultorio_nombre, especialidad }</code></td></tr>
+        <tr><td><span class="api-pub">POST</span></td><td><code>/auth/login</code></td><td>Login. Retorna JWT (24h)</td></tr>
+        <tr><td><span class="api-pub">POST</span></td><td><code>/auth/refresh</code></td><td>Refresh token (30d)</td></tr>
+        <tr><td>POST</td><td><code>/auth/logout</code></td><td>Invalida refresh token</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Pacientes</h3>
+    <table class="api-table">
+      <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td><code>/pacientes?q=&amp;page=&amp;limit=</code></td><td>Lista paginada con búsqueda full-text</td></tr>
+        <tr><td>GET</td><td><code>/pacientes/:id</code></td><td>Ficha completa con timeline</td></tr>
+        <tr><td>POST</td><td><code>/pacientes</code></td><td>Crear paciente</td></tr>
+        <tr><td>PATCH</td><td><code>/pacientes/:id</code></td><td>Actualizar campos</td></tr>
+        <tr><td>DELETE</td><td><code>/pacientes/:id</code></td><td>Soft delete (Ley 1581 — datos persisten 5 años)</td></tr>
+        <tr><td>GET</td><td><code>/pacientes/:id/timeline</code></td><td>Timeline cronológico de eventos</td></tr>
+        <tr><td>GET</td><td><code>/pacientes/:id/messages</code></td><td>Conversaciones con paginación</td></tr>
+        <tr><td>POST</td><td><code>/pacientes/:id/export</code></td><td>Export GDPR/LOPD (genera ZIP con todos los datos)</td></tr>
+        <tr><td>POST</td><td><code>/pacientes/:id/forget</code></td><td>Habeas data: anonimiza permanentemente</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Citas</h3>
+    <table class="api-table">
+      <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td><code>/citas?from=&amp;to=&amp;estado=</code></td><td>Lista filtrada</td></tr>
+        <tr><td>GET</td><td><code>/citas/disponibles?fecha=&amp;duracion=</code></td><td>Slots libres (consulta GCal)</td></tr>
+        <tr><td>POST</td><td><code>/citas</code></td><td>Crear cita (también crea evento en Calendar)</td></tr>
+        <tr><td>PATCH</td><td><code>/citas/:id</code></td><td>Reagendar / cambiar estado</td></tr>
+        <tr><td>DELETE</td><td><code>/citas/:id</code></td><td>Cancelar (libera slot, notifica)</td></tr>
+        <tr><td>POST</td><td><code>/citas/:id/confirm</code></td><td>Paciente confirma asistencia</td></tr>
+        <tr><td>POST</td><td><code>/citas/:id/no-show</code></td><td>Marcar no asistencia (cobra fee si configurado)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Mensajes / Conversaciones</h3>
+    <table class="api-table">
+      <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td><code>/conversaciones</code></td><td>Inbox de conversaciones (estilo WhatsApp)</td></tr>
+        <tr><td>GET</td><td><code>/conversaciones/:id/messages</code></td><td>Hilo completo de mensajes</td></tr>
+        <tr><td>POST</td><td><code>/conversaciones/:id/send</code></td><td>Enviar mensaje manual (toma control del bot)</td></tr>
+        <tr><td>POST</td><td><code>/conversaciones/:id/escalate</code></td><td>Escalar a humano</td></tr>
+        <tr><td>POST</td><td><code>/conversaciones/:id/return-to-bot</code></td><td>Devolver al bot tras intervención humana</td></tr>
+      </tbody>
+    </table>
+
+    <h3>RDA / Resumen Digital</h3>
+    <table class="api-table">
+      <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td><code>/rda/generar</code></td><td>Genera bundle FHIR desde una atención</td></tr>
+        <tr><td>POST</td><td><code>/rda/:id/push</code></td><td>Envía a MinSalud</td></tr>
+        <tr><td>GET</td><td><code>/rda?estado=</code></td><td>Cola de RDAs (pendiente, enviado, aceptado, rechazado)</td></tr>
+        <tr><td>POST</td><td><code>/rda/:id/retry</code></td><td>Reintentar envío fallido</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Códigos de error estándar</h3>
+    <table>
+      <thead><tr><th>Código</th><th>Significado</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><code>400</code></td><td>Bad request</td><td>JSON inválido, campo requerido faltante</td></tr>
+        <tr><td><code>401</code></td><td>No autenticado</td><td>JWT inválido o expirado</td></tr>
+        <tr><td><code>403</code></td><td>Sin permisos</td><td>Tratando de acceder a otro consultorio</td></tr>
+        <tr><td><code>404</code></td><td>No encontrado</td><td>Paciente o cita inexistente</td></tr>
+        <tr><td><code>409</code></td><td>Conflicto</td><td>Slot ya reservado, paciente duplicado</td></tr>
+        <tr><td><code>422</code></td><td>Validación falló</td><td>FHIR bundle inválido, fecha en el pasado</td></tr>
+        <tr><td><code>429</code></td><td>Rate limit</td><td>&gt; 100 req/min por consultorio</td></tr>
+        <tr><td><code>500</code></td><td>Error interno</td><td>Bug — Sentry recibe alerta</td></tr>
+        <tr><td><code>502</code></td><td>Integración caída</td><td>OpenAI, Wompi o MinSalud no responde</td></tr>
+        <tr><td><code>503</code></td><td>Mantenimiento</td><td>Deploy en curso</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== MÉTRICAS ========== -->
+
+    <h2 id="metricas-dashboards"><span class="num">17 — Métricas</span>Métricas y <em>dashboards</em></h2>
+
+    <p>Lo que mides es lo que mejoras. Tres niveles de dashboard:</p>
+
+    <h3>Dashboard 1 — Métricas de producto (uso)</h3>
+    <table>
+      <thead><tr><th>Métrica</th><th>Qué mide</th><th>Target Q1</th></tr></thead>
+      <tbody>
+        <tr><td>Consultorios activos</td><td>Logueados ≥ 1 vez la última semana</td><td>20 → 50 → 100</td></tr>
+        <tr><td>Mensajes procesados/día</td><td>Volumen de uso del bot</td><td>1.000 → 5.000 → 15.000</td></tr>
+        <tr><td>Tasa resolución bot</td><td>% conversaciones resueltas sin escalar</td><td>&gt; 75%</td></tr>
+        <tr><td>Tiempo respuesta bot</td><td>Median desde mensaje paciente hasta respuesta</td><td>&lt; 8s</td></tr>
+        <tr><td>Citas agendadas/semana</td><td>Por el bot, no por humanos</td><td>&gt; 200/sem por consultorio</td></tr>
+        <tr><td>No-show rate</td><td>% citas no asistidas</td><td>&lt; 12% (vs 25% baseline)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Dashboard 2 — Métricas de negocio (revenue)</h3>
+    <table>
+      <thead><tr><th>Métrica</th><th>Definición</th><th>Target 12m</th></tr></thead>
+      <tbody>
+        <tr><td>MRR</td><td>Monthly recurring revenue</td><td>$50M COP</td></tr>
+        <tr><td>ARR</td><td>Annual recurring revenue</td><td>$600M COP</td></tr>
+        <tr><td>Logo retention</td><td>% consultorios que siguen activos a 6 meses</td><td>&gt; 90%</td></tr>
+        <tr><td>NRR</td><td>Net revenue retention (con upsells)</td><td>&gt; 110%</td></tr>
+        <tr><td>CAC</td><td>Customer acquisition cost</td><td>&lt; $1M COP</td></tr>
+        <tr><td>LTV / CAC</td><td>Lifetime value / CAC</td><td>&gt; 3x</td></tr>
+        <tr><td>Payback period</td><td>Meses para recuperar CAC</td><td>&lt; 6 meses</td></tr>
+        <tr><td>Margen bruto</td><td>(Revenue - infra - WA - IA) / revenue</td><td>&gt; 75%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Dashboard 3 — Salud técnica</h3>
+    <table>
+      <thead><tr><th>Métrica</th><th>Target</th><th>Alerta</th></tr></thead>
+      <tbody>
+        <tr><td>Uptime API</td><td>99.9% (SLA)</td><td>&lt; 99.5%/24h</td></tr>
+        <tr><td>p95 API latency</td><td>&lt; 400ms</td><td>&gt; 1s</td></tr>
+        <tr><td>Error rate</td><td>&lt; 0.1%</td><td>&gt; 1%</td></tr>
+        <tr><td>Webhook lag</td><td>p95 &lt; 2s desde Meta hasta DB</td><td>&gt; 10s</td></tr>
+        <tr><td>Queue depth</td><td>&lt; 100 jobs pendientes</td><td>&gt; 500</td></tr>
+        <tr><td>RDA success rate</td><td>&gt; 95% aceptados</td><td>&lt; 90%/h</td></tr>
+        <tr><td>Costo IA por consultorio</td><td>&lt; $5/mes</td><td>&gt; $15/mes</td></tr>
+      </tbody>
+    </table>
+
+    <h3>SQL para Dashboard 1 (ejemplo)</h3>
+    <pre><code><span class="cm">-- Tasa resolución bot últimos 7 días</span>
+<span class="kw">WITH</span> conversaciones_7d <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> id, escalada
+  <span class="kw">FROM</span> conversaciones
+  <span class="kw">WHERE</span> created_at &gt; <span class="kw">NOW</span>() - INTERVAL <span class="str">'7 days'</span>
+)
+<span class="kw">SELECT</span>
+  <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total,
+  <span class="kw">COUNT</span>(*) FILTER (<span class="kw">WHERE NOT</span> escalada) <span class="kw">AS</span> resueltas_bot,
+  ROUND(<span class="num">100.0</span> * <span class="kw">COUNT</span>(*) FILTER (<span class="kw">WHERE NOT</span> escalada) / <span class="kw">COUNT</span>(*), <span class="num">2</span>) <span class="kw">AS</span> tasa_pct
+<span class="kw">FROM</span> conversaciones_7d;
+
+<span class="cm">-- No-show rate por consultorio</span>
+<span class="kw">SELECT</span>
+  c.nombre,
+  <span class="kw">COUNT</span>(ci.*) <span class="kw">AS</span> total_citas,
+  <span class="kw">COUNT</span>(*) FILTER (<span class="kw">WHERE</span> ci.estado = <span class="str">'no_show'</span>) <span class="kw">AS</span> no_shows,
+  ROUND(<span class="num">100.0</span> * <span class="kw">COUNT</span>(*) FILTER (<span class="kw">WHERE</span> ci.estado = <span class="str">'no_show'</span>) / <span class="kw">NULLIF</span>(<span class="kw">COUNT</span>(ci.*), <span class="num">0</span>), <span class="num">2</span>) <span class="kw">AS</span> rate_pct
+<span class="kw">FROM</span> consultorios c
+<span class="kw">LEFT JOIN</span> citas ci <span class="kw">ON</span> ci.consultorio_id = c.id
+  <span class="kw">AND</span> ci.fecha &gt; <span class="kw">NOW</span>() - INTERVAL <span class="str">'30 days'</span>
+<span class="kw">GROUP BY</span> c.id, c.nombre
+<span class="kw">ORDER BY</span> rate_pct <span class="kw">DESC</span>;</code></pre>
+
+    <!-- ========== GLOSARIO ========== -->
+
+    <h2 id="glosario"><span class="num">18 — Glosario</span>Glosario <em>técnico y de negocio</em></h2>
+
+    <h3>Términos técnicos</h3>
+    <dl class="glossary">
+      <dt>BullMQ</dt>
+      <dd>Sistema de colas Node.js sobre Redis. Para procesar mensajes WhatsApp en background sin bloquear el webhook.</dd>
+
+      <dt>FHIR R4</dt>
+      <dd>HL7 Fast Healthcare Interoperability Resources versión 4. Estándar JSON para intercambio de datos clínicos. MinSalud lo exige.</dd>
+
+      <dt>HMAC SHA-256</dt>
+      <dd>Hash con clave secreta para verificar que un webhook viene realmente de Meta (no de un atacante).</dd>
+
+      <dt>JWT</dt>
+      <dd>JSON Web Token. Token de autenticación firmado, contiene claims como <code>consultorio_id</code> y <code>user_id</code>.</dd>
+
+      <dt>mTLS</dt>
+      <dd>Mutual TLS. Autenticación mutua con certificados — MinSalud requiere mTLS para enviar RDAs.</dd>
+
+      <dt>Multi-tenant</dt>
+      <dd>Una sola instancia del software sirve a múltiples clientes (consultorios), aislados por <code>consultorio_id</code> en cada query.</dd>
+
+      <dt>p50 / p95 / p99</dt>
+      <dd>Percentiles de latencia. p95=400ms significa "el 95% de las requests se resuelven en ≤ 400ms".</dd>
+
+      <dt>RTO / RPO</dt>
+      <dd>Recovery Time Objective (tiempo máx para volver) / Recovery Point Objective (datos máx perdidos). Para MEDACCER: RTO 1h, RPO 5min.</dd>
+
+      <dt>Webhook</dt>
+      <dd>URL que recibe eventos en tiempo real (ej: WhatsApp llama a <code>/api/webhooks/whatsapp</code> cuando llega un mensaje).</dd>
+    </dl>
+
+    <h3>Términos de negocio</h3>
+    <dl class="glossary">
+      <dt>ARR</dt>
+      <dd>Annual Recurring Revenue. Ingresos anuales recurrentes (suscripciones).</dd>
+
+      <dt>CAC</dt>
+      <dd>Customer Acquisition Cost. Cuánto cuesta conseguir un cliente nuevo (marketing + ventas / # nuevos clientes).</dd>
+
+      <dt>Churn</dt>
+      <dd>% de clientes que cancelan en un periodo. Mortal para SaaS — más del 5% mensual y la empresa no escala.</dd>
+
+      <dt>LTV</dt>
+      <dd>Lifetime Value. Cuánto dinero genera un cliente promedio en toda su vida con MEDACCER.</dd>
+
+      <dt>MRR</dt>
+      <dd>Monthly Recurring Revenue. Ingresos mensuales recurrentes.</dd>
+
+      <dt>NRR</dt>
+      <dd>Net Revenue Retention. % de revenue que se conserva año a año, considerando upsells y churn. &gt; 100% = los clientes existentes pagan más con el tiempo.</dd>
+
+      <dt>No-show</dt>
+      <dd>Paciente que agenda pero no asiste. Costo brutal en consultorios — slots desperdiciados.</dd>
+    </dl>
+
+    <h3>Términos clínico-legales (Colombia)</h3>
+    <dl class="glossary">
+      <dt>EPS</dt>
+      <dd>Entidad Promotora de Salud. Las "aseguradoras" del sistema de salud colombiano.</dd>
+
+      <dt>Habeas data</dt>
+      <dd>Derecho del paciente a saber qué datos tienes de él, corregirlos o eliminarlos. Plazo legal: 7 días.</dd>
+
+      <dt>Ley 1581 de 2012</dt>
+      <dd>Ley colombiana de protección de datos personales. Equivalente al GDPR. Multas hasta 2.000 SMMLV.</dd>
+
+      <dt>RDA</dt>
+      <dd>Resumen Digital de Atención. Documento clínico que MinSalud exige por cada atención (Resolución 1888/2025).</dd>
+
+      <dt>RIPS</dt>
+      <dd>Registros Individuales de Prestación de Servicios. Reportes mensuales que las IPS hacen al MinSalud.</dd>
+
+      <dt>RM</dt>
+      <dd>Registro Médico. Número de registro profesional ante el MinSalud, equivalente a la matrícula profesional.</dd>
+
+      <dt>SIC</dt>
+      <dd>Superintendencia de Industria y Comercio. Quien sanciona violaciones a Ley 1581.</dd>
+    </dl>
+
+    <!-- ========== ANEXOS ========== -->
+
+    <h2 id="anexos"><span class="num">A — Anexos</span>Anexos <em>útiles</em></h2>
+
+    <h3>Comandos para subir a GitHub</h3>
+    <pre><code><span class="cm"># En la carpeta del proyecto descomprimido</span>
+git init
+git add .
+git commit -m <span class="str">"Initial commit — MEDACCER prototype"</span>
+
+<span class="cm"># Crear repo privado en github.com/tu-usuario/medaccer</span>
+git remote add origin git@github.com:tu-usuario/medaccer.git
+git branch -M main
+git push -u origin main</code></pre>
+
+    <h3>Deploy rápido del prototipo a Vercel</h3>
+    <ol>
+      <li>Ir a <a href="https://vercel.com/new" target="_blank">vercel.com/new</a></li>
+      <li>Import del repo GitHub recién creado</li>
+      <li>Framework: "Other" (es HTML estático)</li>
+      <li>Build command: vacío. Output directory: <code>.</code></li>
+      <li>Deploy. URL pública en ~30s.</li>
+      <li>Comprar dominio <code>medaccer.com</code> (Namecheap/Google Domains ~$12/año) y apuntar a Vercel.</li>
+    </ol>
+
+    <h3>Variables de entorno de producción (template)</h3>
+    <pre><code><span class="cm"># apps/api/.env.production</span>
+DATABASE_URL=<span class="str">"postgresql://..."</span>
+REDIS_URL=<span class="str">"redis://..."</span>
+CLERK_SECRET_KEY=<span class="str">"sk_live_..."</span>
+OPENAI_API_KEY=<span class="str">"sk-..."</span>
+ANTHROPIC_API_KEY=<span class="str">"sk-ant-..."</span>
+META_APP_SECRET=<span class="str">"..."</span>
+META_VERIFY_TOKEN=<span class="str">"..."</span>
+GOOGLE_CLIENT_ID=<span class="str">"..."</span>
+GOOGLE_CLIENT_SECRET=<span class="str">"..."</span>
+WOMPI_PUBLIC_KEY=<span class="str">"pub_prod_..."</span>
+WOMPI_PRIVATE_KEY=<span class="str">"prv_prod_..."</span>
+WOMPI_EVENT_SECRET=<span class="str">"..."</span>
+MINSALUD_CERT_PATH=<span class="str">"/secrets/cert.p12"</span>
+MINSALUD_CERT_PASSWORD=<span class="str">"..."</span>
+AWS_REGION=<span class="str">"sa-east-1"</span>
+S3_BUCKET=<span class="str">"medaccer-prod-assets"</span>
+KMS_KEY_ID=<span class="str">"arn:aws:kms:..."</span>
+SENTRY_DSN=<span class="str">"https://...@sentry.io/..."</span>
+DATADOG_API_KEY=<span class="str">"..."</span></code></pre>
+
+    <h3>Referencias oficiales</h3>
+    <ul>
+      <li><a href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank">WhatsApp Cloud API docs</a></li>
+      <li><a href="https://docs.wompi.co/" target="_blank">Wompi API docs</a></li>
+      <li><a href="https://developers.google.com/calendar/api/v3/reference" target="_blank">Google Calendar API</a></li>
+      <li><a href="https://www.hl7.org/fhir/R4/" target="_blank">HL7 FHIR R4 spec</a></li>
+      <li><a href="https://www.sic.gov.co/registro-nacional-de-bases-de-datos" target="_blank">SIC — Registro Nacional de Bases de Datos</a></li>
+      <li><a href="https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/DIJ/resolucion-1888-de-2023.pdf" target="_blank">Resolución 1888 de 2023</a></li>
+      <li><a href="https://docs.anthropic.com/" target="_blank">Anthropic Claude docs</a></li>
+      <li><a href="https://platform.openai.com/docs" target="_blank">OpenAI API docs</a></li>
+    </ul>
+
+    <div style="margin-top: 80px; padding-top: 32px; border-top: 1px solid var(--ink-100); color: var(--ink-400); font-size: 13px;">
+      <p>MEDACCER · Guía técnica v1.0 · Documento vivo, se actualiza con cada iteración del producto.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// Active TOC highlighting
+const headings = document.querySelectorAll('h2, h3');
+const tocLinks = document.querySelectorAll('.toc a');
+
+function updateActive() {
+  const scrollPos = window.scrollY + 100;
+  let current = '';
+  headings.forEach(h => {
+    if (h.offsetTop <= scrollPos) current = h.id;
+  });
+  tocLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateActive);
+updateActive();
+</script>
+
+</body>
+</html>

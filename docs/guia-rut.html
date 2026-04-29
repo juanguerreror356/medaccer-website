@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tramitar RUT en 48h — Medaccer</title>
+<style>
+  :root {
+    --bg: #0a0a0f; --bg-2: #11111a; --surface: #16161f; --surface-2: #1d1d28;
+    --border: #2a2a38; --text: #e8e8ee; --text-dim: #9090a0; --text-muted: #6b6b7a;
+    --accent: #ffd93d; --accent-2: #4ade80; --danger: #f87171; --warn: #fbbf24; --info: #60a5fa;
+    --code-bg: #0d0d14; --code-border: #1f1f2c;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--sans);
+    line-height: 1.65; font-size: 15px; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 56px 32px 120px; }
+  .hero { margin-bottom: 56px; }
+  h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.1; }
+  h1 em { color: var(--accent); font-style: normal; }
+  .lead { font-size: 18px; color: var(--text-dim); max-width: 720px; }
+  h2 {
+    font-size: 26px; font-weight: 700; margin: 56px 0 18px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    letter-spacing: -0.015em;
+  }
+  h2 .num {
+    color: var(--accent); font-family: var(--mono); font-size: 14px;
+    margin-right: 12px; background: rgba(255, 217, 61, 0.1); padding: 4px 10px;
+    border-radius: 6px; vertical-align: middle;
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 24px 0 10px; }
+  p { color: var(--text-dim); margin-bottom: 14px; }
+  p strong, li strong { color: var(--text); font-weight: 600; }
+  ul, ol { margin: 12px 0 18px 24px; color: var(--text-dim); }
+  li { margin-bottom: 6px; }
+  a { color: var(--info); }
+  code {
+    background: var(--surface-2); padding: 2px 6px; border-radius: 4px;
+    font-family: var(--mono); font-size: 0.88em; color: #fbbf24;
+  }
+  /* Steps */
+  .steps { list-style: none; margin: 18px 0; padding: 0; counter-reset: step; }
+  .steps > li {
+    counter-increment: step;
+    padding: 16px 18px 16px 60px;
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute; left: 18px; top: 14px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--accent); color: var(--bg);
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px;
+  }
+  .steps > li > strong { display: block; color: var(--text); margin-bottom: 6px; font-size: 16px; }
+  /* Callout */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(255, 217, 61, 0.06);
+    padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 18px 0;
+  }
+  .callout.info { border-left-color: var(--info); background: rgba(96,165,250,0.06); }
+  .callout.warn { border-left-color: var(--warn); background: rgba(251,191,36,0.06); }
+  .callout.ok { border-left-color: var(--accent-2); background: rgba(74,222,128,0.06); }
+  .callout.danger { border-left-color: var(--danger); background: rgba(248,113,113,0.06); }
+  .callout p { margin: 0; color: var(--text-dim); font-size: 14px; }
+  .callout .label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    font-weight: 700; margin-bottom: 6px; display: block; color: var(--accent);
+  }
+  .callout.info .label { color: var(--info); }
+  .callout.warn .label { color: var(--warn); }
+  .callout.ok .label { color: var(--accent-2); }
+  .callout.danger .label { color: var(--danger); }
+  /* Tables */
+  table {
+    width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: top; }
+  th { background: var(--surface-2); color: var(--text); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--text); }
+  /* Pill */
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; font-family: var(--mono);
+    background: var(--surface-2); color: var(--text-dim);
+    border: 1px solid var(--border); margin: 0 4px 0 0;
+  }
+  .pill.green { background: rgba(74,222,128,0.1); color: var(--accent-2); border-color: rgba(74,222,128,0.3); }
+  .pill.red { background: rgba(248,113,113,0.1); color: var(--danger); border-color: rgba(248,113,113,0.3); }
+  .pill.yellow { background: rgba(255,217,61,0.1); color: var(--accent); border-color: rgba(255,217,61,0.3); }
+  /* Form preview */
+  .form-screen {
+    background: var(--code-bg); border: 1px solid var(--code-border);
+    border-radius: 12px; padding: 24px; margin: 16px 0;
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+  }
+  .form-screen .field {
+    display: grid; grid-template-columns: 200px 1fr;
+    padding: 8px 0; border-bottom: 1px dashed var(--border);
+  }
+  .form-screen .field:last-child { border-bottom: none; }
+  .form-screen .field .label { color: var(--text-muted); }
+  .form-screen .field .value { color: var(--accent-2); }
+  .nav-back {
+    display: inline-block; margin-bottom: 24px; padding: 8px 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text-dim); text-decoration: none;
+    font-size: 13px;
+  }
+  .nav-back:hover { color: var(--text); border-color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="nav-back">← Volver al hub</a>
+
+  <div class="hero">
+    <h1>RUT en <em>48 horas</em>.<br>Sin susto, sin trampas.</h1>
+    <p class="lead">
+      El paso a paso real para inscribir tu RUT como Persona Natural en la DIAN —
+      gratis, online, sin filas. Necesitás esto antes de Meta Business Manager y Wompi.
+      Todo lo demás del stack lo podés hacer en paralelo.
+    </p>
+  </div>
+
+  <h2 id="por-que"><span class="num">01</span>Por qué necesitás RUT (y por qué no es un impuesto)</h2>
+
+  <p>El <strong>RUT</strong> (Registro Único Tributario) es un número de identificación que la DIAN te da
+  para reconocerte como contribuyente. <strong>Tener RUT no significa pagar impuestos</strong>. Significa estar identificado.</p>
+
+  <table>
+    <thead><tr><th>Mito común</th><th>Realidad</th></tr></thead>
+    <tbody>
+      <tr><td>"Sacar RUT = empezar a pagar impuestos"</td><td>Falso. RUT es identificación. Pagás impuestos solo si tu actividad genera ingresos sobre los topes.</td></tr>
+      <tr><td>"Como Persona Natural no puedo emitir facturas"</td><td>Falso. Persona Natural responsable de IVA puede facturar electrónicamente igual que una empresa.</td></tr>
+      <tr><td>"Si saco RUT y no facturo nada, me multan"</td><td>Falso. Si no tenés actividad, no hay nada que declarar.</td></tr>
+      <tr><td>"El RUT cuesta dinero"</td><td>Falso. Es <strong>100% gratis</strong>. Solo cuesta si lo tramitás con un contador, y no necesitás contador.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>¿Qué te bloquea sin RUT?</h3>
+  <ul>
+    <li><strong>Meta Business Manager</strong> — necesita NIT/RUT para verificar la "legal entity" y aprobar tu Display Name de WhatsApp.</li>
+    <li><strong>Wompi</strong> — pasarela colombiana, no abre cuenta sin RUT.</li>
+    <li><strong>Cuentas empresariales en Davivienda/Bancolombia</strong> (ya tenés Davivank, eso te sirve para la suscripción).</li>
+    <li><strong>Facturación electrónica</strong> — cuando le cobres al primer doctor, necesitás factura electrónica para que él la deduzca.</li>
+  </ul>
+
+  <p>Lo que <strong>NO te bloquea sin RUT</strong> (podés hacerlo HOY): GitHub, Vercel, Supabase, Gemini, Groq, Resend, n8n, dominio, código del producto, demo a doctores. Eso es ~80% del trabajo.</p>
+
+  <h2 id="cuanto-pago"><span class="num">02</span>¿Cuánto voy a pagar de impuestos cuando empiece a cobrar?</h2>
+
+  <p>Esto importa decidirlo desde el inicio porque te define el "responsable" en el RUT.</p>
+
+  <h3>Régimen Simple de Tributación (SIMPLE) — lo que vas a usar</h3>
+  <p>Es el régimen creado para emprendedores. <strong>Reemplaza renta + IVA + ICA en una sola tasa</strong>. Para servicios profesionales y SaaS:</p>
+
+  <table>
+    <thead><tr><th>Ingresos anuales</th><th>Tasa SIMPLE</th><th>Equivalente mensual ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>Hasta $59M COP/año</td><td><strong>1.8%</strong></td><td>$5M/mes → pagás $90.000/mes de impuestos</td></tr>
+      <tr><td>$59M – $124M COP/año</td><td><strong>2.2%</strong></td><td>$10M/mes → pagás $220.000/mes</td></tr>
+      <tr><td>$124M – $400M COP/año</td><td><strong>3.9%</strong></td><td>$30M/mes → pagás $1.170.000/mes</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <span class="label">Lo que esto significa</span>
+    <p>Si cobrás $249.000 COP/mes a 10 doctores = $2.49M/mes = ~$30M/año. Estás en la tasa más baja: <strong>1.8%</strong>. Pagás $540.000 al año de impuestos. Insignificante. Y al elegir SIMPLE, no manejás IVA, no hay declaración de renta, no hay retenciones complicadas. Pagás bimestral por la web de DIAN, 5 minutos.</p>
+  </div>
+
+  <h3>Régimen Ordinario — NO uses este al inicio</h3>
+  <p>Es el default. Renta 35% + IVA 19% + ICA. Solo conviene cuando tu empresa tiene muchos costos deducibles (oficina, sueldos). Para vos, solo, con suscripciones digitales: NO.</p>
+
+  <h2 id="paso-a-paso"><span class="num">03</span>Paso a paso para inscribir RUT (15 min online)</h2>
+
+  <p>Todo se hace en <code>muisca.dian.gov.co</code> sin moverte de tu casa. Sin agendar cita en CAE.</p>
+
+  <ol class="steps">
+    <li><strong>Ingresar a la web de la DIAN</strong>
+      Andá a <code>www.dian.gov.co</code> → "Trámites" → "Inscribir mi RUT". O directo: <a href="https://www.dian.gov.co/Servicios/AbusoTributario/PreInscribete/Paginas/PreInscribete.aspx">link oficial</a>.
+      Te llega a la sección "Inscripción del Registro Único Tributario".
+    </li>
+
+    <li><strong>Seleccionar "Persona Natural" + "Inscripción"</strong>
+      Tipo: Persona Natural. Acción: Inscripción.
+      Si te pregunta si actualmente tenés RUT: NO.
+    </li>
+
+    <li><strong>Llenar el formulario 001</strong>
+      Es un formulario largo pero simple. Los datos clave que pide:
+<div class="form-screen">
+  <div class="field"><span class="label">Nombre completo:</span><span class="value">Juan Guerrero</span></div>
+  <div class="field"><span class="label">Tipo documento:</span><span class="value">Cédula de Ciudadanía</span></div>
+  <div class="field"><span class="label">Número documento:</span><span class="value">XX.XXX.XXX</span></div>
+  <div class="field"><span class="label">Fecha expedición:</span><span class="value">DD/MM/AAAA</span></div>
+  <div class="field"><span class="label">Lugar expedición:</span><span class="value">Bogotá / Medellín / etc</span></div>
+  <div class="field"><span class="label">Dirección:</span><span class="value">Tu dirección residencial</span></div>
+  <div class="field"><span class="label">Teléfono celular:</span><span class="value">300 XXX XXXX</span></div>
+  <div class="field"><span class="label">Correo electrónico:</span><span class="value">medaccer@gmail.com</span></div>
+</div>
+    </li>
+
+    <li><strong>Casilla 46 — "Actividad económica" (CIIU)</strong>
+      <strong>Esta es LA casilla crítica.</strong> Acá decís a qué te vas a dedicar. Para Medaccer, podés poner una principal y hasta 3 secundarias:
+      <ul style="margin-top:8px">
+        <li><strong>6201 — Actividades de desarrollo de sistemas informáticos</strong> ← <span class="pill green">PRINCIPAL</span> (esta es la que más usa SaaS / software)</li>
+        <li><strong>6202 — Actividades de consultoría informática</strong> ← <span class="pill yellow">Secundaria</span> (consultoría, implementación)</li>
+        <li><strong>6311 — Procesamiento de datos, alojamiento</strong> ← <span class="pill yellow">Secundaria</span> (porque hospedás datos de pacientes)</li>
+        <li><strong>6209 — Otras TIC</strong> ← <span class="pill yellow">Secundaria</span> (cajón de sastre por si hace falta)</li>
+      </ul>
+    </li>
+
+    <li><strong>Casilla 53 — Responsabilidades</strong>
+      Esto es lo que define tu régimen. Marcá:
+      <ul style="margin-top:8px">
+        <li><strong>05 — Régimen Ordinario</strong> (por default lo marca, pero después lo cambiás a Simple — ver paso 8)</li>
+        <li><strong>52 — Facturador electrónico</strong> (para poder cobrarle a doctores)</li>
+      </ul>
+      <em style="color:var(--accent)">No marques 11 (Régimen común IVA) ni 12 (Régimen simplificado IVA) todavía. Si elegís SIMPLE después, eso lo reemplaza.</em>
+    </li>
+
+    <li><strong>Subir documentos</strong>
+      Te pide adjuntar (PDF o foto):
+      <ul style="margin-top:8px">
+        <li>Cédula por ambas caras</li>
+        <li>Recibo de servicio público (luz, agua, gas) reciente — para verificar dirección</li>
+      </ul>
+      Si no tenés un recibo a tu nombre (vivís con familia), podés usar una declaración juramentada simple. La DIAN la acepta.
+    </li>
+
+    <li><strong>Firmar electrónicamente</strong>
+      Te llega un código por SMS al celular que pusiste. Lo ingresás. Listo: la DIAN genera el RUT.
+      <strong>Te lo manda en PDF al correo en 5-30 minutos.</strong>
+    </li>
+
+    <li><strong>(Opcional pero recomendado) Cambiar a Régimen Simple</strong>
+      Una vez tenés RUT, te logueás en MUISCA con tu cédula. Vas a:
+      <code>Mi Perfil → Solicitudes → Inscripción al Régimen Simple</code>
+      Lo aceptan inmediato. Quedás en SIMPLE desde el día 1, sin pagar IVA y con tasa única.
+    </li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="label">Si te trabás en algún paso</span>
+    <p>
+      <strong>Línea de la DIAN:</strong> <code>(601) 307 8064</code> — Bogotá. Lunes-Viernes 7am-7pm. Te atiende un funcionario en 5-15 min de espera. Funcionan bien.
+      <br><br>
+      <strong>Chat oficial:</strong> <code>www.dian.gov.co</code> → ícono chat abajo derecha. También funciona.
+    </p>
+  </div>
+
+  <h2 id="firma-digital"><span class="num">04</span>Firma electrónica DIAN (la necesitás para facturar)</h2>
+
+  <p>El RUT te identifica, pero para emitir <strong>facturas electrónicas</strong> a tus doctores necesitás firma electrónica. Ya viene incluida en el trámite anterior — la DIAN te la genera junto con el RUT, sin costo. Solo tenés que activarla.</p>
+
+  <ol class="steps">
+    <li><strong>Logueá en MUISCA</strong>
+      Con tu cédula y la contraseña que creaste cuando te registraste.
+    </li>
+    <li><strong>Andá a "Firma Electrónica"</strong>
+      <code>Servicios → Firma Electrónica → Generar Firma</code>
+      Te pide crear una contraseña adicional para la firma (distinta a la del login).
+    </li>
+    <li><strong>Activás</strong> y descargás un certificado <code>.pfx</code>. Lo guardás (lo vas a usar después en software de facturación electrónica).
+    </li>
+  </ol>
+
+  <h2 id="facturacion-electronica"><span class="num">05</span>Habilitar facturación electrónica (esperá hasta primer cobro real)</h2>
+
+  <p>Esto se hace cuando ya tenés el primer cliente real listo a pagar. <strong>No lo hagas antes</strong>, porque te obliga a empezar a numerar facturas con resolución de la DIAN.</p>
+
+  <h3>Opción A — DIAN Gratuita (lo recomiendo para empezar)</h3>
+  <p>La DIAN tiene un sistema gratis "Factura Electrónica DIAN". Te alcanza para emitir hasta ~50 facturas/mes sin problema. Cero costo.</p>
+  <ul>
+    <li>Cumple resolución 042/2020</li>
+    <li>Genera CUFE (código único de factura)</li>
+    <li>Manda XML a la DIAN automático</li>
+    <li>Limitación: no integra con tu Next.js. Tenés que ir a la web a emitir cada factura.</li>
+  </ul>
+
+  <h3>Opción B — Alegra / Siigo (cuando crezcas)</h3>
+  <p>$17.900-$59.900 COP/mes. Te integra por API con tu producto: el cliente paga en Wompi → Wompi notifica → tu webhook llama Alegra → factura electrónica generada y enviada al doctor automático.</p>
+
+  <div class="callout info">
+    <span class="label">Plan recomendado</span>
+    <p>
+      <strong>Mes 1-3:</strong> DIAN gratuita. Emitís manual. 3 doctores piloto, son 3 facturas/mes, demora 5 min cada una.
+      <br>
+      <strong>Mes 4+:</strong> Alegra ($17.900) integrada por API. Automático.
+    </p>
+  </div>
+
+  <h2 id="cronograma"><span class="num">06</span>Cronograma sugerido — paralelo al desarrollo</h2>
+
+  <table>
+    <thead><tr><th>Cuándo</th><th>Acción</th><th>Tiempo invertido</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Hoy / Mañana</strong></td><td>Inscribir RUT online en MUISCA</td><td>15-30 min</td></tr>
+      <tr><td><strong>+24-48h</strong></td><td>Recibir RUT por email, activar firma electrónica</td><td>10 min</td></tr>
+      <tr><td><strong>Semana 1</strong></td><td>Crear Meta Business Manager con tu RUT (mientras esperás Display Name de WA, ya empezás)</td><td>30 min</td></tr>
+      <tr><td><strong>Semana 5-6</strong></td><td>Solicitar cuenta Wompi (cuando ya tengas signup funcionando)</td><td>20 min + 2-5 días aprobación</td></tr>
+      <tr><td><strong>Semana 8</strong></td><td>Primera factura DIAN gratuita al primer doctor pago</td><td>5 min</td></tr>
+      <tr><td><strong>Mes 4+</strong></td><td>Migrar a Alegra/Siigo cuando ya tengas 5+ clientes</td><td>2h setup</td></tr>
+      <tr><td><strong>Mes 8-10</strong></td><td>Constituir SAS (cuando MRR &gt; $5M COP/mes)</td><td>1 semana + $200k aprox</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="cuando-sas"><span class="num">07</span>¿Cuándo crear SAS?</h2>
+
+  <p>Una <strong>SAS (Sociedad por Acciones Simplificada)</strong> es una empresa propiamente dicha. Persona Natural eres VOS, SAS es una entidad separada.</p>
+
+  <h3>Ventajas de SAS</h3>
+  <ul>
+    <li><strong>Limitación de responsabilidad:</strong> si un doctor te demanda por algo, te demanda a la SAS, no a tu patrimonio personal.</li>
+    <li><strong>Inversión:</strong> los inversionistas (cuando vos quieras levantar) prefieren mil veces invertir en SAS que en Persona Natural.</li>
+    <li><strong>Vender la empresa:</strong> Persona Natural no se vende. SAS sí — vendés acciones.</li>
+    <li><strong>Apariencia profesional:</strong> "Medaccer SAS" suena distinto a "Juan Guerrero" en la factura.</li>
+  </ul>
+
+  <h3>Costos de SAS</h3>
+  <table>
+    <tbody>
+      <tr><td>Constitución (escritura + registro Cámara de Comercio)</td><td>$150.000 – $250.000 COP (una vez)</td></tr>
+      <tr><td>Renovación matrícula mercantil</td><td>$220.000 – $380.000 COP/año (depende activos)</td></tr>
+      <tr><td>Contador básico</td><td>$300.000 – $600.000 COP/mes</td></tr>
+      <tr><td>Impuesto de industria y comercio (ICA Bogotá)</td><td>~0.4-1.4% sobre ingresos</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <span class="label">Mi recomendación</span>
+    <p>
+      <strong>Persona Natural + SIMPLE</strong> hasta llegar a <strong>$5M COP/mes de MRR consolidado</strong> (≈ 20 clientes pagos a $249.000).
+      Antes de eso, SAS solo agrega gastos. Después, SAS te ayuda a profesionalizar y prepararte para inversión.
+      <br><br>
+      Tiempo estimado para llegar a ese punto con el roadmap actual: <strong>mes 8-10</strong>.
+    </p>
+  </div>
+
+  <h2 id="checklist"><span class="num">08</span>Checklist final</h2>
+
+  <p>Tachá esto a medida que avanza:</p>
+  <ul style="list-style: none; margin: 16px 0;">
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Tener cédula a mano (foto ambas caras en PDF)</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Tener recibo de servicio público o declaración juramentada</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Entrar a <code>muisca.dian.gov.co</code></li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Llenar formulario 001 (15-30 min)</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Casilla 46: CIIU 6201 principal + 6202, 6311, 6209 secundarias</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Casilla 53: marcar 05 + 52</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Subir documentos</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Confirmar SMS y firmar</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Recibir RUT por email (24-48h)</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Activar firma electrónica en MUISCA</li>
+    <li style="margin-bottom:8px"><span class="pill">☐</span> Cambiar a Régimen SIMPLE en MUISCA</li>
+    <li style="margin-bottom:8px"><span class="pill green">✓</span> Listo para Meta Business Manager + Wompi</li>
+  </ul>
+
+</div>
+</body>
+</html>

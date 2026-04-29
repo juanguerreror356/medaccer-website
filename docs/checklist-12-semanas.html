@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checklist 12 semanas — Medaccer</title>
+<style>
+  :root {
+    --bg: #fafaf7; --paper: #ffffff; --ink: #1a1a1a; --ink-2: #4a4a4a; --ink-3: #888;
+    --rule: #e5e5e0; --accent: #c4541a; --accent-soft: #fef4ee; --green: #16a34a;
+    --yellow-bg: #fffbeb; --yellow-rule: #fbbf24;
+    --serif: 'Charter', 'Iowan Old Style', 'Georgia', serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--serif);
+    line-height: 1.55; font-size: 15px; -webkit-font-smoothing: antialiased;
+  }
+  .toolbar {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    padding: 12px 24px; display: flex; gap: 12px; align-items: center;
+    font-family: var(--sans); font-size: 13px;
+  }
+  .toolbar a { color: var(--ink-2); text-decoration: none; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--rule); }
+  .toolbar a:hover { background: var(--bg); }
+  .toolbar button {
+    margin-left: auto; padding: 8px 16px; background: var(--ink); color: var(--paper);
+    border: none; border-radius: 6px; font-family: var(--sans); font-weight: 600;
+    cursor: pointer; font-size: 13px;
+  }
+  .toolbar button:hover { background: var(--accent); }
+  .page {
+    max-width: 800px; margin: 32px auto; background: var(--paper);
+    padding: 56px 64px; border: 1px solid var(--rule); border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .header {
+    border-bottom: 2px solid var(--ink); padding-bottom: 18px; margin-bottom: 32px;
+  }
+  .brand {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+    color: var(--accent); text-transform: uppercase; font-weight: 600;
+  }
+  h1 {
+    font-family: var(--serif); font-size: 38px; font-weight: 700; line-height: 1.1;
+    margin: 8px 0 6px; letter-spacing: -0.01em;
+  }
+  .meta {
+    font-family: var(--sans); font-size: 13px; color: var(--ink-3);
+    display: flex; gap: 24px; margin-top: 8px;
+  }
+  .meta strong { color: var(--ink-2); }
+  /* Resumen ejecutivo */
+  .summary {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 18px 22px; margin: 0 0 36px; border-radius: 0 4px 4px 0;
+  }
+  .summary h2 {
+    font-family: var(--sans); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--accent); margin-bottom: 10px; font-weight: 700;
+  }
+  .summary-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 14px;
+  }
+  .summary-stats .stat {
+    border-left: 1px solid rgba(196,84,26,0.2); padding-left: 12px;
+  }
+  .summary-stats .stat:first-child { border-left: none; padding-left: 0; }
+  .summary-stats .stat .num {
+    font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1;
+  }
+  .summary-stats .stat .lbl {
+    font-family: var(--sans); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--ink-3); margin-top: 4px;
+  }
+  /* Week section */
+  .week {
+    margin-bottom: 36px; page-break-inside: avoid;
+    border: 1px solid var(--rule); border-radius: 6px; overflow: hidden;
+  }
+  .week-head {
+    display: flex; align-items: baseline; gap: 16px;
+    padding: 14px 20px; background: var(--bg); border-bottom: 1px solid var(--rule);
+  }
+  .week-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    color: var(--accent); font-weight: 700; text-transform: uppercase;
+  }
+  .week-title {
+    font-family: var(--serif); font-size: 19px; font-weight: 700; flex: 1;
+    letter-spacing: -0.005em;
+  }
+  .week-hours {
+    font-family: var(--sans); font-size: 11px; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .week-body { padding: 18px 24px 22px; }
+  .week-goal {
+    font-family: var(--serif); font-size: 14px; font-style: italic;
+    color: var(--ink-2); padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .week-goal::before { content: "Objetivo: "; font-style: normal; font-weight: 600; color: var(--ink); }
+  .week-section-title {
+    font-family: var(--sans); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-3); margin: 16px 0 8px; font-weight: 600;
+  }
+  .week-section-title:first-child { margin-top: 0; }
+  /* Task list */
+  .tasks { list-style: none; margin: 0; padding: 0; }
+  .tasks li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 6px 0; font-family: var(--sans); font-size: 14px; color: var(--ink-2);
+  }
+  .tasks li .check {
+    width: 16px; height: 16px; border: 1.5px solid var(--ink-3); border-radius: 3px;
+    flex-shrink: 0; margin-top: 2px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .tasks li.done .check { background: var(--green); border-color: var(--green); }
+  .tasks li.done .check::after { content: "✓"; color: white; font-size: 11px; font-weight: 700; }
+  .tasks li.done .label { text-decoration: line-through; color: var(--ink-3); }
+  .tasks li .label { flex: 1; cursor: pointer; }
+  .tasks li .label code {
+    font-family: var(--mono); background: var(--bg); padding: 1px 5px; border-radius: 3px;
+    font-size: 12px; color: var(--accent);
+  }
+  .tasks li .time {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3); white-space: nowrap;
+  }
+  /* Deliverable */
+  .deliverable {
+    background: var(--yellow-bg); border-left: 3px solid var(--yellow-rule);
+    padding: 12px 16px; margin-top: 14px; border-radius: 0 4px 4px 0;
+    font-family: var(--sans); font-size: 13px;
+  }
+  .deliverable strong {
+    display: block; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #92400e; margin-bottom: 4px;
+  }
+  /* Print */
+  @media print {
+    body { background: white; }
+    .toolbar { display: none; }
+    .page { box-shadow: none; border: none; margin: 0; padding: 24px; max-width: 100%; }
+    .week { page-break-inside: avoid; border: 1px solid #ddd; }
+    .summary { background: white; border: 1px solid #ddd; border-left: 3px solid var(--accent); }
+    .deliverable { background: white; border: 1px solid #ddd; border-left: 3px solid var(--yellow-rule); }
+  }
+  /* Print-only legend */
+  .progress-info {
+    text-align: center; font-family: var(--sans); font-size: 12px;
+    color: var(--ink-3); margin: 24px 0 8px; padding-top: 16px; border-top: 1px solid var(--rule);
+  }
+  .legend {
+    display: flex; gap: 16px; justify-content: center; margin-top: 8px;
+    font-size: 11px; color: var(--ink-3);
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--ink-3); }
+  .legend .dot.code { background: #2563eb; }
+  .legend .dot.bus { background: #c4541a; }
+  .legend .dot.legal { background: #16a34a; }
+  .legend .dot.sales { background: #dc2626; }
+  .tasks li .tag {
+    width: 4px; height: 16px; border-radius: 2px; margin-right: 4px; flex-shrink: 0; margin-top: 2px;
+  }
+  .tasks li[data-cat="code"] .tag { background: #2563eb; }
+  .tasks li[data-cat="bus"] .tag { background: #c4541a; }
+  .tasks li[data-cat="legal"] .tag { background: #16a34a; }
+  .tasks li[data-cat="sales"] .tag { background: #dc2626; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="../index.html">← Hub</a>
+  <a href="guia-rut.html">RUT</a>
+  <a href="guia-tecnica.html">Guía técnica</a>
+  <button onclick="window.print()">⎙ Imprimir / PDF</button>
+</div>
+
+<div class="page">
+
+  <header class="header">
+    <div class="brand">Medaccer · Plan operativo</div>
+    <h1>De cero a los primeros 10 doctores pagos</h1>
+    <div class="meta">
+      <span><strong>Horizonte:</strong> 12 semanas</span>
+      <span><strong>Dedicación:</strong> 6h/día</span>
+      <span><strong>Inversión:</strong> ~$200.000 COP/mes</span>
+    </div>
+  </header>
+
+  <div class="summary">
+    <h2>Resumen ejecutivo</h2>
+    <p style="font-family: var(--serif); font-size: 15px; color: var(--ink); line-height: 1.6;">
+      Tres bloques: <strong>fundamentos legales y técnicos</strong> (semanas 1–2),
+      <strong>producto vendible</strong> (semanas 3–7),
+      <strong>tracción comercial</strong> (semanas 8–12).
+      Al final del trimestre tenés un SaaS funcional, integrado a WhatsApp Cloud API,
+      con 3 doctores piloto pagando y 7 más en pipeline.
+    </p>
+    <div class="summary-stats">
+      <div class="stat"><div class="num">12</div><div class="lbl">Semanas</div></div>
+      <div class="stat"><div class="num">~500h</div><div class="lbl">Trabajo total</div></div>
+      <div class="stat"><div class="num">10</div><div class="lbl">Doctores piloto</div></div>
+      <div class="stat"><div class="num">$2.5M</div><div class="lbl">MRR objetivo COP</div></div>
+    </div>
+  </div>
+
+  <!-- BLOQUE 1: FUNDAMENTOS -->
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 01</span>
+      <h2 class="week-title">Setup legal, identidad y stack base</h2>
+      <span class="week-hours">~36h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Tener RUT, dominio, repos y entornos cloud listos para escribir código real.</p>
+
+      <div class="week-section-title">Legal y administrativo</div>
+      <ul class="tasks">
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Inscribir RUT en MUISCA (formulario 001, CIIU 6201 + 6202, 6311, 6209)</span><span class="time">30m</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Activar firma electrónica DIAN</span><span class="time">10m</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Cambiar a Régimen Simple en MUISCA</span><span class="time">15m</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Comprar celular + eSIM Claro/Movistar para WhatsApp Business</span><span class="time">2h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Comprar dominio <code>medaccer.com</code> (Namecheap o Cloudflare Registrar)</span><span class="time">15m</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Crear correo <code>medaccer@gmail.com</code> + alias <code>founders@</code>, <code>soporte@</code></span><span class="time">30m</span></li>
+      </ul>
+
+      <div class="week-section-title">Cloud y stack</div>
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Crear organización <code>medaccer</code> en GitHub (privada)</span><span class="time">10m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Crear repo <code>medaccer-app</code> y <code>medaccer-landing</code></span><span class="time">15m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cuenta Vercel con plan Hobby (gratis)</span><span class="time">10m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cuenta Supabase (Free tier — 500MB DB)</span><span class="time">15m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cuenta Google AI Studio (API key Gemini gratis)</span><span class="time">10m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cuenta Groq (Llama 3.3 70B fallback gratis)</span><span class="time">10m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cuenta Resend (emails transaccionales — 100/día gratis)</span><span class="time">10m</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Setup base Next.js 15 con TypeScript, Tailwind, shadcn/ui</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Conectar Supabase Auth (email + Google OAuth)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migrar landing existente al subdominio <code>www.medaccer.com</code></span><span class="time">1h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Auth funcional en <code>app.medaccer.com</code>, signup → login → dashboard vacío.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 02</span>
+      <h2 class="week-title">Modelo de datos + Onboarding</h2>
+      <span class="week-hours">~38h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Schema de DB completo con multi-tenant + RLS, y un onboarding de 5 pasos que recoja datos del consultorio.</p>
+
+      <div class="week-section-title">Base de datos</div>
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migration <code>001_init.sql</code>: organizations, members, invitations</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migration <code>002_clinical.sql</code>: patients, appointments, encounters, documents</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migration <code>003_messaging.sql</code>: conversations, messages, ai_runs</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migration <code>004_billing.sql</code>: subscriptions, invoices, usage_events</span><span class="time">1.5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Migration <code>005_audit.sql</code>: audit_log + triggers automáticos (Ley 1581)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Políticas RLS en TODAS las tablas (tenant isolation)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Seed con datos demo (1 org, 3 pacientes, 5 citas)</span><span class="time">1h</span></li>
+      </ul>
+
+      <div class="week-section-title">Onboarding</div>
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Wizard 5 pasos: Especialidad → Consultorio → Horarios → WhatsApp → Listo</span><span class="time">6h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Persistir progreso en <code>localStorage</code> + DB</span><span class="time">1h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Validación con Zod en cada paso</span><span class="time">1h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Página <code>/dashboard</code> con tabs (Pacientes, Agenda, Conversaciones, Config)</span><span class="time">3h</span></li>
+      </ul>
+
+      <div class="week-section-title">Negocio en paralelo</div>
+      <ul class="tasks">
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Crear Meta Business Manager con RUT</span><span class="time">30m</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Solicitar Display Name "Medaccer" en WhatsApp Cloud API</span><span class="time">20m</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Empezar a hacer lista de 30 doctores potenciales (LinkedIn + referencias)</span><span class="time">3h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Doctor puede registrarse, completar onboarding, y ver su dashboard con datos demo. DB con RLS verificado.
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOQUE 2: PRODUCTO -->
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 03</span>
+      <h2 class="week-title">CRUD pacientes + agenda visual</h2>
+      <span class="week-hours">~40h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Doctor puede gestionar pacientes y ver agenda — base sólida antes de agregar IA.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">CRUD pacientes con búsqueda, filtros y paginación</span><span class="time">5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Campos extendidos: alergias, medicación, antecedentes, consentimientos</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Subida de documentos (Supabase Storage) con OCR opcional</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Calendario semanal/mensual (FullCalendar o custom)</span><span class="time">8h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Drag & drop para reagendar</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Slots disponibles por especialidad/duración</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Bloqueos (almuerzo, vacaciones, días no laborables)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Vista paciente individual con historial de citas + notas</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Agendar 5 calls de descubrimiento con doctores de la lista</span><span class="time">6h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        CRM funcional sin IA. Doctor podría usarlo desde ya como reemplazo de Excel.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 04</span>
+      <h2 class="week-title">WhatsApp Cloud API + webhook bidireccional</h2>
+      <span class="week-hours">~42h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Cuando un paciente escriba al WhatsApp del consultorio, el mensaje cae en la app y el doctor puede responder desde la app o vía IA.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Endpoint webhook <code>/api/webhooks/whatsapp</code> con verificación HMAC</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Parser de payloads Meta (text, audio, image, document, location)</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Persistir mensajes en <code>messages</code> + crear/asociar conversation</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Match de paciente por número de teléfono (normalización +57)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">UI inbox tipo Intercom (lista convs + panel + composer)</span><span class="time">8h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Realtime con Supabase Channels (mensajes nuevos sin refresh)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Endpoint <code>/api/messages/send</code> que llama Meta Graph API</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Sistema de templates aprobados (HSM) para iniciar conversaciones</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Transcripción de audios con Whisper (OpenAI o Groq Whisper-large)</span><span class="time">3h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Recibir Display Name aprobado de Meta (espera 1-3 días)</span><span class="time">—</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Hacer 5 calls de descubrimiento agendadas + recoger feedback</span><span class="time">5h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Inbox unificado funcional. Recibís mensajes de pacientes en la app y respondés desde ahí.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 05</span>
+      <h2 class="week-title">Agente IA: agendamiento autónomo</h2>
+      <span class="week-hours">~40h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Que un paciente diga "Hola quiero cita el martes 3pm" y la IA agende sola, sin doctor.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Agente con Vercel AI SDK + Gemini 2.5 Flash + tool calling</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>checkAvailability(date, duration)</code></span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>createAppointment(patientId, datetime, type)</code></span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>cancelAppointment(id, reason)</code></span><span class="time">1h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>rescheduleAppointment(id, newDatetime)</code></span><span class="time">1h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>getPatientHistory(patientId)</code></span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tool: <code>escalateToHuman(reason)</code> + notificación al doctor</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">System prompts por especialidad (medicina general, pediatría, etc.)</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Memoria de conversación (últimos 10 mensajes + context summary)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Toggle "modo auto" / "modo asistido" por conversación</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Logging detallado de cada AI run (prompt, tools, latencia, cost)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Fallback Groq Llama si Gemini cae</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tests E2E con conversaciones simuladas</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Definir 3 doctores piloto (con nombre y apellido)</span><span class="time">4h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Demo en vivo: número WhatsApp Medaccer responde y agenda solo. Grabar video de 2 min para usar en ventas.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 06</span>
+      <h2 class="week-title">Recordatorios + confirmaciones automáticas</h2>
+      <span class="week-hours">~36h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Reducir no-shows con recordatorios T-24h y T-2h por WhatsApp; reagendar automáticamente cancelados.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Cron en Vercel (Vercel Cron) para escanear citas próximas cada 15 min</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Reglas configurables: cuándo enviar (T-24h, T-2h, T-30min)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Templates aprobados Meta para recordatorios</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Lógica de respuesta: "1 confirmar" → confirma, "2 reagendar" → abre flow</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Sistema de waitlist: al cancelar, ofrecer slot a próximo en lista</span><span class="time">5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Métrica visible: "X% de no-shows este mes" en dashboard</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Notificaciones in-app + push opcional</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Configuración de horarios de no-molestar (no enviar 10pm-7am)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Tracking de eventos: sent, delivered, read, replied, confirmed</span><span class="time">3h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Demos en vivo a los 3 doctores piloto, cerrar 1 (mínimo)</span><span class="time">8h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Solicitar cuenta Wompi con RUT</span><span class="time">30m</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Sistema de recordatorios funcional. <strong>Primer doctor piloto firmado.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 07</span>
+      <h2 class="week-title">Billing con Wompi + planes</h2>
+      <span class="week-hours">~36h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Doctores se suscriben con tarjeta colombiana, plan auto-renueva, factura electrónica al primer cobro.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Integración Wompi Checkout + Wompi Recurrente</span><span class="time">5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Webhook Wompi → actualizar subscription status</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Página <code>/billing</code>: plan actual, upgrade/downgrade, historial</span><span class="time">5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">3 planes: Starter $129k, Pro $249k, Equipo $349k (COP/mes)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Trial 14 días sin tarjeta</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Lockout automático si pago falla 3 veces (modo solo-lectura)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Factura electrónica DIAN gratuita (manual mes 1-3)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Emails Resend: bienvenida, factura, recordatorio pago, cancelación</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Limit enforcement por plan (X mensajes WA, Y citas, Z usuarios)</span><span class="time">3h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Cerrar doctores piloto 2 y 3</span><span class="time">8h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Producto vendible end-to-end. <strong>3 doctores piloto pagando.</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOQUE 3: TRACCIÓN -->
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 08</span>
+      <h2 class="week-title">Polish + observabilidad + errores en producción</h2>
+      <span class="week-hours">~30h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Producto estable: Sentry, monitoring, fix de bugs reportados por los 3 pilotos.</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Sentry para error tracking (frontend + backend)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">PostHog o Plausible para analytics de producto</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Status page público <code>status.medaccer.com</code> (BetterStack o UptimeRobot)</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Alertas Slack/Email para errores críticos</span><span class="time">2h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Backups automáticos diarios verificados (Supabase + S3)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Performance audit (Lighthouse 90+ en todas las páginas)</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Mobile responsive completo (incluso CRM)</span><span class="time">5h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Calls semanales con cada piloto (3 calls de 30 min)</span><span class="time">2h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Recoger 5 testimonios escritos + 1 en video</span><span class="time">5h</span></li>
+        <li data-cat="sales"><span class="tag"></span><span class="check"></span><span class="label">Plan de outreach: 50 doctores via LinkedIn + WhatsApp directo</span><span class="time">4h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Producto estable y monitoreado. Plan de outreach activo.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 09</span>
+      <h2 class="week-title">Outreach masivo + landing optimizada</h2>
+      <span class="week-hours">~36h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Generar 30 leads cualificados (demos agendadas).</p>
+
+      <ul class="tasks">
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Lista 200 doctores en Bogotá/Medellín por especialidad</span><span class="time">6h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Mensaje de outreach LinkedIn personalizado (3 variantes A/B)</span><span class="time">2h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">50 mensajes/día por 5 días = 250 contactos</span><span class="time">10h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Calendly para agendar demos 30 min</span><span class="time">30m</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Deck de ventas (10 slides, basado en testimonios)</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Caso de estudio escrito del piloto #1 con métricas reales</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Actualizar landing con testimonios reales + métricas reales</span><span class="time">4h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Blog post: "Cómo el Dr. X redujo no-shows X%"</span><span class="time">3h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">SEO básico: meta tags, sitemap, schema.org Healthcare</span><span class="time">3h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Pipeline de 30 demos agendadas para semanas 10-11.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 10</span>
+      <h2 class="week-title">Demos masivas + cierre</h2>
+      <span class="week-hours">~40h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">15 demos en la semana → cerrar 4 doctores nuevos.</p>
+
+      <ul class="tasks">
+        <li data-cat="sales"><span class="tag"></span><span class="check"></span><span class="label">15 demos en vivo (3/día × 5 días)</span><span class="time">15h</span></li>
+        <li data-cat="sales"><span class="tag"></span><span class="check"></span><span class="label">Follow-up por WhatsApp 24h después</span><span class="time">5h</span></li>
+        <li data-cat="sales"><span class="tag"></span><span class="check"></span><span class="label">Onboarding personalizado a cada cierre (45 min)</span><span class="time">5h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Fix bugs urgentes que aparezcan en producción</span><span class="time">5h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Iterar deck según objeciones recurrentes</span><span class="time">2h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Documentar Top 10 objeciones + respuestas</span><span class="time">2h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Programa de referidos: $50.000 COP por doctor referido que pague</span><span class="time">1h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        <strong>7 doctores pagando.</strong> 4 nuevos cierres + 3 pilotos.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 11</span>
+      <h2 class="week-title">Iteración: features pedidas + RDA</h2>
+      <span class="week-hours">~36h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Implementar 2-3 features top que aparecen en feedback. Empezar prep RDA (Resolución 1888).</p>
+
+      <ul class="tasks">
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Feature top #1 (probable: integración Google Calendar)</span><span class="time">8h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Feature top #2 (probable: telemedicina con Daily.co)</span><span class="time">10h</span></li>
+        <li data-cat="code"><span class="tag"></span><span class="check"></span><span class="label">Feature top #3 (probable: receta médica electrónica básica)</span><span class="time">8h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Investigar requisitos RDA (Registro Datos Abiertos) Resolución 1888</span><span class="time">4h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Mapear schema HL7 FHIR a tu modelo de datos actual</span><span class="time">3h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Calls de retención con cada cliente (8 calls)</span><span class="time">4h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable</strong>
+        Producto con features clave. Plan RDA documentado.
+      </div>
+    </div>
+  </section>
+
+  <section class="week">
+    <header class="week-head">
+      <span class="week-num">Semana 12</span>
+      <h2 class="week-title">Cierre Q1 + plan Q2</h2>
+      <span class="week-hours">~30h</span>
+    </header>
+    <div class="week-body">
+      <p class="week-goal">Llegar a 10 doctores pagando, $2.5M MRR, plan trimestre 2 listo.</p>
+
+      <ul class="tasks">
+        <li data-cat="sales"><span class="tag"></span><span class="check"></span><span class="label">10 demos finales semana → cerrar 3 más</span><span class="time">10h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Reporte Q1: MRR, NPS, churn, no-show reduction promedio</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Caso de estudio #2 con datos cuantitativos de 3 clientes</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Definir si seguís solo o buscás co-founder técnico</span><span class="time">2h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Plan Q2: foco en RDA + meta de 30 doctores</span><span class="time">4h</span></li>
+        <li data-cat="bus"><span class="tag"></span><span class="check"></span><span class="label">Contactar primeros 3 inversores ángel (sin levantar todavía, solo presentar)</span><span class="time">4h</span></li>
+        <li data-cat="legal"><span class="tag"></span><span class="check"></span><span class="label">Si MRR &gt; $5M COP: empezar trámite SAS con abogado</span><span class="time">2h</span></li>
+      </ul>
+
+      <div class="deliverable">
+        <strong>Entregable trimestre</strong>
+        <strong>10 doctores activos pagando · $2.5M COP MRR · 1 caso de estudio robusto · roadmap Q2 firmado.</strong>
+      </div>
+    </div>
+  </section>
+
+  <div class="progress-info">
+    Tu progreso se guarda en este navegador (localStorage). Imprimí este documento o exportá a PDF para imprimirlo.
+    <div class="legend">
+      <span><span class="dot code"></span>Código</span>
+      <span><span class="dot bus"></span>Negocio</span>
+      <span><span class="dot legal"></span>Legal/Admin</span>
+      <span><span class="dot sales"></span>Ventas</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Persistir checks
+  const STORAGE_KEY = 'medaccer-checklist-v1';
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function applyState() {
+    const state = loadState();
+    document.querySelectorAll('.tasks li').forEach((li, i) => {
+      const id = `task-${i}`;
+      li.dataset.id = id;
+      if (state[id]) li.classList.add('done');
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const li = e.target.closest('.tasks li');
+    if (!li) return;
+    if (e.target.closest('.check') || e.target.closest('.label')) {
+      li.classList.toggle('done');
+      const state = loadState();
+      state[li.dataset.id] = li.classList.contains('done');
+      saveState(state);
+    }
+  });
+  applyState();
+</script>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Asistente RUT — Medaccer</title>
+<style>
+  :root {
+    --bg: #0a0a0f; --surface: #14141d; --surface-2: #1a1a25; --border: #2a2a38;
+    --text: #f0f0f5; --text-dim: #9090a0; --text-muted: #6b6b7a;
+    --accent: #ffd93d; --green: #4ade80; --red: #f87171; --blue: #60a5fa; --warn: #fbbf24;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  .topbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; gap: 16px; align-items: center;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar a { color: var(--text-dim); text-decoration: none; font-size: 13px; }
+  .topbar a:hover { color: var(--text); }
+  .topbar .progress-text {
+    margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--text-muted);
+  }
+  .progress-bar {
+    height: 3px; background: var(--border); position: relative; overflow: hidden;
+  }
+  .progress-bar .fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--green));
+    width: 0%; transition: width 0.4s;
+  }
+  .container {
+    flex: 1; max-width: 760px; margin: 0 auto; padding: 48px 32px;
+    width: 100%;
+  }
+  .step {
+    display: none;
+    animation: slide 0.3s ease;
+  }
+  .step.active { display: block; }
+  @keyframes slide {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .step-num {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600;
+  }
+  h1 {
+    font-family: var(--serif); font-size: 42px; font-weight: 400; line-height: 1.1;
+    letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .lead {
+    font-size: 17px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.5;
+  }
+  .lead strong { color: var(--text); }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 26px; margin-bottom: 18px;
+  }
+  .card h3 {
+    font-size: 16px; margin-bottom: 12px; color: var(--text); font-weight: 600;
+  }
+  .card p {
+    color: var(--text-dim); font-size: 14px; margin-bottom: 8px; line-height: 1.55;
+  }
+  .card p:last-child { margin-bottom: 0; }
+  .card strong { color: var(--text); }
+
+  /* Field with value */
+  .field-row {
+    display: grid; grid-template-columns: 200px 1fr;
+    padding: 12px 0; border-bottom: 1px dashed var(--border);
+    align-items: center; gap: 18px;
+  }
+  .field-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .field-row .lbl {
+    font-family: var(--mono); font-size: 12px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .field-row .val {
+    font-family: var(--mono); font-size: 14px; color: var(--green); word-break: break-word;
+  }
+  .field-row .val.placeholder { color: var(--warn); font-style: italic; }
+  .field-row .copy {
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-dim); padding: 4px 10px; border-radius: 6px;
+    font-size: 11px; cursor: pointer; font-family: var(--mono);
+    transition: all 0.15s;
+  }
+  .field-row .copy:hover { color: var(--accent); border-color: var(--accent); }
+  .field-row .copy.copied { color: var(--green); border-color: var(--green); }
+  .field-row.with-copy { grid-template-columns: 200px 1fr auto; }
+
+  /* Callouts */
+  .callout {
+    border-left: 3px solid var(--accent); background: rgba(255,217,61,0.05);
+    padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  }
+  .callout.warn { border-left-color: var(--warn); background: rgba(251,191,36,0.05); }
+  .callout.info { border-left-color: var(--blue); background: rgba(96,165,250,0.05); }
+  .callout.ok { border-left-color: var(--green); background: rgba(74,222,128,0.05); }
+  .callout .label {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--accent); font-weight: 700; margin-bottom: 4px;
+    display: block;
+  }
+  .callout.warn .label { color: var(--warn); }
+  .callout.info .label { color: var(--blue); }
+  .callout.ok .label { color: var(--green); }
+  .callout p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.55; }
+  .callout p + p { margin-top: 8px; }
+
+  /* Code inline */
+  code {
+    font-family: var(--mono); font-size: 0.88em; background: var(--surface-2);
+    padding: 2px 6px; border-radius: 4px; color: var(--accent);
+  }
+
+  /* Buttons */
+  .actions {
+    display: flex; gap: 12px; margin-top: 32px; align-items: center;
+  }
+  .btn {
+    padding: 12px 22px; border-radius: 8px; font-family: var(--sans);
+    font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid transparent;
+    transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary { background: var(--accent); color: #0a0a0f; }
+  .btn-primary:hover { background: #ffe066; transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+  .btn-secondary:hover { background: var(--surface-2); }
+  .btn-link { color: var(--text-dim); padding: 12px 6px; }
+  .btn-link:hover { color: var(--text); }
+  .btn-external { background: transparent; color: var(--blue); border-color: var(--blue); }
+  .btn-external:hover { background: rgba(96,165,250,0.1); }
+
+  /* Confirm box */
+  .confirm-box {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 16px 20px; border-radius: 10px; margin-top: 14px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .confirm-box input[type="checkbox"] {
+    margin-top: 3px; width: 18px; height: 18px; cursor: pointer;
+    accent-color: var(--accent);
+  }
+  .confirm-box label {
+    font-size: 13px; color: var(--text-dim); cursor: pointer;
+    line-height: 1.5; user-select: none;
+  }
+  .confirm-box label strong { color: var(--text); }
+
+  /* Step nav */
+  .step-pills {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .step-pill {
+    padding: 6px 11px; border-radius: 999px; font-size: 11px;
+    font-family: var(--mono); border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-muted); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .step-pill.active {
+    background: var(--accent); color: #0a0a0f; border-color: var(--accent);
+  }
+  .step-pill.done {
+    background: rgba(74,222,128,0.1); color: var(--green); border-color: rgba(74,222,128,0.3);
+  }
+  .step-pill:hover:not(.active) { color: var(--text); border-color: var(--text-muted); }
+
+  /* Final / done state */
+  .done-celebration {
+    text-align: center; padding: 40px 0;
+  }
+  .done-celebration .check {
+    width: 80px; height: 80px; border-radius: 50%; background: var(--green);
+    margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
+    color: #0a0a0f; font-size: 40px; font-weight: 700;
+  }
+
+  /* Print-only doc */
+  .print-only { display: none; }
+  @media print {
+    body { background: white; color: black; }
+    .topbar, .progress-bar, .step-pills, .actions, .step.active.no-print { display: none; }
+    .step { display: block !important; page-break-after: always; }
+    .print-only { display: block; }
+    .container { max-width: 100%; padding: 24px; }
+    .card { background: white; border: 1px solid #ccc; }
+    .field-row .val { color: #16a34a; }
+    .field-row .lbl, .lead, .card p { color: #444; }
+    h1 { color: black; font-size: 28px; }
+    code { background: #f5f5f5; color: #c4541a; }
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px; }
+    h1 { font-size: 32px; }
+    .field-row { grid-template-columns: 1fr; gap: 4px; }
+    .field-row.with-copy { grid-template-columns: 1fr auto; }
+    .field-row .lbl { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="hub.html">← Hub</a>
+  <a href="docs/guia-rut.html">Guía completa</a>
+  <a href="javascript:window.print()">⎙ Imprimir todo</a>
+  <span class="progress-text" id="progressText">Paso 1 de 8</span>
+</div>
+<div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+
+<div class="container">
+
+  <!-- Pills -->
+  <div class="step-pills" id="stepPills"></div>
+
+  <!-- ============================================================
+       STEP 1 · INTRO
+       ============================================================ -->
+  <section class="step active" data-step="1">
+    <div class="step-num">Paso 1 / 8 · Antes de empezar</div>
+    <h1>Vamos a tramitar tu RUT, <em>juntos</em>.</h1>
+    <p class="lead">
+      Tengo tus datos. Te voy guiando casilla por casilla del formulario 001 de la DIAN.
+      Solo necesitás <strong>cédula y un recibo de servicio público</strong> (puede ser de un familiar si vivís en casa familiar, te explico abajo).
+    </p>
+
+    <div class="card">
+      <h3>📋 Lo que vas a tener al terminar</h3>
+      <p>✓ RUT como <strong>Persona Natural</strong> · CIIU 6201 (desarrollo de sistemas)</p>
+      <p>✓ <strong>Régimen Simple de Tributación (SIMPLE)</strong> · tasa 1.8% sobre ingresos hasta $59M/año</p>
+      <p>✓ <strong>Facturador electrónico habilitado</strong> desde día 1 (lo pediste)</p>
+      <p>✓ <strong>Firma electrónica DIAN</strong> activada</p>
+      <p>✓ Listo para abrir Meta Business + Wompi</p>
+    </div>
+
+    <div class="callout ok">
+      <span class="label">✓ Buena noticia · tu RUT ya existe</span>
+      <p>Por un trámite previo de tu familia, ya tenés un RUT generado (sin actividad económica). En vez de hacer "Inscripción", vas a hacer <strong>"Actualización"</strong>: es gratis igual, más rápido (4 hojas en vez de 8), y te ahorra el SMS de verificación inicial.</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Antes de seguir, conseguí estos documentos</span>
+      <p>1. <strong>Tu cédula amarilla escaneada</strong> (ambas caras, en PDF o JPG).</p>
+      <p>2. <strong>Recibo de servicio público reciente</strong> (luz, agua o gas, máximo 3 meses). Como vivís en casa familiar y el recibo es del familiar, vamos a usar el del familiar + una <strong>declaración juramentada simple</strong> que te genero más adelante.</p>
+      <p>3. <strong>Correo y celular activos.</strong> Te llega código por SMS y el RUT por email.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="label">Detalle importante de tu caso</span>
+      <p>Trabajás en <strong>Mercado Libre como empleado dependiente</strong>. Eso NO te impide sacar RUT ni operar como Persona Natural en paralelo. Tu empleador sigue pagando seguridad social por vos; vos vas a declarar tus ingresos extra de Medaccer aparte vía Régimen Simple. <strong>No hay conflicto laboral</strong>.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="next()">Empezar →</button>
+      <span class="btn btn-link">Tiempo estimado: 25-40 min</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 2 · ACTUALIZAR (NO INSCRIBIR) RUT EXISTENTE
+       ============================================================ -->
+  <section class="step" data-step="2">
+    <div class="step-num">Paso 2 / 8 · Actualizar tu RUT existente</div>
+    <h1>Tu RUT <em>ya existe</em> — vas a actualizarlo</h1>
+    <p class="lead">
+      Tu RUT se generó por un trámite previo de tu familia. <strong>Eso no es un problema</strong>: actualizarlo es gratis, igual que crear uno nuevo, y te ahorra el paso de inscripción.
+    </p>
+
+    <div class="callout ok">
+      <span class="label">Lo que vas a hacer en MUISCA</span>
+      <p>1. Descargar tu RUT actual (para ver qué tiene).</p>
+      <p>2. Abrir <strong>"Actualiza virtual RUT"</strong>.</p>
+      <p>3. Editar las casillas: 46 (CIIU), 53 (responsabilidades), dirección y contacto.</p>
+      <p>4. Firmar y enviar.</p>
+    </div>
+
+    <div class="card">
+      <h3>1. Descargá tu RUT actual</h3>
+      <p>En el dashboard de MUISCA, arriba derecha, cliqueá <strong>"Obtener copia RUT"</strong>. Te descarga el PDF.</p>
+      <p>Abrí el PDF y revisá:</p>
+      <div class="field-row">
+        <span class="lbl">Casilla 46</span>
+        <span class="val">¿Tiene código CIIU? ¿Cuál? (probablemente vacío)</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Casilla 53</span>
+        <span class="val">¿Qué responsabilidades tiene? (probablemente solo 05)</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Dirección</span>
+        <span class="val">¿Es tu dirección actual o una vieja?</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>2. Cliqueá "Actualiza virtual RUT"</h3>
+      <p>En el dashboard, arriba derecha en Favoritos, hay un ícono verde <strong>"Actualiza virtual RUT — Realizar la actualización de su RUT"</strong>.</p>
+      <p>Te abre el formulario 001 con tus datos pre-cargados. <strong>Solo modificás lo que falta o está mal</strong>.</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Diferencia clave vs. inscripción</span>
+      <p>En este flujo <strong>no</strong> tenés que volver a poner cédula, nombres, fecha de expedición — eso ya está. Solo vas directo a las hojas que importan: actividad económica (paso 4), responsabilidades (paso 5), y verificar dirección/contacto (paso 3).</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Estoy en el formulario de actualización →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 3 · VERIFICAR DATOS BÁSICOS Y DIRECCIÓN
+       ============================================================ -->
+  <section class="step" data-step="3">
+    <div class="step-num">Paso 3 / 8 · Verificar datos y dirección</div>
+    <h1>Revisá lo que <em>ya está cargado</em></h1>
+    <p class="lead">
+      Como es actualización, las casillas 24-37 (cédula, nombres, fecha de expedición) ya están llenas. <strong>No las toques</strong>. Andá directo a la sección de dirección y contacto.
+    </p>
+
+    <div class="callout info">
+      <span class="label">Identificación · NO modificar</span>
+      <p>Casillas 24, 25, 26, 27, 31, 35 ya tienen tus datos. Confirmá que sean correctos pero no los edites.</p>
+    </div>
+
+    <div class="card">
+      <h3>Casilla 38 · Dirección — VERIFICAR Y ACTUALIZAR SI ES VIEJA</h3>
+      <div class="field-row">
+        <span class="lbl">Departamento</span>
+        <span class="val">Bogotá D.C.</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Ciudad</span>
+        <span class="val">Bogotá</span>
+      </div>
+      <div class="field-row with-copy">
+        <span class="lbl">Dirección residencia</span>
+        <span class="val placeholder">Tu dirección actual (donde vivís)</span>
+        <button class="copy" onclick="alert('Calle/Carrera/Diagonal + número, la misma del recibo')">tuyo</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Casilla 41-42 · Contacto</h3>
+      <div class="field-row with-copy">
+        <span class="lbl">41 · Correo electrónico</span>
+        <span class="val placeholder">El correo Medaccer (medaccer@gmail.com)</span>
+        <button class="copy" onclick="copyText(this, 'medaccer@gmail.com')">copiar</button>
+      </div>
+      <div class="field-row with-copy">
+        <span class="lbl">42 · Teléfono celular</span>
+        <span class="val placeholder">Tu celular personal (no el de la eSIM nueva)</span>
+        <button class="copy" onclick="alert('El celular donde recibís SMS hoy')">tuyo</button>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Por qué tu celular personal y no el de WhatsApp Business</span>
+      <p>El SMS de verificación de la DIAN llega ahora. La eSIM Claro de Medaccer todavía no la activaste. Usá el celular que ya tenés. Después en Meta Business Manager usás el otro.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Listo, dirección y contacto verificados →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 4 · CASILLA 46 (CIIU)
+       ============================================================ -->
+  <section class="step" data-step="4">
+    <div class="step-num">Paso 4 / 8 · Actividad económica · Casilla 46</div>
+    <h1>La casilla <em>más importante</em></h1>
+    <p class="lead">
+      Esto define a qué te dedicás ante la DIAN. Vas a poner una actividad <strong>principal</strong> y hasta 3 <strong>secundarias</strong>.
+    </p>
+
+    <div class="card">
+      <h3>Casilla 46 · Actividad económica</h3>
+      <div class="field-row with-copy">
+        <span class="lbl">Principal</span>
+        <span class="val">6201 — Actividades de desarrollo de sistemas informáticos (planificación, análisis, diseño, programación)</span>
+        <button class="copy" onclick="copyText(this, '6201')">6201</button>
+      </div>
+      <div class="field-row with-copy">
+        <span class="lbl">Secundaria 1</span>
+        <span class="val">6202 — Actividades de consultoría informática</span>
+        <button class="copy" onclick="copyText(this, '6202')">6202</button>
+      </div>
+      <div class="field-row with-copy">
+        <span class="lbl">Secundaria 2</span>
+        <span class="val">6311 — Procesamiento de datos, alojamiento y actividades relacionadas</span>
+        <button class="copy" onclick="copyText(this, '6311')">6311</button>
+      </div>
+      <div class="field-row with-copy">
+        <span class="lbl">Secundaria 3</span>
+        <span class="val">6209 — Otras actividades de tecnologías de información</span>
+        <button class="copy" onclick="copyText(this, '6209')">6209</button>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="label">Por qué estos códigos y no otros</span>
+      <p><strong>6201</strong> es el más usado por SaaS y desarrollo de software → es tu actividad principal.</p>
+      <p><strong>6202</strong> cubre cuando hagas consultoría / implementación a un consultorio.</p>
+      <p><strong>6311</strong> cubre que vos hospedás datos clínicos (importante por temas de Ley 1581).</p>
+      <p><strong>6209</strong> es comodín para cualquier otra cosa TIC que no encaje arriba.</p>
+    </div>
+
+    <div class="callout">
+      <span class="label">Fecha de inicio de actividad</span>
+      <p>Poné la <strong>fecha de hoy</strong> (el día que estás haciendo el trámite). La DIAN cuenta tus obligaciones desde esa fecha.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Cargué los CIIU →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 5 · CASILLA 53 (RESPONSABILIDADES)
+       ============================================================ -->
+  <section class="step" data-step="5">
+    <div class="step-num">Paso 5 / 8 · Responsabilidades · Casilla 53</div>
+    <h1>Marcá las <em>responsabilidades</em></h1>
+    <p class="lead">
+      Esto define el régimen tributario. Como vas a emitir factura desde el día 1, marcamos la <strong>52</strong>. La <strong>05</strong> queda por defecto y la cambiamos a SIMPLE en el paso 8.
+    </p>
+
+    <div class="card">
+      <h3>Casilla 53 · Marcar:</h3>
+      <div class="field-row">
+        <span class="lbl">☑ 05</span>
+        <span class="val">Régimen Ordinario (default — la cambiamos a SIMPLE después)</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">☑ 52</span>
+        <span class="val">Facturador electrónico</span>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">NO marques estas (importante)</span>
+      <p>✗ <strong>11</strong> Régimen común IVA — al pasarte a SIMPLE no necesitás esto.</p>
+      <p>✗ <strong>12</strong> Régimen simplificado IVA — idem.</p>
+      <p>✗ <strong>07</strong> Retención en la fuente — no aplica para Persona Natural sin empleados.</p>
+      <p>✗ <strong>14</strong> Informante de exógena — solo si superás los topes (vos no llegás).</p>
+    </div>
+
+    <div class="callout info">
+      <span class="label">Con tus ingresos esperados (hasta $30M/año)</span>
+      <p>Vas a estar en el <strong>tramo más bajo de SIMPLE: 1.8%</strong>. Si facturás $30M en el año, pagás $540.000 de impuestos TOTAL al año. SIMPLE reemplaza renta + IVA + ICA, todo en un solo pago bimestral. <strong>Esto es lo más barato del país para tu caso</strong>.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Listo, marqué 05 + 52 →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 6 · DOCUMENTOS Y FIRMA
+       ============================================================ -->
+  <section class="step" data-step="6">
+    <div class="step-num">Paso 6 / 8 · Documentos y firma</div>
+    <h1>Subí tus <em>documentos</em></h1>
+    <p class="lead">
+      La DIAN te pide adjuntar PDFs o JPGs. Acá te resuelvo el tema del <strong>recibo de servicio público</strong>.
+    </p>
+
+    <div class="card">
+      <h3>Documentos requeridos</h3>
+      <div class="field-row">
+        <span class="lbl">Cédula</span>
+        <span class="val">Foto/scan ambas caras (1 sola página PDF idealmente)</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Comprobante dirección</span>
+        <span class="val">Recibo de luz/agua/gas (≤3 meses) <strong>+</strong> declaración juramentada</span>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Tu caso · Vivís en casa familiar</span>
+      <p>El recibo está a nombre del familiar. La DIAN acepta esto si adjuntás <strong>la declaración juramentada simple firmada por vos</strong>. Te dejé una plantilla abajo lista para imprimir, llenar y firmar.</p>
+    </div>
+
+    <div class="card">
+      <h3>📝 Plantilla declaración juramentada</h3>
+      <div style="background: var(--bg); padding: 18px; border-radius: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); border: 1px solid var(--border); white-space: pre-line; margin-top: 10px; line-height: 1.7;">DECLARACIÓN JURAMENTADA DE DIRECCIÓN
+
+Yo, JUAN GUERRERO, identificado(a) con cédula de
+ciudadanía número [TU NÚMERO], expedida en
+[CIUDAD DE EXPEDICIÓN], bajo la gravedad de
+juramento declaro que:
+
+1. Mi lugar de residencia actual es:
+   [TU DIRECCIÓN COMPLETA, INCLUYENDO BARRIO]
+   en la ciudad de Bogotá D.C.
+
+2. El inmueble en mención corresponde a vivienda
+   familiar y el recibo de servicios públicos que
+   se adjunta se encuentra a nombre de:
+   [NOMBRE COMPLETO DEL TITULAR DEL RECIBO]
+   quien es mi [PARENTESCO: padre/madre/hermano/etc].
+
+3. Esta declaración la rindo para efectos de la
+   inscripción en el Registro Único Tributario
+   (RUT) ante la DIAN.
+
+Dada en Bogotá D.C., a los ___ días del mes
+de ____________ de ______.
+
+Firma: _____________________
+JUAN GUERRERO
+C.C. [TU NÚMERO]</div>
+      <div class="actions" style="margin-top: 16px">
+        <button class="btn btn-secondary" onclick="downloadDeclaracion()">⬇ Descargar como .txt</button>
+        <button class="btn btn-link" onclick="copyDeclaracion()">📋 Copiar texto</button>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="label">Cómo prepararla en 5 minutos</span>
+      <p>1. Descargá el .txt arriba o copialo a Word.</p>
+      <p>2. Reemplazá los <code>[ENTRE CORCHETES]</code> con tus datos reales.</p>
+      <p>3. Imprimila, firmala con bolígrafo azul.</p>
+      <p>4. Escaneala (con la cámara del celular, app CamScanner o similar).</p>
+      <p>5. Subí: PDF1 = cédula, PDF2 = recibo del familiar, PDF3 = declaración firmada.</p>
+    </div>
+
+    <div class="callout ok">
+      <span class="label">Después de subir y enviar</span>
+      <p>La DIAN te manda <strong>código por SMS al celular</strong> que pusiste en casilla 42. Lo ingresás en el formulario, firmás electrónicamente, y listo. <strong>Recibís el RUT en PDF al correo entre 5 minutos y 48 horas</strong> (depende de cola DIAN, normalmente <2h).</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Documentos enviados, esperando RUT →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 7 · POST-RUT: FIRMA ELECTRÓNICA
+       ============================================================ -->
+  <section class="step" data-step="7">
+    <div class="step-num">Paso 7 / 8 · Activar firma electrónica</div>
+    <h1>Recibiste el <em>RUT en PDF</em></h1>
+    <p class="lead">
+      Te llegó al correo. Ahora hay 2 cosas que hacer en MUISCA antes de cerrar el navegador.
+    </p>
+
+    <div class="card">
+      <h3>A. Activar firma electrónica</h3>
+      <p>Volvé a MUISCA logueado con tu cédula. Andá a:</p>
+      <p><code>Servicios → Firma Electrónica → Generar Firma</code></p>
+      <p>Te pide crear una contraseña adicional (distinta a la del login). Guardala bien — la vas a necesitar después para emitir facturas.</p>
+      <p>Descargá el certificado <code>.pfx</code> que te genera. Guardalo en una carpeta segura (Drive privado, password manager).</p>
+    </div>
+
+    <div class="card">
+      <h3>B. Cambiar a Régimen Simple (SIMPLE)</h3>
+      <p>En el mismo MUISCA andá a:</p>
+      <p><code>Mi Perfil → Solicitudes → Inscripción al Régimen Simple</code></p>
+      <p>Confirmá. Quedás con tasa <strong>1.8% sobre ingresos</strong> desde HOY. Sin IVA. Sin retenciones complicadas. Pago bimestral.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="label">Pago bimestral SIMPLE — fechas que tenés que recordar</span>
+      <p>Se paga cada 2 meses según el último dígito del NIT (que es tu cédula). Las fechas las publica DIAN al inicio del año. Hoy te ahorro la búsqueda: <strong>el primer pago lo hacés cuando hayas facturado algo</strong>. Si no facturás nada en un bimestre, presentás declaración en $0 (igual hay que presentarla para no incurrir en sanción).</p>
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Recordatorio Mercado Libre</span>
+      <p>Cuando declares Renta anual el próximo año (entre marzo-octubre 2026), tenés que sumar tus ingresos de Medaccer (declarados vía SIMPLE) <strong>+</strong> tus ingresos de Mercado Libre (que ML te reporta vía certificado de retención). El SIMPLE no te exime de declarar Renta personal si superás los topes globales. <strong>Pero el RUT en SIMPLE sí simplifica MUCHO esa declaración</strong>.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="prev()">← Atrás</button>
+      <button class="btn btn-primary" onclick="next()">Firma activada + SIMPLE listo →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       STEP 8 · DONE
+       ============================================================ -->
+  <section class="step" data-step="8">
+    <div class="step-num">Paso 8 / 8 · Completado</div>
+
+    <div class="done-celebration">
+      <div class="check">✓</div>
+      <h1>RUT <em>listo</em>.</h1>
+      <p class="lead" style="text-align: center">
+        Sos formalmente <strong>Persona Natural responsable de Régimen Simple</strong>, con CIIU 6201 y firma electrónica activa. Ya podés operar.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🚀 Lo que desbloqueás ahora</h3>
+      <div class="field-row">
+        <span class="lbl">Meta Business Manager</span>
+        <span class="val">✓ Podés crear cuenta con tu RUT</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Wompi (pasarela)</span>
+        <span class="val">✓ Podés solicitar cuenta</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Facturación electrónica</span>
+        <span class="val">✓ Habilitada — usá DIAN gratuita primero</span>
+      </div>
+      <div class="field-row">
+        <span class="lbl">Cuenta empresarial Davivienda</span>
+        <span class="val">○ Opcional — tu Davivank actual sirve para cobros</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📅 Próximos pasos · esta semana</h3>
+      <p>1. <strong>Comprar dominio</strong> <code>medaccer.com</code> (Cloudflare Registrar, ~$10 USD)</p>
+      <p>2. <strong>Crear org GitHub</strong> Medaccer + repo <code>medaccer-app</code> (privado)</p>
+      <p>3. <strong>Comprar eSIM Claro/Movistar</strong> (~$20.000 COP) y activarla</p>
+      <p>4. <strong>Crear Meta Business Manager</strong> con tu RUT recién obtenido</p>
+      <p>5. <strong>Solicitar Display Name "Medaccer"</strong> en WhatsApp Cloud API (espera 1-3 días)</p>
+    </div>
+
+    <div class="actions">
+      <a href="docs/checklist-12-semanas.html" class="btn btn-primary">Ir al checklist 12 semanas →</a>
+      <a href="hub.html" class="btn btn-secondary">Volver al hub</a>
+      <button class="btn btn-link" onclick="markComplete()">Marcar como completado</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const TOTAL = 8;
+  const STORAGE_KEY = 'medaccer-rut-progress-v1';
+  let current = 1;
+
+  // Step labels
+  const labels = ['Intro', 'MUISCA', 'Datos', 'CIIU', 'Régimen', 'Docs', 'Firma', 'Listo'];
+
+  function buildPills() {
+    const container = document.getElementById('stepPills');
+    container.innerHTML = labels.map((lbl, i) =>
+      `<button class="step-pill" data-target="${i+1}" onclick="goto(${i+1})">${i+1}. ${lbl}</button>`
+    ).join('');
+  }
+
+  function update() {
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step) === current);
+    });
+    const pct = ((current - 1) / (TOTAL - 1)) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `Paso ${current} de ${TOTAL}`;
+
+    document.querySelectorAll('.step-pill').forEach(p => {
+      const t = parseInt(p.dataset.target);
+      p.classList.toggle('active', t === current);
+      p.classList.toggle('done', t < current);
+    });
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ current, ts: Date.now() }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function next() {
+    if (current < TOTAL) { current++; update(); }
+  }
+  function prev() {
+    if (current > 1) { current--; update(); }
+  }
+  function goto(n) {
+    if (n >= 1 && n <= TOTAL) { current = n; update(); }
+  }
+
+  function copyText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
+  function downloadDeclaracion() {
+    const text = document.querySelector('.card div[style*="monospace"]').textContent;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'declaracion-juramentada-direccion.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function copyDeclaracion() {
+    const text = document.querySelector('.card div[style*="monospace"]').textContent;
+    navigator.clipboard.writeText(text);
+    alert('Declaración copiada al portapapeles.');
+  }
+
+  function markComplete() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ current: TOTAL, completed: true, ts: Date.now() }));
+    alert('¡RUT marcado como completado! Todo guardado.');
+  }
+
+  // Restore
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (saved.current && saved.current >= 1 && saved.current <= TOTAL) current = saved.current;
+  } catch {}
+
+  // Keyboard nav
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  buildPills();
+  update();
+</script>
+
+</body>
+</html>

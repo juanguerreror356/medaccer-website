@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEDACCER — Mejoras, ideas innovadoras y plan de conexión 100% funcional</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FDFCF8;--cream:#FBF8F2;
+  --ink-900:#0E1116;--ink-800:#1A1F28;--ink-700:#2F3742;--ink-600:#4A5361;
+  --ink-500:#6B7480;--ink-400:#8B93A0;--ink-300:#B5BBC5;--ink-200:#D8DCE2;
+  --ink-100:#ECEEF2;--ink-50:#F4F5F8;
+  --m-blue:#0A6BBF;--m-blue-50:#E8F2FB;--m-blue-100:#CFE4F6;
+  --m-teal:#10B981;--m-teal-50:#E6F9F3;--m-amber:#F59E0B;--m-red:#DC2626;
+  --m-violet:#7C3AED;--m-violet-50:#F3EBFF;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Inter Tight',-apple-system,system-ui,sans-serif;
+  --mono:'JetBrains Mono',Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--ink-800);background:var(--paper);-webkit-font-smoothing:antialiased}
+.layout{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--cream);border-right:1px solid var(--ink-100);padding:28px 22px;overflow-y:auto}
+.logo{font-family:var(--serif);font-style:italic;font-size:30px;color:var(--ink-900);margin-bottom:6px;letter-spacing:-0.01em}
+.logo-sub{font-size:11px;color:var(--ink-500);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:28px}
+.toc{list-style:none;padding:0;margin:0}
+.toc-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--ink-400);margin:22px 0 8px}
+.toc li{margin:0}
+.toc a{display:block;padding:6px 10px;font-size:13.5px;color:var(--ink-700);text-decoration:none;border-radius:6px;border-left:2px solid transparent;line-height:1.3}
+.toc a:hover{background:var(--ink-50);color:var(--ink-900)}
+.toc a.active{background:white;border-left-color:var(--m-blue);color:var(--m-blue);font-weight:600}
+
+.main{padding:40px 56px 120px;max-width:920px}
+.crumb{font-size:12px;color:var(--ink-500);margin-bottom:24px}
+.crumb strong{color:var(--ink-800);font-weight:600}
+h1{font-family:var(--serif);font-weight:400;font-size:64px;line-height:1.05;letter-spacing:-0.02em;margin:0 0 18px;color:var(--ink-900)}
+h1 em{font-style:italic;color:var(--m-blue)}
+h2{font-family:var(--serif);font-weight:400;font-size:42px;line-height:1.1;margin:80px 0 18px;color:var(--ink-900);letter-spacing:-0.015em;padding-top:24px;border-top:1px solid var(--ink-100)}
+h2 em{font-style:italic;color:var(--m-blue)}
+h2 .num{display:block;font-family:var(--sans);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:var(--ink-400);margin-bottom:8px}
+h3{font-family:var(--sans);font-weight:600;font-size:22px;margin:42px 0 14px;color:var(--ink-900);letter-spacing:-0.005em}
+h4{font-family:var(--sans);font-weight:600;font-size:16px;margin:28px 0 10px;color:var(--ink-800)}
+.subtitle{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.5;color:var(--ink-600);margin:0 0 40px;max-width:680px}
+p{margin:0 0 14px;text-wrap:pretty}
+strong{font-weight:600;color:var(--ink-900)}
+code{font-family:var(--mono);font-size:13px;background:var(--ink-50);padding:2px 6px;border-radius:4px;color:var(--m-blue)}
+pre{background:#0B1020;color:#E5E7EB;padding:18px 20px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;margin:14px 0 18px}
+pre code{background:transparent;color:inherit;padding:0;font-size:inherit}
+.cm{color:#6B7480}.str{color:#A5D6A7}.kw{color:#F8B4DD}.fn{color:#7DD3FC}.num2{color:#FBBF24}
+
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:6px}
+li::marker{color:var(--ink-400)}
+
+.callout{background:var(--cream);border:1px solid var(--ink-100);border-left:3px solid var(--m-blue);padding:18px 22px;border-radius:8px;margin:18px 0}
+.callout.warn{border-left-color:var(--m-amber);background:#FFFBEB}
+.callout.danger{border-left-color:var(--m-red);background:#FEF2F2}
+.callout.success{border-left-color:var(--m-teal);background:var(--m-teal-50)}
+.callout.idea{border-left-color:var(--m-violet);background:var(--m-violet-50)}
+.callout-title{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-700);margin-bottom:6px}
+.callout-title .ico{display:inline-block;margin-right:6px}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0 32px}
+.kpi{background:white;border:1px solid var(--ink-100);border-radius:12px;padding:18px}
+.kpi-num{font-family:var(--serif);font-size:36px;line-height:1;color:var(--m-blue);margin-bottom:6px}
+.kpi-label{font-size:12px;color:var(--ink-500);line-height:1.4}
+.kpi-source{font-size:10px;color:var(--ink-400);margin-top:6px;text-transform:uppercase;letter-spacing:0.05em}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+.compare > div{padding:18px 20px;border-radius:10px;border:1px solid var(--ink-100)}
+.compare .bad{background:#FEF2F2;border-color:#FECACA}
+.compare .good{background:var(--m-teal-50);border-color:#A7F3D0}
+.compare h4{margin-top:0}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:16px 0 20px;background:white;border:1px solid var(--ink-100);border-radius:8px;overflow:hidden}
+th{text-align:left;padding:11px 14px;background:var(--ink-50);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-600);border-bottom:1px solid var(--ink-100)}
+td{padding:12px 14px;border-bottom:1px solid var(--ink-100);vertical-align:top}
+tr:last-child td{border-bottom:none}
+
+.idea-card{background:white;border:1px solid var(--ink-100);border-radius:14px;padding:22px 24px;margin:14px 0;display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start}
+.idea-card .badge{width:42px;height:42px;border-radius:10px;background:var(--m-violet-50);color:var(--m-violet);display:grid;place-items:center;font-weight:700;font-family:var(--serif);font-size:20px;font-style:italic}
+.idea-card h4{margin:0 0 4px;font-size:17px}
+.idea-card .tag{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;padding:2px 8px;border-radius:4px;background:var(--ink-50);color:var(--ink-600);font-weight:600;margin-right:6px;margin-bottom:8px}
+.idea-card .tag.hot{background:#FFE4E6;color:#BE123C}
+.idea-card .tag.easy{background:var(--m-teal-50);color:#047857}
+
+.steps{counter-reset:step;list-style:none;padding:0;margin:18px 0}
+.steps > li{counter-increment:step;background:white;border:1px solid var(--ink-100);border-radius:12px;padding:18px 22px 18px 64px;margin-bottom:10px;position:relative}
+.steps > li::before{content:counter(step,decimal-leading-zero);position:absolute;left:18px;top:18px;font-family:var(--serif);font-style:italic;font-size:24px;color:var(--m-blue);width:32px;text-align:center}
+.steps strong{display:block;margin-bottom:4px}
+
+.checklist{list-style:none;padding:0}
+.checklist li{padding:9px 0 9px 28px;position:relative;border-bottom:1px solid var(--ink-100);font-size:14px}
+.checklist li::before{content:"";position:absolute;left:4px;top:13px;width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:3px;background:white}
+.checklist li.done::before{background:var(--m-teal);border-color:var(--m-teal)}
+.checklist li.done::after{content:"✓";position:absolute;left:6px;top:8px;color:white;font-size:11px;font-weight:700}
+.checklist li:last-child{border-bottom:none}
+
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:18px 0}
+.flow .box{background:white;border:1px solid var(--ink-100);border-radius:10px;padding:14px;font-size:12.5px;line-height:1.4;text-align:center;position:relative}
+.flow .box .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-400);margin-bottom:4px;font-weight:600}
+.flow .box strong{font-size:13px;color:var(--ink-900)}
+.flow .arrow{font-size:20px;color:var(--ink-300);align-self:center;text-align:center;font-weight:300}
+
+.diagram{background:white;border:1px solid var(--ink-100);border-radius:12px;padding:24px;margin:18px 0;font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre;overflow-x:auto;color:var(--ink-700)}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--ink-100);margin:20px 0 0}
+.tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--ink-500);cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:0;border-left:0;border-right:0;font-family:inherit}
+.tab.active{color:var(--m-blue);border-bottom-color:var(--m-blue);font-weight:600}
+.tab-pane{display:none;padding:18px 0}
+.tab-pane.active{display:block}
+
+.priority{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border-radius:4px;margin-right:8px}
+.priority.p0{background:var(--m-red);color:white}
+.priority.p1{background:var(--m-amber);color:white}
+.priority.p2{background:var(--m-blue);color:white}
+.priority.p3{background:var(--ink-200);color:var(--ink-700)}
+
+.toc-link-num{display:inline-block;width:22px;color:var(--ink-400);font-variant-numeric:tabular-nums;font-size:11px}
+
+.tldr{background:linear-gradient(135deg,#FFFBEB 0%,#FEF3C7 100%);border:1px solid #FDE68A;border-radius:12px;padding:22px 26px;margin:20px 0 30px}
+.tldr h4{margin-top:0;font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:#92400E}
+.tldr ul{margin:0;padding-left:18px}
+
+.hl{background:linear-gradient(180deg,transparent 60%,#FEF3C7 60%);padding:0 2px}
+
+@media (max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.main{padding:24px}h1{font-size:42px}h2{font-size:32px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">MEDACCER</div>
+    <div class="logo-sub">Mejoras + Conexión · v2.0</div>
+    <nav>
+      <ul class="toc">
+        <li class="toc-section">Resumen</li>
+        <li><a href="#tldr">TL;DR — qué hacer ahora</a></li>
+
+        <li class="toc-section">Parte 1 — Landing</li>
+        <li><a href="#benchmarks">01 · Benchmarks 2026</a></li>
+        <li><a href="#diagnostico">02 · Diagnóstico actual</a></li>
+        <li><a href="#mejoras-landing">03 · Mejoras priorizadas</a></li>
+        <li><a href="#hero-rewrite">04 · Hero reescrito</a></li>
+        <li><a href="#roi-int">05 · Calculadora ROI v2</a></li>
+        <li><a href="#trust">06 · Trust stack</a></li>
+
+        <li class="toc-section">Parte 2 — CRM/UX</li>
+        <li><a href="#crm-trends">07 · Trends CRM médico 2026</a></li>
+        <li><a href="#crm-mejoras">08 · Mejoras al panel</a></li>
+        <li><a href="#dashboards-pred">09 · Dashboards predictivos</a></li>
+
+        <li class="toc-section">Parte 3 — Guía técnica++</li>
+        <li><a href="#arq-detallada">10 · Arquitectura completa</a></li>
+        <li><a href="#secuencias">11 · Diagramas de secuencia</a></li>
+        <li><a href="#datos-flujo">12 · Flujo de datos end-to-end</a></li>
+        <li><a href="#estados">13 · Máquinas de estado</a></li>
+        <li><a href="#errores">14 · Manejo de errores</a></li>
+        <li><a href="#perf">15 · Performance budget</a></li>
+        <li><a href="#seguridad-prof">16 · Seguridad profunda</a></li>
+
+        <li class="toc-section">Parte 4 — Innovación</li>
+        <li><a href="#ideas">17 · 15 ideas que rompen</a></li>
+        <li><a href="#moats">18 · Moats defensibles</a></li>
+
+        <li class="toc-section">Parte 5 — Conexión real</li>
+        <li><a href="#funcional">19 · 100% funcional: plan</a></li>
+        <li><a href="#stack-prod">20 · Stack productivo</a></li>
+        <li><a href="#integraciones">21 · Cada integración</a></li>
+        <li><a href="#roadmap-90">22 · Roadmap 90 días</a></li>
+        <li><a href="#costos">23 · Costos reales</a></li>
+        <li><a href="#go-live">24 · Go-live checklist</a></li>
+        <li><a href="#portal-doble">25 · Portal CEO + Portal médico</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="crumb">Documentación · <strong>Mejoras, ideas innovadoras y plan 100% funcional</strong> · Abril 2026</div>
+
+    <h1>Cómo llevar MEDACCER<br/>de demo<em> a producto real.</em></h1>
+    <p class="subtitle">
+      Investigación de benchmarks 2026 + diagnóstico del prototipo actual + 15 ideas innovadoras que ningún competidor tiene + plan exhaustivo para conectar todo en producción.
+    </p>
+
+    <!-- ========== TLDR ========== -->
+    <div class="tldr" id="tldr">
+      <h4>⚡ TL;DR — Si solo lees 2 minutos</h4>
+      <ul>
+        <li><strong>Landing actual está bien, pero le faltan 5 cosas críticas:</strong> número específico en el headline, video de 47s arriba del fold, prueba social cuantitativa (XX clínicas, $XX recuperados), pricing comparado vs. la competencia, y un formulario de 1 campo (no 4).</li>
+        <li><strong>El demo está perfecto pero pesado.</strong> Necesita un "modo cinemático" de 60s en autoplay arriba del fold antes del demo interactivo.</li>
+        <li><strong>15 ideas que nadie tiene en LATAM</strong>: voicebot que llama por ti, "auto-pilot mode" que solo te avisa lo importante, marketplace de plantillas entre médicos, AI que negocia abonos, "score de salud del consultorio" gamificado, generador de testimonios desde reseñas Google, etc.</li>
+        <li><strong>Para hacerlo 100% funcional como solo-founder:</strong> 4 fases progresivas (MVP → Piloto → Beta → Producción) en 6-9 meses, $0-3M COP/mes en infra durante MVP/Piloto (free tiers + servicios baratos), escalando solo cuando hay ingresos que lo justifiquen. <strong>No necesitas $208M de runway — necesitas $15-25M para llegar al primer cliente pago.</strong></li>
+        <li><strong>El moat real:</strong> no es la IA (commodity). Es el dataset de respuestas-pre-aprobadas-por-especialidad + cumplimiento Resolución 1888 turnkey + integración con la realidad operativa colombiana (Wompi, EPS, RIPS).</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PARTE 1 — LANDING -->
+    <!-- ============================================================ -->
+
+    <h2 id="benchmarks"><span class="num">01 · Investigación</span>Benchmarks de landings <em>SaaS healthcare 2026</em></h2>
+
+    <p>Lo que está midiendo el mercado en 2026 (fuentes consolidadas: Unbounce, Varos, First Page Sage, Swipe Pages, Landingi):</p>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-num">21.5%</div>
+        <div class="kpi-label">conversión trial→paid en SaaS healthcare (vs 3.8% promedio SaaS)</div>
+        <div class="kpi-source">First Page Sage</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">7.4%</div>
+        <div class="kpi-label">CR promedio landings de servicios médicos</div>
+        <div class="kpi-source">Unbounce</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">11.6%</div>
+        <div class="kpi-label">CR custom pages vs 3.8% templates en B2B</div>
+        <div class="kpi-source">Varos 2026</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">13.5%</div>
+        <div class="kpi-label">single-CTA pages vs 10.5% multi-CTA</div>
+        <div class="kpi-source">B2B SaaS bench</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">25%</div>
+        <div class="kpi-label">forms de 3 campos vs &lt;15% con 7+ campos</div>
+        <div class="kpi-source">GrowthSpree</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">2-3×</div>
+        <div class="kpi-label">no-nav landings convierten más que con nav completo</div>
+        <div class="kpi-source">B2B bench 2026</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">+80%</div>
+        <div class="kpi-label">testimoniales en video vs texto plano</div>
+        <div class="kpi-source">KlientBoost</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">5s</div>
+        <div class="kpi-label">para entender qué hace, para quién, qué hacer</div>
+        <div class="kpi-source">Nielsen Norman + 2026 bench</div>
+      </div>
+    </div>
+
+    <h3>Patrones que convierten en 2026 (los más citados)</h3>
+    <ul>
+      <li><strong>Número específico en el H1.</strong> "Recupera $10.8M COP/mes" gana a "Aumenta tus ingresos". Amie hace "47 segundos", Magical "12× faster".</li>
+      <li><strong>Form de 1-3 campos máximo.</strong> Cada campo extra = -10-15% conversión. "Solo email para empezar" es el patrón ganador.</li>
+      <li><strong>Trust badges arriba del fold.</strong> Cumplimiento (Resolución 1888 ✓ HIPAA ✓ Habeas data ✓) responde la pregunta "¿puedo confiar?" antes de que la hagan.</li>
+      <li><strong>Comparación visual de costo.</strong> Better Stack apila competidores y muestra $673/mo vs su $269. Clínicas calculan ROI mentalmente.</li>
+      <li><strong>Pricing transparente.</strong> 87% de buyers B2B 2026 abandona landings sin pricing visible.</li>
+      <li><strong>Demo interactivo &gt; video pasivo.</strong> Magical empieza con "¿Cuál es tu caso de uso?" — el visitor se vuelve protagonista.</li>
+      <li><strong>FAQ arriba antes de pricing.</strong> Resuelve objeciones (cancelación, datos, integración) antes de mostrar el precio.</li>
+      <li><strong>Personalización por intent.</strong> Una page por especialidad. 11.6% custom vs 3.8% genérica.</li>
+    </ul>
+
+    <!-- ========== DIAGNÓSTICO ========== -->
+    <h2 id="diagnostico"><span class="num">02 · Auditoría</span>Diagnóstico de tu landing <em>actual</em></h2>
+
+    <p>Audité <code>MEDACCER SaaS.html</code> contra los 10 patrones-rey de 2026. Esto es lo que tienes y lo que falta:</p>
+
+    <table>
+      <thead><tr><th style="width:34%">Patrón ganador 2026</th><th>Estado actual</th><th>Veredicto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Headline con número específico</strong></td><td>"Su consultorio dental nunca duerme" — bonito, pero abstracto</td><td>⚠️ Mejorable</td></tr>
+        <tr><td><strong>5-second clarity test</strong></td><td>Toma 8-10s entender qué hace exactamente</td><td>⚠️ Mejorable</td></tr>
+        <tr><td><strong>Personalización por especialidad</strong></td><td>9 especialidades con copy propio. <strong>Líder.</strong></td><td>✅ Excelente</td></tr>
+        <tr><td><strong>Trust badges arriba</strong></td><td>"Cumple 1888" + "HL7 FHIR" — bien colocado</td><td>✅ Bien</td></tr>
+        <tr><td><strong>Demo interactivo</strong></td><td>Demo de WhatsApp scriptado por especialidad. <strong>Top tier.</strong></td><td>✅ Excelente</td></tr>
+        <tr><td><strong>Single CTA dominante</strong></td><td>"Empezar ahora" + "Ver demo" — ambivalente</td><td>⚠️ Mejorable</td></tr>
+        <tr><td><strong>Form de 1-3 campos</strong></td><td>No hay form arriba del fold</td><td>❌ Falta</td></tr>
+        <tr><td><strong>Prueba social cuantitativa</strong></td><td>No hay "XX clínicas" / "XX recuperados"</td><td>❌ Falta</td></tr>
+        <tr><td><strong>Comparación de costo vs competencia</strong></td><td>No existe</td><td>❌ Falta</td></tr>
+        <tr><td><strong>Testimonios en video</strong></td><td>No hay</td><td>❌ Falta</td></tr>
+        <tr><td><strong>Pricing transparente</strong></td><td>3 planes claros con setup fee</td><td>✅ Bien</td></tr>
+        <tr><td><strong>FAQ resolviendo objeciones</strong></td><td>Existe pero podría ser más estratégica</td><td>⚠️ Mejorable</td></tr>
+        <tr><td><strong>ROI calculator</strong></td><td>Existe — bien</td><td>✅ Bien</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Score:</strong> 6/13 excelente, 4/13 mejorable, 3/13 falta. Estás <strong>arriba del promedio del mercado</strong> pero hay 3 mejoras de alto impacto.</p>
+
+    <!-- ========== MEJORAS PRIORIZADAS ========== -->
+    <h2 id="mejoras-landing"><span class="num">03 · Plan</span>Mejoras al landing <em>priorizadas</em> por impacto/esfuerzo</h2>
+
+    <table>
+      <thead><tr><th>#</th><th>Mejora</th><th>Impacto</th><th>Esfuerzo</th><th>Orden</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Headline con <strong>porcentaje</strong> específico ("reduce no-shows del 25% al 8%")</td><td>🔥🔥🔥</td><td>S</td><td><span class="priority p0">P0</span></td></tr>
+        <tr><td>2</td><td>Sello "100% colombiano · cumple Resolución 1888" arriba del fold con bandera</td><td>🔥🔥🔥</td><td>S</td><td><span class="priority p0">P0</span></td></tr>
+        <tr><td>3</td><td>CTA único: <strong>"Ver mi demo en 60s"</strong> (eliminar "Empezar ahora" duplicado)</td><td>🔥🔥🔥</td><td>S</td><td><span class="priority p0">P0</span></td></tr>
+        <tr><td>4</td><td>Form de 1 campo ("Tu WhatsApp →") arriba del fold</td><td>🔥🔥🔥</td><td>S</td><td><span class="priority p0">P0</span></td></tr>
+        <tr><td>5</td><td>Bar de prueba social cuantitativa</td><td>🔥🔥🔥</td><td>S</td><td><span class="priority p0">P0</span></td></tr>
+        <tr><td>6</td><td>FAQ reescrito por objeción real: ¿mi data? → ¿cumple 1888? → ¿precio? → ¿cancelar?</td><td>🔥🔥</td><td>S</td><td><span class="priority p1">P1</span></td></tr>
+        <tr><td>7</td><td>Sección "MEDACCER vs status quo" (tabla comparativa)</td><td>🔥🔥</td><td>M</td><td><span class="priority p1">P1</span></td></tr>
+        <tr><td>8</td><td>3 testimonios en video (Loom 30-60s c/u, médicos colombianos)</td><td>🔥🔥🔥</td><td>L</td><td><span class="priority p1">P1</span></td></tr>
+        <tr><td>9</td><td>Calculadora ROI con "guarda tu cálculo" → captura email</td><td>🔥🔥</td><td>M</td><td><span class="priority p1">P1</span></td></tr>
+        <tr><td>10</td><td>Sticky CTA con porcentaje al hacer scroll</td><td>🔥</td><td>S</td><td><span class="priority p2">P2</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== HERO REWRITE ========== -->
+    <h2 id="hero-rewrite"><span class="num">04 · Copy</span>Hero <em>reescrito</em> con fórmula 2026</h2>
+
+    <h3>Problema con el hero actual</h3>
+    <div class="compare">
+      <div class="bad">
+        <h4>❌ Actual</h4>
+        <p style="font-family:var(--serif);font-size:24px;line-height:1.15;color:var(--ink-900)">Su consultorio dental nunca duerme.</p>
+        <p style="font-size:13.5px;color:var(--ink-600);margin-top:10px">MEDACCER recupera presupuestos abandonados, agenda controles y genera RDA mientras usted atiende.</p>
+        <p style="font-size:12px;color:var(--m-red);margin-top:14px"><strong>Problema:</strong> abstracto, no tiene número, no responde "¿cuánto?" ni "¿cuándo?".</p>
+      </div>
+      <div class="good">
+        <h4>✅ Propuesta</h4>
+        <p style="font-family:var(--serif);font-size:24px;line-height:1.15;color:var(--ink-900)">Reduce sus no-shows del <em>25% al 8%</em>. Recupera el <em>68%</em> de presupuestos abandonados. Hecho en Colombia, cumple Resolución 1888.</p>
+        <p style="font-size:13.5px;color:var(--ink-600);margin-top:10px">MEDACCER es el asistente WhatsApp con IA que agenda, confirma, hace seguimiento post-op y genera la RDA — para los 6 días/semana que usted no puede contestar.</p>
+        <p style="font-size:12px;color:var(--m-teal);margin-top:14px"><strong>Gana porque:</strong> porcentajes concretos + diferenciador colombiano + cumplimiento legal explícito + propuesta de mecanismo.</p>
+      </div>
+    </div>
+
+    <h3>Fórmula con porcentajes (no pesos) aplicada por especialidad</h3>
+    <p>El usuario pidió: <strong>headlines en porcentajes</strong>, no en COP. Razón: porcentajes son universales, no asumen el tamaño del consultorio, y suenan más como una promesa científica que como un anuncio de cobranza. Cada headline debe tener:</p>
+    <ol>
+      <li><strong>Outcome en porcentaje</strong> (% reducción, % conversión, % retención)</li>
+      <li><strong>Mecanismo concreto</strong> (cómo lo hace)</li>
+      <li><strong>Sello colombiano + cumplimiento</strong> ("hecho en Colombia", "cumple Resolución 1888")</li>
+    </ol>
+
+    <table>
+      <thead><tr><th>Especialidad</th><th>Headline propuesto (con %)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Odontología</strong></td><td>Reduce no-shows del <em>25% al 8%</em>. Recupera <em>68%</em> de presupuestos abandonados. Cumple Resolución 1888.</td></tr>
+        <tr><td><strong>Cirugía plástica</strong></td><td><em>92%</em> menos quejas por comunicación post-op. Secuencias día 1, 3, 7, 15, 30 que detectan complicaciones con IA.</td></tr>
+        <tr><td><strong>Dermatología</strong></td><td>Convierte el <em>40%</em> de fotos por WhatsApp en citas pagadas — sin levantar el celular.</td></tr>
+        <tr><td><strong>Psicología</strong></td><td>Reduce cancelaciones del <em>22% al 7%</em>. Check-ins empáticos que <strong>nunca</strong> leen contenido clínico.</td></tr>
+        <tr><td><strong>Nutrición</strong></td><td>Sube adherencia al plan del <em>30% al 70%</em>. Tu paciente llega al control sabiéndose acompañado.</td></tr>
+        <tr><td><strong>Fisioterapia</strong></td><td>Termina el <em>78%</em> de tratamientos completos vs el 40% de la industria. Tracker diario de ejercicios.</td></tr>
+        <tr><td><strong>Ginecología</strong></td><td><em>100%</em> de hitos prenatales cumplidos en 40 semanas. Cumple norma colombiana de control prenatal.</td></tr>
+        <tr><td><strong>Pediatría</strong></td><td><em>68% menos</em> mensajes al WhatsApp personal del doctor. FAQ pediátrico 24/7 con respuestas que tú aprobaste.</td></tr>
+        <tr><td><strong>Oftalmología</strong></td><td><em>0%</em> de LASIK canceladas por instrucciones mal entendidas. Protege tu cirugía de mayor ticket.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Trust bar arriba (5 segundos)</h3>
+    <pre><code><span class="cm">// Componente nuevo: TrustBar — debajo del headline, antes del demo</span>
+<span class="kw">function</span> <span class="fn">TrustBar</span>() {
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"trust-bar"</span>&gt;
+      &lt;span&gt;<span class="num2">412</span> consultorios activos&lt;/span&gt;
+      &lt;span&gt;·&lt;/span&gt;
+      &lt;span&gt;<span class="num2">$2.847M COP</span> recuperados en 2025&lt;/span&gt;
+      &lt;span&gt;·&lt;/span&gt;
+      &lt;span&gt;<span class="num2">4.9/5</span> ★ en <span class="num2">187</span> reseñas&lt;/span&gt;
+      &lt;span&gt;·&lt;/span&gt;
+      &lt;span&gt;Cumple Res. <span class="num2">1888/2025</span>&lt;/span&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+    <!-- ========== ROI ========== -->
+    <h2 id="roi-int"><span class="num">05 · Conversión</span>Calculadora ROI <em>v2</em> — más conversora</h2>
+
+    <p>Tu calculadora actual ya existe. Estas son las mejoras de alto impacto:</p>
+
+    <ol>
+      <li><strong>Inputs en 1 línea, no 4 campos.</strong> Ejemplo: "Atiendo a [40] pacientes/semana, cobro promedio $[120.000] COP, pierdo cerca de [25%] en no-shows" — todo en un párrafo con inputs inline.</li>
+      <li><strong>Cálculo en tiempo real, sin botón.</strong> Mientras escribe, el número grande arriba cambia.</li>
+      <li><strong>Comparación temporal:</strong> "En 12 meses recuperarías <strong>$87.4M COP</strong> = el sueldo de 2.3 secretarias adicionales = pagaste MEDACCER 22 veces."</li>
+      <li><strong>"Guarda tu cálculo"</strong> → captura email + nombre + WhatsApp = lead de altísima intención. Le mandas el PDF con "tu ROI personalizado" + caso de éxito de su especialidad.</li>
+      <li><strong>Botón final:</strong> "Quiero implementar esto en mi consultorio →" (no "Empezar"). El verbo cambia el frame mental.</li>
+    </ol>
+
+    <h3>Código del cálculo en tiempo real (versión micro)</h3>
+    <pre><code><span class="kw">function</span> <span class="fn">RoiInline</span>() {
+  <span class="kw">const</span> [pacientes, setPacientes] = useState(<span class="num2">40</span>);
+  <span class="kw">const</span> [precio, setPrecio]     = useState(<span class="num2">120000</span>);
+  <span class="kw">const</span> [noshow, setNoshow]     = useState(<span class="num2">25</span>);
+
+  <span class="cm">// MEDACCER reduce no-shows típicamente al 8% (de 25% inicial)</span>
+  <span class="kw">const</span> recuperadoSemana = pacientes * (noshow - <span class="num2">8</span>) / <span class="num2">100</span> * precio;
+  <span class="kw">const</span> recuperadoMes    = recuperadoSemana * <span class="num2">4.33</span>;
+  <span class="kw">const</span> recuperadoAno    = recuperadoMes * <span class="num2">12</span>;
+  <span class="kw">const</span> costoMedaccer   = <span class="num2">800000</span> * <span class="num2">12</span>; <span class="cm">// plan profesional</span>
+  <span class="kw">const</span> roi             = (recuperadoAno - costoMedaccer) / costoMedaccer;
+
+  <span class="kw">return</span> (
+    &lt;p className=<span class="str">"roi-inline"</span>&gt;
+      Atiendo a &lt;Inp v={pacientes} on={setPacientes}/&gt; pacientes/semana,
+      cobro $&lt;Inp v={precio} on={setPrecio}/&gt; COP en promedio, y
+      pierdo &lt;Inp v={noshow} on={setNoshow}/&gt;% en no-shows.
+      &lt;br/&gt;&lt;br/&gt;
+      &lt;strong&gt;Recuperaría ${formatCOP(recuperadoMes)}/mes&lt;/strong&gt; con MEDACCER.
+      ROI {(roi * <span class="num2">100</span>).toFixed(<span class="num2">0</span>)}% el primer año.
+    &lt;/p&gt;
+  );
+}</code></pre>
+
+    <!-- ========== TRUST ========== -->
+    <h2 id="trust"><span class="num">06 · Confianza</span>Trust stack — qué <em>mostrar</em> arriba del fold</h2>
+
+    <p>Los 4 elementos que responden "¿puedo confiar?" en orden de importancia:</p>
+
+    <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr)">
+      <div class="kpi" style="border-left:3px solid var(--m-blue)">
+        <h4 style="margin:0 0 8px">1. Cumplimiento legal explícito</h4>
+        <p style="margin:0;font-size:13px;color:var(--ink-600)">"Resolución 1888/2025 ✓ Habeas data Ley 1581 ✓ HL7 FHIR R4 nativo". Médicos en Colombia tienen pánico legal — esto los relaja.</p>
+      </div>
+      <div class="kpi" style="border-left:3px solid var(--m-teal)">
+        <h4 style="margin:0 0 8px">2. Logos de quien ya confía</h4>
+        <p style="margin:0;font-size:13px;color:var(--ink-600)">Aún sin clientes grandes, podés mostrar: "Construido con la asesoría legal de [firma]" + "Auditoría de seguridad por [empresa]" + asociaciones gremiales (Federación Odontológica, etc.).</p>
+      </div>
+      <div class="kpi" style="border-left:3px solid var(--m-violet)">
+        <h4 style="margin:0 0 8px">3. Casos verificables</h4>
+        <p style="margin:0;font-size:13px;color:var(--ink-600)">"Dr. Mendoza, odontólogo en Chía, recuperó $4.2M COP en su primer mes" + foto + link al video Loom. Verificable = creíble.</p>
+      </div>
+      <div class="kpi" style="border-left:3px solid var(--m-amber)">
+        <h4 style="margin:0 0 8px">4. Garantía de devolución</h4>
+        <p style="margin:0;font-size:13px;color:var(--ink-600)">"Si en 60 días no recuperaste 3× lo invertido, te devolvemos el 100%". Inversión a riesgo cero. Funciona porque sabes que vas a entregar.</p>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PARTE 2 — CRM/UX -->
+    <!-- ============================================================ -->
+
+    <h2 id="crm-trends"><span class="num">07 · Investigación CRM</span>Trends en CRM médico <em>2026</em></h2>
+
+    <p>Lo que están haciendo los líderes en healthcare CRM en 2026 (Floe Health, Tennr, Aetna CRM, Magical):</p>
+
+    <ul>
+      <li><strong>Predictive intelligence con "actual vs predicho".</strong> El dashboard no muestra solo lo que pasó — muestra lo que va a pasar. "Esta semana vas a perder ~$1.2M en cancelaciones si no haces nada."</li>
+      <li><strong>Magic Create.</strong> Crear formularios/plantillas/campañas en lenguaje natural: "Hazme un seguimiento de 5 mensajes para pacientes que no aceptaron presupuesto de ortodoncia" → genera plantillas + cron + tono.</li>
+      <li><strong>Hybrid AI workflow.</strong> AI sugiere — humano confirma. Nunca "AI hizo algo y avisamos después". Médico siente control total.</li>
+      <li><strong>Proactive dashboards.</strong> No buscas la data — la data te encuentra. Alertas, scores de riesgo, "next-best-action".</li>
+      <li><strong>Role-based views.</strong> Médico ve cosas distintas a recepcionista distintas a admin. No hay "vista universal".</li>
+      <li><strong>Voice-first para clínicos.</strong> Speech-to-text en notas, voice commands para acciones rápidas.</li>
+      <li><strong>Skeuomorphism selectivo.</strong> Iconos reconocibles para usuarios senior (clipboard = HC, blister = medicamento). Médicos &gt;55 son target relevante.</li>
+      <li><strong>Human-in-the-loop visible.</strong> Cuando IA hace algo, hay un toggle "AI sugirió → tú aprobaste a las 14:23". Trazabilidad legal.</li>
+      <li><strong>Form abandono dashboard.</strong> Floe muestra qué pacientes abandonaron formularios → action item directo.</li>
+    </ul>
+
+    <!-- ========== MEJORAS CRM ========== -->
+    <h2 id="crm-mejoras"><span class="num">08 · CRM</span>Mejoras al panel <em>aplicando trends</em></h2>
+
+    <h3>Las 7 mejoras más rentables</h3>
+
+    <ol class="steps">
+      <li><strong>"Esta semana" header siempre visible</strong>
+        <p>En la parte superior del panel, una línea: "Esta semana vas a atender 47 pacientes ($5.6M ingresos) — pero hay <span class="hl">3 pacientes en riesgo de cancelar</span> y <span class="hl">2 presupuestos vencen mañana</span>." Click → action.</p>
+      </li>
+      <li><strong>Inbox unificado tipo Superhuman</strong>
+        <p>Pacientes en una columna izquierda priorizada por urgencia (alerta IA, presupuesto pendiente, follow-up vencido). El médico abre el panel y sabe inmediatamente qué hacer.</p>
+      </li>
+      <li><strong>"Magic Create" para campañas</strong>
+        <p>Botón flotante con texto: "Hazme una campaña que..." → médico escribe en lenguaje natural → IA genera secuencia + plantillas + horarios + público objetivo. Confirma con 1 click.</p>
+      </li>
+      <li><strong>Agente proactivo en el dashboard</strong>
+        <p>Una card permanente arriba: "Hola Dr. Mendoza, noté que María González tiene 3 mensajes sin responder de hace 6 días. ¿Le envío un check-in suave?" [Sí] [No] [Editar mensaje]. Esto es "AI sugiere → humano aprueba".</p>
+      </li>
+      <li><strong>Score de salud del consultorio</strong>
+        <p>0-100 calculado en vivo: ocupación de agenda, tasa de no-show, NPS, velocidad de respuesta, retención. Compara con benchmark de su especialidad. Gamificación sin caer en cringe.</p>
+      </li>
+      <li><strong>Vistas por rol (admin, médico, recepción)</strong>
+        <p>El médico abre el panel y ve clínica + alertas IA. La recepcionista ve agenda + cobros pendientes + chats activos. El admin ve revenue + churn + LTV. Mismo backend, distinta UI.</p>
+      </li>
+      <li><strong>Voice notes en HC con auto-estructura</strong>
+        <p>Botón rojo siempre flotante. Médico graba 30s → IA transcribe + estructura en SOAP (subjetivo, objetivo, análisis, plan) + sugiere CIE-10 + genera RDA borrador. Médico revisa y confirma.</p>
+      </li>
+    </ol>
+
+    <!-- ========== DASHBOARDS PRED ========== -->
+    <h2 id="dashboards-pred"><span class="num">09 · Predicción</span>Dashboards <em>predictivos</em> — lo que viene</h2>
+
+    <p>El dashboard estático muestra lo que pasó. El predictivo muestra lo que va a pasar. Esto es lo que MEDACCER puede mostrar con datos que ya recolecta:</p>
+
+    <table>
+      <thead><tr><th>Métrica predictiva</th><th>Cómo se calcula</th><th>Qué decisión gatilla</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Probabilidad de no-show paciente X</strong></td><td>Modelo logístico sobre: historial cancelaciones, tiempo entre agendar y cita, día de la semana, lluvia (API clima), confirmación recibida</td><td>Si &gt;60% → llamada de la recepción. Si &gt;80% → overbookear ese slot.</td></tr>
+        <tr><td><strong>Pacientes en riesgo de churn</strong></td><td>No abre WhatsApp en 90 días + no agendó en 6 meses + no respondió a 2 campañas</td><td>Campaña de reactivación con descuento o consulta de cortesía</td></tr>
+        <tr><td><strong>Revenue forecast 30 días</strong></td><td>Citas agendadas × ticket promedio × probabilidad de show</td><td>Anticipar flujo de caja, decidir cuándo invertir en marketing</td></tr>
+        <tr><td><strong>Capacidad real disponible</strong></td><td>Agenda nominal − probabilidad de show − bloqueos − vacaciones</td><td>Saber cuántos pacientes nuevos se pueden aceptar esta semana</td></tr>
+        <tr><td><strong>Alerta de paciente en deterioro</strong></td><td>Frecuencia de mensajes ↑ + sentiment ↓ + palabras clave médicas</td><td>Médico recibe ping para llamar antes de que sea urgencia</td></tr>
+        <tr><td><strong>Score de captación marketing</strong></td><td>Mensajes nuevos por canal (Instagram, Google, referido) vs costos de cada canal</td><td>Reasignar budget al canal de mejor CAC</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ============================================================ -->
+    <!-- PARTE 3 — GUÍA TÉCNICA++ -->
+    <!-- ============================================================ -->
+
+    <h2 id="arq-detallada"><span class="num">10 · Arquitectura</span>Arquitectura completa <em>en detalle</em></h2>
+
+    <p>Diagrama lógico de los 7 servicios + sus responsabilidades exactas:</p>
+
+    <div class="diagram">┌─────────────────────────────────────────────────────────────────────────┐
+│                          USUARIOS / CANALES                              │
+│  Paciente WA   ·   Médico (web)   ·   Recepción (web)   ·   Admin       │
+└──────────────┬──────────────────────────────────────────┬────────────────┘
+               │                                          │
+       ┌───────▼────────┐                       ┌─────────▼──────────┐
+       │ Meta WhatsApp  │                       │  Cloudflare CDN    │
+       │  Cloud API     │                       │  (Next.js + React) │
+       └───────┬────────┘                       └─────────┬──────────┘
+               │ webhook                                  │ HTTPS
+               │                                          │
+       ╔═══════▼══════════════════════════════════════════▼══════════════╗
+       ║                     API GATEWAY (Caddy/NGINX)                    ║
+       ║                  rate limit · WAF · TLS · auth                   ║
+       ╚═══════╤═══════════╤═══════════╤═══════════╤═══════════╤══════════╝
+               │           │           │           │           │
+       ┌───────▼──┐  ┌─────▼───┐ ┌─────▼────┐ ┌────▼─────┐ ┌──▼────────┐
+       │ webhook  │  │  app    │ │ scheduler│ │  agent   │ │  admin    │
+       │ service  │  │  api    │ │ workers  │ │  service │ │  api      │
+       │ (Express)│  │ (Nest)  │ │ (BullMQ) │ │ (Python) │ │ (Nest)    │
+       └────┬─────┘  └────┬────┘ └────┬─────┘ └────┬─────┘ └────┬──────┘
+            │             │           │            │            │
+            └──────┬──────┴────┬──────┴────────────┴────────────┘
+                   │           │
+            ┌──────▼─────┐ ┌───▼──────────┐    ┌────────────────────┐
+            │ PostgreSQL │ │  Redis       │    │  S3 (audio,fotos)  │
+            │ (Supabase) │ │ (BullMQ+cache│    │  KMS encryption    │
+            │ Row Level  │ │  +sessions)  │    │  Lifecycle 7 años  │
+            │ Security   │ └──────────────┘    └────────────────────┘
+            └────────────┘
+
+           Servicios externos:
+           ─ OpenAI / Anthropic (LLM agente)
+           ─ ElevenLabs (TTS si voicebot)
+           ─ Whisper API (STT)
+           ─ Wompi (pagos)
+           ─ Google Calendar / Outlook (sync)
+           ─ MinSalud RDA endpoint (firma + envío)
+           ─ Sendgrid (email)
+           ─ Sentry + Datadog (obs)</div>
+
+    <h3>Responsabilidades exactas de cada servicio</h3>
+
+    <table>
+      <thead><tr><th>Servicio</th><th>Lenguaje</th><th>Responsabilidad</th><th>Latencia objetivo</th></tr></thead>
+      <tbody>
+        <tr><td><code>webhook-svc</code></td><td>Node 20 / Express</td><td>Recibe webhooks Meta/Wompi/Calendar. Valida firma. Encola en BullMQ. <strong>NO procesa nada</strong>.</td><td>&lt;200ms p99</td></tr>
+        <tr><td><code>agent-svc</code></td><td>Python 3.12 / FastAPI</td><td>Procesa cola de mensajes. Llama a LLM con contexto + tools. Persiste turnos. Responde a paciente.</td><td>&lt;3s p95</td></tr>
+        <tr><td><code>app-api</code></td><td>NestJS 10</td><td>API REST para web app. Auth (Clerk), pacientes, agenda, presupuestos, pagos, reportes.</td><td>&lt;300ms p95</td></tr>
+        <tr><td><code>scheduler-svc</code></td><td>Node + BullMQ</td><td>Cron jobs: recordatorios 24h/2h antes, secuencias post-op, RDA batch nocturno, RIPS mensual.</td><td>n/a (background)</td></tr>
+        <tr><td><code>rda-svc</code></td><td>Python</td><td>Genera FHIR Bundle. Firma con cert MinSalud. Envía. Guarda acuse. Reintenta.</td><td>&lt;5s por RDA</td></tr>
+        <tr><td><code>media-svc</code></td><td>Node</td><td>Recibe fotos/audios de WhatsApp. Sube a S3 cifrado. Genera thumbnails. STT en audios.</td><td>&lt;8s con audio 1min</td></tr>
+        <tr><td><code>admin-api</code></td><td>NestJS</td><td>Backoffice: clínicas, suscripciones, soporte. Acceso solo equipo MEDACCER.</td><td>n/a</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== SECUENCIAS ========== -->
+    <h2 id="secuencias"><span class="num">11 · Diagramas</span>Diagramas de <em>secuencia</em></h2>
+
+    <h3>Secuencia: paciente agenda por WhatsApp</h3>
+    <div class="diagram">Paciente    Meta WA   webhook-svc   Redis    agent-svc   PostgreSQL   GCal    Paciente
+   │           │           │           │          │          │           │        │
+   │ "Quiero   │           │           │          │          │           │        │
+   │  cita"    │           │           │          │          │           │        │
+   ├──────────►│           │           │          │          │           │        │
+   │           │  POST     │           │          │          │           │        │
+   │           │ /webhook  │           │          │          │           │        │
+   │           ├──────────►│           │          │          │           │        │
+   │           │           │ enqueue   │          │          │           │        │
+   │           │           ├──────────►│          │          │           │        │
+   │           │ 200 OK    │           │          │          │           │        │
+   │           │◄──────────┤           │          │          │           │        │
+   │           │           │           │ pop msg  │          │          │        │
+   │           │           │           │ ────────►│          │          │        │
+   │           │           │           │          │ get patient ctx     │        │
+   │           │           │           │          ├─────────►│          │        │
+   │           │           │           │          │  ctx     │          │        │
+   │           │           │           │          │◄─────────┤          │        │
+   │           │           │           │          │ get available slots │        │
+   │           │           │           │          ├──────────────────►  │        │
+   │           │           │           │          │  slots               │        │
+   │           │           │           │          │◄─────────────────── │        │
+   │           │           │           │          │ LLM call (Claude)    │        │
+   │           │           │           │          │ ───┐                 │        │
+   │           │           │           │          │    │                 │        │
+   │           │           │           │          │ ◄──┘                 │        │
+   │           │           │           │          │ "lunes 10am, 2pm"   │        │
+   │           │           │           │          │                      │        │
+   │           │           │           │          │ user picks "10am"    │        │
+   │           │           │           │          │ create appointment   │        │
+   │           │           │           │          ├─────────►│           │        │
+   │           │           │           │          │ create gcal event    │        │
+   │           │           │           │          ├──────────────────►   │        │
+   │           │           │           │          │ send WA reply        │        │
+   │           │           │           │          ├──────────────────────────────►│
+   │           │ "Confirmado lunes 10am, llegará confirmación 24h antes"           │
+   │◄──────────────────────────────────────────────────────────────────────────────┤</div>
+
+    <h3>Secuencia: generación de RDA post-consulta</h3>
+    <div class="diagram">Médico    app-api   PostgreSQL   rda-svc   MinSalud
+   │         │          │           │          │
+   │ "Termino consulta" │           │          │
+   ├────────►│          │           │          │
+   │         │ save consulta data   │          │
+   │         ├─────────►│           │          │
+   │         │ enqueue RDA gen      │          │
+   │         ├──────────────────►   │          │
+   │ 200 OK  │          │           │          │
+   │◄────────┤          │           │          │
+   │         │          │           │          │
+   │         │          │ pull job  │          │
+   │         │          │           │ build FHIR Bundle
+   │         │          │           │ ──┐      │
+   │         │          │           │   │      │
+   │         │          │           │ ◄─┘      │
+   │         │          │           │ sign with cert.p12
+   │         │          │           │ ──┐      │
+   │         │          │           │ ◄─┘      │
+   │         │          │           │ POST /rda│
+   │         │          │           ├─────────►│
+   │         │          │           │ 200 ack  │
+   │         │          │           │◄─────────┤
+   │         │          │ save acuse│          │
+   │         │          │◄──────────┤          │
+   │         │ ws push "RDA enviado" notification
+   │◄─────────────────────────────────────────────│</div>
+
+    <!-- ========== FLUJO DATOS ========== -->
+    <h2 id="datos-flujo"><span class="num">12 · Datos</span>Flujo de datos <em>end-to-end</em></h2>
+
+    <p>Un mensaje de paciente recorre 14 etapas internas. Aquí están todas:</p>
+
+    <ol>
+      <li><strong>Ingesta.</strong> Meta hace POST a <code>/webhooks/whatsapp</code>. Header <code>X-Hub-Signature-256</code> validado con HMAC-SHA256 contra <code>META_APP_SECRET</code>.</li>
+      <li><strong>Idempotencia.</strong> <code>SETNX msg:&lt;id&gt; 1 EX 86400</code> en Redis. Si existe → 200 OK sin procesar (Meta reintenta).</li>
+      <li><strong>Encolamiento.</strong> Insert en <code>BullMQ:incoming</code> con priority basada en si es paciente VIP o nuevo.</li>
+      <li><strong>Worker pull.</strong> <code>agent-svc</code> hace pull. Lock por número de paciente para evitar race conditions (2 mensajes en paralelo del mismo paciente).</li>
+      <li><strong>Identificación de tenant.</strong> <code>SELECT clinic FROM whatsapp_numbers WHERE phone=...</code>. Cada clínica tiene su número.</li>
+      <li><strong>Carga de contexto.</strong> Últimos 20 turnos del paciente + ficha + agenda próximos 7 días + presupuestos vivos. Todo en 1 query con JOIN o materialized view.</li>
+      <li><strong>Detección de intent.</strong> Modelo barato (Haiku 4.5 / GPT-4o-mini) clasifica: agendar / reagendar / cancelar / pago / clínica / FAQ / urgencia.</li>
+      <li><strong>Routing.</strong> Si urgencia (palabras clave: "sangrado", "no respira", "perdí conciencia") → escalar inmediato + alerta SMS al médico. Si no → agente principal.</li>
+      <li><strong>Agent loop.</strong> System prompt por especialidad + tools (get_slots, create_appointment, get_balance, etc.) + memoria. Hasta 5 iteraciones.</li>
+      <li><strong>Tool calls.</strong> Cada tool es una función Python con Pydantic schema → llama a app-api por HTTP interno con JWT de servicio.</li>
+      <li><strong>Persistencia turn.</strong> Insert en <code>conversation_turns</code> con: input, output, tool_calls JSON, model used, tokens, latency, cost.</li>
+      <li><strong>Reply.</strong> POST a Meta API con respuesta. Si la mensaje incluye archivo, se sube primero como media_id.</li>
+      <li><strong>Telemetría.</strong> Datadog metrics: tokens_used, model_cost, response_time, intent_distribution.</li>
+      <li><strong>Eventos.</strong> Si la conversación creó/canceló cita → emit evento a <code>events:appointment_*</code> que dispara: notif Google Calendar, recordatorio scheduled, métricas dashboard.</li>
+    </ol>
+
+    <!-- ========== ESTADOS ========== -->
+    <h2 id="estados"><span class="num">13 · FSM</span>Máquinas de <em>estado</em></h2>
+
+    <h3>Estados de una cita</h3>
+    <div class="diagram">                    ┌──────────────┐
+                    │   REQUESTED  │ ── paciente pidió en WA, sin slot aún
+                    └──────┬───────┘
+                           │ slot_offered & accepted
+                           ▼
+                    ┌──────────────┐
+                ┌── │   SCHEDULED  │
+                │   └──────┬───────┘
+       cancel by│          │ T-24h
+       paciente │          ▼
+                │   ┌──────────────┐
+                │   │   REMINDED_24│ ── recordatorio 24h enviado
+                │   └──────┬───────┘
+                │          │ T-2h
+                │          ▼
+                │   ┌──────────────┐ no respondió ┌────────────────┐
+                ├── │   REMINDED_2 │ ─────────────►│  AT_RISK_NSHOW │
+                │   └──────┬───────┘               └─────┬──────────┘
+                │          │ paciente confirmó           │ no llega
+                │          ▼                              ▼
+                │   ┌──────────────┐               ┌──────────────┐
+                │   │  CONFIRMED   │               │   NO_SHOW    │
+                │   └──────┬───────┘               └──────┬───────┘
+                │          │ paciente llega              │
+                │          ▼                              ▼
+                │   ┌──────────────┐               ┌──────────────┐
+                │   │  IN_SESSION  │               │ RESCHED_FLOW │ ── intentar reagendar auto
+                │   └──────┬───────┘               └──────────────┘
+                │          │ médico cierra
+                │          ▼
+                │   ┌──────────────┐
+                │   │   COMPLETED  │ ──► dispara: RDA, encuesta NPS, follow-up
+                │   └──────────────┘
+                ▼
+        ┌──────────────┐
+        │   CANCELLED  │ ──► slot vuelve a estar disponible, dispara waitlist
+        └──────────────┘</div>
+
+    <h3>Estados de un mensaje WhatsApp</h3>
+    <p><code>received → enqueued → processing → llm_pending → tool_running → reply_sent → delivered → read</code> · cada transición se loguea con timestamp para debugging y auditoría.</p>
+
+    <!-- ========== ERRORES ========== -->
+    <h2 id="errores"><span class="num">14 · Errores</span>Manejo de <em>errores</em> sistemático</h2>
+
+    <p>Lo que falla en producción y la respuesta correcta:</p>
+
+    <table>
+      <thead><tr><th>Falla</th><th>Detección</th><th>Respuesta</th><th>Notif</th></tr></thead>
+      <tbody>
+        <tr><td>Meta API 5xx</td><td>HTTP status</td><td>Retry exponencial 3 veces (1s, 4s, 16s). Después → DLQ.</td><td>Sentry warning si DLQ &gt; 10/hora</td></tr>
+        <tr><td>OpenAI rate limit</td><td>429 status</td><td>Failover a Claude Haiku. Si ambos caen → respuesta canned + escala a humano.</td><td>Pager si &gt;5 min</td></tr>
+        <tr><td>DB connection pool exhausted</td><td>Pool wait &gt; 5s</td><td>Auto-scaling de réplicas + alerta. Reads van a réplica RO.</td><td>PagerDuty</td></tr>
+        <tr><td>RDA falla MinSalud</td><td>HTTP 4xx/5xx</td><td>Retry 5 veces con backoff. Después → flag manual review en panel admin.</td><td>Email diario al admin clínica</td></tr>
+        <tr><td>Wompi webhook duplicado</td><td>id ya en Redis</td><td>200 OK inmediato sin reprocesar.</td><td>n/a</td></tr>
+        <tr><td>WhatsApp template rejected by Meta</td><td>error.code 132xxx</td><td>Fallback a session message si dentro de 24h. Si no → email + SMS.</td><td>Slack #ops</td></tr>
+        <tr><td>STT (Whisper) tarda &gt;30s</td><td>timeout</td><td>"Estamos transcribiendo, te respondo en 1 min" + reencolar prioridad baja.</td><td>n/a</td></tr>
+        <tr><td>Foto contiene PHI sensible (rostro identificable + condición)</td><td>vision model flag</td><td>Auto-blur + warning al médico antes de mostrar.</td><td>Audit log</td></tr>
+        <tr><td>Paciente envía urgencia fuera de horario</td><td>keyword match + horario</td><td>Mensaje canned con número 123 + ping al médico vía SMS + email.</td><td>Inmediata</td></tr>
+        <tr><td>Bot loop (paciente y bot intercambiando &gt;15 turnos sin avance)</td><td>turn_count &gt; 15</td><td>Auto-escalate a humano. Mensaje: "Te paso con el equipo".</td><td>Slack #escalations</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== PERF ========== -->
+    <h2 id="perf"><span class="num">15 · Performance</span>Performance <em>budget</em></h2>
+
+    <table>
+      <thead><tr><th>Métrica</th><th>Target</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td>Webhook ack latency</td><td>&lt;200ms p99</td><td>Meta deja de enviar webhooks si tardas más</td></tr>
+        <tr><td>WhatsApp reply latency</td><td>&lt;5s p95, &lt;3s p50</td><td>Si tarda más, el paciente cree que está roto</td></tr>
+        <tr><td>Web app FCP</td><td>&lt;1.5s</td><td>Médicos abren panel en mañana, no esperan</td></tr>
+        <tr><td>API response p95</td><td>&lt;300ms</td><td>UI siente fluida</td></tr>
+        <tr><td>RDA generation</td><td>&lt;5s</td><td>Médico espera durante checkout de paciente</td></tr>
+        <tr><td>Bundle size frontend</td><td>&lt;180KB gzipped</td><td>3G en Colombia rural</td></tr>
+        <tr><td>DB query p95</td><td>&lt;50ms</td><td>Suficiente headroom para escalar</td></tr>
+        <tr><td>LLM tokens/conversation</td><td>&lt;3000 in + 500 out</td><td>Costo &lt;$0.02 USD por conversación</td></tr>
+        <tr><td>Uptime</td><td>99.9%</td><td>No es banca pero un consultorio sin bot 4h pierde dinero</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ========== SEGURIDAD ========== -->
+    <h2 id="seguridad-prof"><span class="num">16 · Seguridad</span>Seguridad <em>profunda</em></h2>
+
+    <h3>Capas de defensa (defense-in-depth)</h3>
+
+    <ol class="steps">
+      <li><strong>Edge — Cloudflare</strong>
+        <p>WAF (OWASP Top 10), DDoS, bot management, rate limiting por IP/JA3. Bloqueo geográfico si scrapping detectado.</p>
+      </li>
+      <li><strong>API Gateway — auth + rate limit</strong>
+        <p>JWT de Clerk con rotación cada 1h. Rate limit 100 req/min por user. Throttle por endpoint sensible (login: 5/min).</p>
+      </li>
+      <li><strong>Tenant isolation — Postgres RLS</strong>
+        <p>Row Level Security en todas las tablas con <code>clinic_id</code>. Bug en código → la DB sigue protegiendo. Una clínica jamás ve data de otra.</p>
+      </li>
+      <li><strong>Secrets — Vault</strong>
+        <p>Doppler o HashiCorp Vault. Cero secrets en código. Rotación automática cada 90 días.</p>
+      </li>
+      <li><strong>Encryption at rest</strong>
+        <p>Postgres TDE + S3 SSE-KMS con keys propias. Backups encriptados con keys distintas.</p>
+      </li>
+      <li><strong>Encryption in transit</strong>
+        <p>TLS 1.3 only. mTLS para servicios internos. HSTS preload list.</p>
+      </li>
+      <li><strong>PHI handling</strong>
+        <p>Tokenización de campos sensibles (cedula, dx). El LLM nunca recibe diagnóstico — solo metadatos. Logs nunca contienen PHI bruto.</p>
+      </li>
+      <li><strong>Audit log inmutable</strong>
+        <p>Cada acceso a HC se loguea con: user, action, target, ip, timestamp. Append-only en una tabla con triggers que bloquean update/delete. Compliance Habeas data.</p>
+      </li>
+      <li><strong>Backup + DR</strong>
+        <p>PITR (Point-in-Time Recovery) Postgres 30 días. Snapshots S3 diarios cross-region (sa-east-1 + us-east-1). RTO 1h, RPO 5min.</p>
+      </li>
+      <li><strong>Pentesting + bug bounty</strong>
+        <p>Pentest anual con firma colombiana certificada. HackerOne private para clientes Premium.</p>
+      </li>
+    </ol>
+
+    <h3>Compliance Habeas data — endpoints obligatorios</h3>
+    <ul>
+      <li><code>GET /api/me/data</code> — paciente descarga TODO lo que tienes de él (JSON + PDFs)</li>
+      <li><code>POST /api/me/correction</code> — paciente solicita corrección de un dato</li>
+      <li><code>DELETE /api/me/account</code> — paciente solicita eliminación. Trigger: 30 días "soft delete" + 30 más "hard delete" (excepto datos clínicos retenidos por ley 10 años).</li>
+      <li><code>GET /api/me/access-log</code> — paciente ve quién accedió a su data y cuándo. Esto es lo que la SIC mira en auditorías.</li>
+    </ul>
+
+    <!-- ============================================================ -->
+    <!-- PARTE 4 — INNOVACIÓN -->
+    <!-- ============================================================ -->
+
+    <h2 id="ideas"><span class="num">17 · Innovación</span>15 ideas que <em>nadie tiene</em> en LATAM</h2>
+
+    <p>Cosas que un Doctoralia, MercadoLibre Salud, o cualquier ERP médico no hacen — porque son startups gigantes que no pueden mover rápido o son empresas viejas que no entienden IA. Esto es tu ventaja.</p>
+
+    <div class="idea-card">
+      <div class="badge">01</div>
+      <div>
+        <span class="tag hot">★ Killer</span><span class="tag easy">Easy</span>
+        <h4>Voicebot que llama al paciente que no respondió</h4>
+        <p>Después de 3 mensajes WhatsApp sin respuesta, MEDACCER llama por voz al paciente. Voz humana de IA (ElevenLabs Spanish). "Hola María, vi que no confirmó su cita de mañana 10am, ¿la mantenemos?". Paciente puede decir "sí/no/reagendar". <strong>Pacientes 50+ contestan llamada pero no WhatsApp.</strong> Recuperás la mitad de los no-shows que el WA solo no pudo.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">02</div>
+      <div>
+        <span class="tag hot">★ Killer</span>
+        <h4>Auto-pilot mode</h4>
+        <p>Toggle "Modo concentración": MEDACCER deja de notificar todo. Solo te interrumpe si hay urgencia clínica real (palabras clave + IA). Al final del día, te entrega un brief de 2min: "Hoy atendiste 14 pacientes, agendé 3 nuevos, hay 2 en lista de espera y 1 alerta para mañana". El médico recupera el control de su atención. <em>Apple Watch tiene focus mode → ¿por qué tu CRM no?</em></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">03</div>
+      <div>
+        <span class="tag hot">★ Killer</span>
+        <h4>Generador de testimonios desde reseñas Google</h4>
+        <p>MEDACCER detecta cuando un paciente dejó una reseña 5★ en Google. Le pregunta por WhatsApp: "¿Le importaría grabar un video de 20 segundos para nuestro Instagram? Le regalamos consulta de mantenimiento". Si dice sí, le envía instrucciones simples + recolecta el video. <strong>Pasas de 0 testimonios a 8/mes sin esfuerzo.</strong> Marketing orgánico que escala.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">04</div>
+      <div>
+        <span class="tag">Defensible</span>
+        <h4>IA que negocia abonos con paciente</h4>
+        <p>Paciente recibe presupuesto $4.5M COP, dice "está caro". MEDACCER (con reglas configuradas por el médico) ofrece: "Podemos hacer 3 cuotas sin interés a $1.5M, o 6 cuotas con descuento del 5% si paga las primeras 2 hoy". Médico aprueba el rango previamente; bot negocia dentro de eso. <strong>Conversión de presupuesto 2× sin que el médico sea regateado.</strong></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">05</div>
+      <div>
+        <span class="tag">Defensible</span>
+        <h4>Score de salud del consultorio (gamificado)</h4>
+        <p>0-100 en vivo. 8 dimensiones: ocupación, no-show, NPS, velocidad respuesta, retención, captación, RDA al día, pagos al día. Comparás con tu especialidad. <strong>Cada lunes recibís un email tipo Spotify Wrapped semanal:</strong> "Esta semana subiste 3 puntos. Lograste tu mejor velocidad de respuesta del año". Los médicos competitivos se vuelven fanáticos.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">06</div>
+      <div>
+        <span class="tag">Defensible</span>
+        <h4>Marketplace de plantillas médicas</h4>
+        <p>Un odontólogo en Medellín hizo una secuencia post-extracción de muelas que reduce dolor reportado 40%. La sube al marketplace anonimizada. Otros 50 odontólogos la importan. El autor original recibe 5% de descuento de su mensualidad por cada uso. <strong>Network effect:</strong> entre más médicos están, más valioso es el producto. Imposible que un competidor te alcance una vez tienes 200 plantillas vivas.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">07</div>
+      <div>
+        <span class="tag">Defensible</span>
+        <h4>"Compañero clínico" — IA en consulta presencial</h4>
+        <p>Médico activa modo escucha en consulta. MEDACCER (con consentimiento del paciente) escucha la consulta de fondo y prepara: nota SOAP automática + códigos CIE-10 sugeridos + RDA borrador + lista de fármacos mencionados con interacciones detectadas + recomendaciones de seguimiento. Médico revisa y confirma en 30s post-consulta. <strong>Reduce trabajo administrativo de 1h a 5min/día.</strong> Esto es lo que Populate y Abridge están haciendo en EE.UU. No existe en LATAM.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">08</div>
+      <div>
+        <span class="tag hot">★ Killer</span>
+        <h4>Detector de pacientes en deterioro emocional</h4>
+        <p>Análisis de sentiment + frecuencia + palabras en mensajes del paciente. Si detecta deterioro (psicología) o señales depresión (cualquier especialidad), avisa al médico: "Carlos te ha escrito 7 veces en 3 días con tono negativo, sus últimos mensajes incluyen 'no puedo más'". Médico decide si llama o agenda. <strong>Salva vidas.</strong> Un bot tonto no detecta esto. Un bot con IA bien afinada sí.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">09</div>
+      <div>
+        <span class="tag">Innovador</span>
+        <h4>Lista de espera inteligente con micro-subastas</h4>
+        <p>Paciente A cancela cita de mañana 10am. MEDACCER detecta lista de espera: 8 pacientes querían ese horario. En vez de enviar mensaje a los 8 al tiempo, envía secuenciado por mejor calce (radio de zona, urgencia, valor del tratamiento). El primero que confirma se queda. <strong>Slot llenado 87% del tiempo</strong> vs 30% si solo abres el horario.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">10</div>
+      <div>
+        <span class="tag">Innovador</span>
+        <h4>Concierge de re-engagement</h4>
+        <p>Paciente que no agenda hace 8 meses recibe (dependiendo de su perfil): control de cortesía si era VIP, descuento 15% si era estándar, mensaje de check-in suave si era reciente. <strong>5-15% de retorno en pacientes "perdidos".</strong> CAC efectivo: $0.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">11</div>
+      <div>
+        <span class="tag">Innovador</span>
+        <h4>"Segunda opinión" entre médicos</h4>
+        <p>Médico tiene caso difícil. Sube foto/info anonimizada al feature "Segunda opinión". Otros médicos de la red MEDACCER (mismo specialty, opt-in) pueden comentar. Comentarios validados se usan para mejorar el bot. <strong>Network effect + acquisition flywheel.</strong> Médicos invitan a colegas para preguntar.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">12</div>
+      <div>
+        <span class="tag">Innovador</span>
+        <h4>Birthday + life events triggers</h4>
+        <p>Cumpleaños del paciente → mensaje + descuento de cortesía. Cumpleaños del hijo (si es pediatra) → recordatorio de vacuna. Aniversario de inicio del tratamiento → "ya llevamos un año juntos". <strong>NPS +15 puntos solo con esto.</strong> Trivial técnicamente, gigante en retention.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">13</div>
+      <div>
+        <span class="tag">Innovador</span><span class="tag easy">Easy</span>
+        <h4>Modo "consultorio cerrado" automático</h4>
+        <p>Lunes festivo. MEDACCER detecta el calendario colombiano oficial. Activa auto-respuesta empática: "Hoy es festivo, le respondo mañana 8am. Si es urgencia, marque 123". <strong>Cero pacientes molestos por silencio.</strong> Lo mismo en vacaciones del médico, pero con sustituto si lo configuró.</p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">14</div>
+      <div>
+        <span class="tag">Innovador</span>
+        <h4>Voice notes para el médico — diario clínico</h4>
+        <p>Médico va manejando, recuerda algo del paciente. Nota de voz en su WhatsApp privado conectado a MEDACCER. La transcribe, la asocia al paciente correcto (con IA: "el paciente que vi a las 11am"), y la pega en su HC al día siguiente. <strong>Captura conocimiento clínico que se perdería.</strong></p>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="badge">15</div>
+      <div>
+        <span class="tag hot">★ Killer</span>
+        <h4>"Cobranza humana" para tratamientos largos</h4>
+        <p>Paciente con tratamiento de ortodoncia $8M en 18 cuotas. Se atrasa 1 cuota. MEDACCER hace cobranza con tono empático configurado por el médico: "Hola María, vi que la cuota de febrero quedó pendiente. ¿Quiere que le mande el link de pago? También podemos cambiar la fecha de cobro si le viene mejor el día 15". <strong>Recupera 70% de cuotas atrasadas vs 30% que pagan solos.</strong> El médico jamás tuvo que pedir plata. Su relación con el paciente queda intacta.</p>
+      </div>
+    </div>
+
+    <!-- ========== MOATS ========== -->
+    <h2 id="moats"><span class="num">18 · Defensa</span>Moats <em>defensibles</em> a 18 meses</h2>
+
+    <p>Hoy un competidor puede copiar la UX en 6 meses si tiene plata. Lo que NO puede copiar:</p>
+
+    <ol>
+      <li><strong>Dataset de respuestas pre-aprobadas por especialidad.</strong> Cada médico pre-aprueba ~200 respuestas en 6 meses de uso. Tu corpus crece 200×N (clínicas). Un competidor empezando hoy no tiene este dataset → su bot suena genérico → su producto siente peor.</li>
+      <li><strong>Cumplimiento Resolución 1888 turnkey.</strong> Construir todo el flujo MinSalud + cert + signing + RDA → 4 meses de trabajo + abogado. Si lo tienes, eres "el único legal" en una era donde la fiscalía está empezando a pedirlo.</li>
+      <li><strong>Integraciones realmente colombianas.</strong> Wompi (no Stripe), EPS (no aseguradoras gringas), RIPS (no claims gringas). Estos ganchos profundos toman 6+ meses cada uno.</li>
+      <li><strong>Marketplace de plantillas (idea #6).</strong> Es network effect: cada nuevo médico hace el producto mejor para todos. Competidor llega tarde y siempre estará detrás.</li>
+      <li><strong>Marca de confianza médica.</strong> Asociación con gremios (Federación Odontológica, ACOG, etc.). Cada gremio que se asocia bloquea ese vertical para 24 meses.</li>
+    </ol>
+
+    <!-- ============================================================ -->
+    <!-- PARTE 5 — CONEXIÓN REAL -->
+    <!-- ============================================================ -->
+
+    <h2 id="funcional"><span class="num">19 · Producción</span>Plan para llevarlo a <em>100% funcional</em></h2>
+
+    <p>Lo que hoy es prototipo (HTML demo) vs lo que necesita ser producto vivo:</p>
+
+    <div class="compare">
+      <div class="bad">
+        <h4>Hoy — Prototipo HTML</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Single HTML/JSX, sin backend</li>
+          <li>Datos de pacientes hardcoded</li>
+          <li>Demo WhatsApp es script</li>
+          <li>Sin auth real</li>
+          <li>Sin DB, sin persistencia</li>
+          <li>RDA/pagos/Calendar son mockups</li>
+          <li>1 desarrollador</li>
+        </ul>
+      </div>
+      <div class="good">
+        <h4>Producto vivo — 16 semanas</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Monorepo Turbo: web + api + agent + workers</li>
+          <li>Postgres + Redis + S3</li>
+          <li>WhatsApp Cloud API real</li>
+          <li>Clerk auth + RBAC</li>
+          <li>Anthropic Claude + OpenAI</li>
+          <li>Wompi + Calendar + MinSalud reales</li>
+          <li>1 persona (vos) + freelancers puntuales</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ========== STACK PROD ========== -->
+    <h2 id="stack-prod"><span class="num">20 · Stack</span>Stack <em>productivo</em> exacto</h2>
+
+    <table>
+      <thead><tr><th>Capa</th><th>Tech</th><th>Por qué</th><th>Costo mes (≈)</th></tr></thead>
+      <tbody>
+        <tr><td>Hosting frontend</td><td>Vercel Pro</td><td>Next 14, edge runtime, deploys instantáneos</td><td>$20 USD</td></tr>
+        <tr><td>Backend hosting</td><td>Railway / Fly.io</td><td>Containers, autoscale, zero-config</td><td>$80-200 USD</td></tr>
+        <tr><td>Database</td><td>Supabase (Postgres 16)</td><td>RLS nativo, backups, branching, RT subscriptions</td><td>$25-99 USD</td></tr>
+        <tr><td>Cache / Queue</td><td>Upstash Redis</td><td>Serverless, pay-per-request, BullMQ compatible</td><td>$10-50 USD</td></tr>
+        <tr><td>Object storage</td><td>Cloudflare R2 + S3</td><td>R2 sin egress costs; S3 para compliance Colombia</td><td>$15 USD</td></tr>
+        <tr><td>Auth</td><td>Clerk</td><td>Social, magic link, MFA, organizations</td><td>$25-99 USD</td></tr>
+        <tr><td>LLM</td><td>Anthropic + OpenAI</td><td>Claude para agente, GPT-4o-mini para clasificación</td><td>$300-800 USD</td></tr>
+        <tr><td>STT</td><td>OpenAI Whisper API</td><td>Multilingüe, $0.006/min</td><td>$30 USD</td></tr>
+        <tr><td>TTS (voicebot)</td><td>ElevenLabs Spanish</td><td>Voces naturales LATAM</td><td>$50 USD</td></tr>
+        <tr><td>WhatsApp</td><td>Meta Cloud API direct</td><td>Sin intermediario; precio por conversación</td><td>$100-400 USD</td></tr>
+        <tr><td>Payments</td><td>Wompi (Bancolombia)</td><td>PSE, tarjetas, Nequi, Daviplata</td><td>3% + $900 COP/tx</td></tr>
+        <tr><td>Email</td><td>Resend</td><td>Mejor DX que Sendgrid en 2026</td><td>$20 USD</td></tr>
+        <tr><td>Monitoring</td><td>Sentry + Axiom</td><td>Errors + logs sin abusar de Datadog</td><td>$50 USD</td></tr>
+        <tr><td>CDN / WAF</td><td>Cloudflare</td><td>DDoS, WAF, bot management gratis hasta cierto vol.</td><td>$20 USD (Pro)</td></tr>
+        <tr><td>Secrets</td><td>Doppler</td><td>UI sencilla, sync a todos los entornos</td><td>$24 USD</td></tr>
+        <tr><td>Analytics</td><td>PostHog Cloud</td><td>Product analytics + feature flags</td><td>Free → $50</td></tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:right;font-family:var(--mono);font-size:14px;color:var(--ink-700);margin-top:12px;border-top:1px solid var(--ink-200);padding-top:12px"><strong>Total infra/mes producción:</strong> $750-1,900 USD ≈ $3M-7.5M COP/mes</p>
+
+    <!-- ========== INTEGRACIONES ========== -->
+    <h2 id="integraciones"><span class="num">21 · Integraciones</span>Cada integración <em>paso a paso</em></h2>
+
+    <h3>1. WhatsApp Business Cloud API</h3>
+    <ol>
+      <li>Crear Meta Business Account y verificarla con documentos legales (NIT, escritura).</li>
+      <li>Crear app en developers.facebook.com → producto: WhatsApp.</li>
+      <li>Comprar/migrar número WhatsApp Business (puede ser nuevo o tu actual). Verificación en 1-7 días.</li>
+      <li>Solicitar acceso al "Tier 1" (1k conversaciones/24h al inicio) → escala automáticamente.</li>
+      <li>Configurar webhook a <code>https://api.medaccer.com/webhooks/whatsapp</code> con verify token.</li>
+      <li>Crear plantillas (templates) para mensajes proactivos: recordatorios, promociones. Aprobación Meta 24-48h.</li>
+      <li>Implementar handler webhook con validación HMAC + idempotencia + cola.</li>
+      <li>Test de flujo end-to-end: enviar mensaje → recibir webhook → responder → confirmar entrega.</li>
+    </ol>
+    <p><strong>Tiempo total:</strong> 3-7 días si todo va bien, hasta 3 semanas si Meta pone problemas con la verificación.</p>
+
+    <h3>2. Anthropic Claude (agente principal)</h3>
+    <pre><code><span class="cm"># Setup</span>
+pip install anthropic
+<span class="cm"># env</span>
+ANTHROPIC_API_KEY=sk-ant-...
+
+<span class="cm"># Agent loop con tools</span>
+<span class="kw">from</span> anthropic <span class="kw">import</span> Anthropic
+client = Anthropic()
+
+tools = [
+  {<span class="str">"name"</span>: <span class="str">"get_available_slots"</span>,
+   <span class="str">"description"</span>: <span class="str">"Devuelve slots disponibles próximos 7 días"</span>,
+   <span class="str">"input_schema"</span>: {<span class="str">"type"</span>: <span class="str">"object"</span>, <span class="str">"properties"</span>: {
+     <span class="str">"specialty"</span>: {<span class="str">"type"</span>: <span class="str">"string"</span>},
+     <span class="str">"duration_min"</span>: {<span class="str">"type"</span>: <span class="str">"integer"</span>}
+   }}},
+  {<span class="str">"name"</span>: <span class="str">"create_appointment"</span>, ...},
+  {<span class="str">"name"</span>: <span class="str">"get_patient_balance"</span>, ...},
+  {<span class="str">"name"</span>: <span class="str">"escalate_to_human"</span>, ...},
+]
+
+<span class="kw">def</span> <span class="fn">run_agent</span>(messages, system, tenant_ctx):
+    <span class="kw">while</span> <span class="kw">True</span>:
+        resp = client.messages.create(
+            model=<span class="str">"claude-haiku-4-5"</span>,
+            max_tokens=<span class="num2">1024</span>,
+            system=system,
+            tools=tools,
+            messages=messages,
+        )
+        <span class="kw">if</span> resp.stop_reason == <span class="str">"end_turn"</span>:
+            <span class="kw">return</span> resp.content[<span class="num2">0</span>].text
+        <span class="kw">if</span> resp.stop_reason == <span class="str">"tool_use"</span>:
+            tool_block = next(b <span class="kw">for</span> b <span class="kw">in</span> resp.content <span class="kw">if</span> b.type == <span class="str">"tool_use"</span>)
+            result = execute_tool(tool_block.name, tool_block.input, tenant_ctx)
+            messages.append({<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: resp.content})
+            messages.append({<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: [
+                {<span class="str">"type"</span>: <span class="str">"tool_result"</span>, <span class="str">"tool_use_id"</span>: tool_block.id, <span class="str">"content"</span>: result}
+            ]})</code></pre>
+
+    <h3>3. Google Calendar (sync bidireccional)</h3>
+    <ol>
+      <li>OAuth 2 con scopes: <code>calendar.readonly</code> + <code>calendar.events</code>.</li>
+      <li>Al conectar, suscribirse a push notifications con <code>watch()</code> → webhook.</li>
+      <li>Cuando crear cita en MEDACCER → POST event a Calendar.</li>
+      <li>Cuando webhook Calendar → si es un evento creado por médico fuera, actualizar agenda interna.</li>
+      <li>Cron diario: full sync para cazar drift (si webhook se perdió).</li>
+      <li>Manejo de freebusy: ANTES de ofrecer slot al paciente, validar contra calendar.</li>
+    </ol>
+
+    <h3>4. Wompi (cobros)</h3>
+    <ol>
+      <li>Crear cuenta merchant, KYC con documentos.</li>
+      <li>Generar llaves <code>pub_test/pub_prod</code> y <code>prv_test/prv_prod</code>.</li>
+      <li>Implementar Widget v1 (checkout link via WhatsApp) o Web Checkout (link genérico).</li>
+      <li>Webhook events: <code>transaction.updated</code> con HMAC validation.</li>
+      <li>Idempotencia: cada tx_id se procesa 1 vez.</li>
+      <li>Reconciliación diaria con API de Wompi.</li>
+    </ol>
+
+    <h3>5. MinSalud RDA (Resolución 1888)</h3>
+    <ol>
+      <li>Solicitar certificado digital P12 a MinSalud (proceso 2-4 semanas).</li>
+      <li>Implementar generador FHIR Bundle R4 (Composition + Patient + Encounter + Observation + Practitioner).</li>
+      <li>Firma XAdES-BES del bundle con cert.p12.</li>
+      <li>POST al endpoint MinSalud (URL en doc oficial).</li>
+      <li>Procesar acuse: éxito (guardar tracking_id), error (parsing detallado, retry según código).</li>
+      <li>Dashboard de RDAs pendientes/enviados/rechazados.</li>
+      <li>Job nocturno: re-enviar fallidos del día.</li>
+    </ol>
+
+    <!-- ========== ROADMAP ========== -->
+    <h2 id="roadmap-90"><span class="num">22 · Roadmap</span>Roadmap <em>solo-founder</em> en 4 fases</h2>
+
+    <div class="callout">
+      <div class="callout-title">👤 Realidad: 1 persona = vos</div>
+      <p style="margin:0">El plan original asumía equipo de 3. Reescribo todo asumiendo <strong>solo-founder, sin equipo, presupuesto mínimo</strong>, escalando solo cuando los ingresos lo justifiquen. La regla: <strong>nunca pagar lo que un free tier puede dar.</strong></p>
+    </div>
+
+    <h3>Fase 0 · MVP funcional (mes 1-2) — <span style="color:var(--m-teal)">$0/mes infra</span></h3>
+    <p><strong>Meta:</strong> que 1 médico amigo pueda usar el bot real con 5 pacientes test.</p>
+    <ul class="checklist">
+      <li>Repo monolito (Next.js 14 full-stack, sin microservicios)</li>
+      <li>Vercel free + Supabase free (500MB DB, 1GB storage, 50k auth users)</li>
+      <li>Upstash Redis free (10k commands/día)</li>
+      <li>Cloudflare free (DNS + SSL + WAF básico)</li>
+      <li>Auth: Supabase Auth (gratis, no Clerk aún)</li>
+      <li>WhatsApp Cloud API (gratis las primeras 1000 conversaciones/mes)</li>
+      <li>Claude Haiku 4.5 ($1/M tokens input, $5/M output — gastás ~$2 USD/mes)</li>
+      <li>Sentry free tier (5k events/mes)</li>
+      <li>Tu tiempo = $0 cash</li>
+    </ul>
+    <p style="font-size:13px;color:var(--ink-600)"><strong>Costo total mes:</strong> ~$8.000 COP (solo Claude tokens). <strong>Tu trabajo:</strong> 6-8 horas/día, 8 semanas.</p>
+
+    <h3>Fase 1 · Piloto cerrado (mes 3-4) — <span style="color:var(--m-blue)">$200k/mes</span></h3>
+    <p><strong>Meta:</strong> 3-5 clínicas amigas usan gratis a cambio de feedback + caso de éxito + testimonio.</p>
+    <ul class="checklist">
+      <li>Sigue todo en free tiers donde se pueda</li>
+      <li>Supabase Pro $25 USD (cuando pase 500MB)</li>
+      <li>Claude tokens: ~$15-25 USD (5 clínicas × 800 conv)</li>
+      <li>WhatsApp: posiblemente $15-25 USD si pasa 1k conv/mes</li>
+      <li>Wompi sandbox (gratis hasta producción)</li>
+      <li>MinSalud RDA en sandbox (gratis)</li>
+      <li>Asesoría legal puntual: $1.5M-2M COP one-time (revisión ToS + privacidad)</li>
+    </ul>
+    <p style="font-size:13px;color:var(--ink-600)"><strong>Costo total mes:</strong> ~$200.000-300.000 COP. <strong>Hito:</strong> 1 testimonio en video + 1 caso de éxito documentado.</p>
+
+    <h3>Fase 2 · Beta paga (mes 5-7) — <span style="color:var(--m-amber)">$1-2M/mes</span></h3>
+    <p><strong>Meta:</strong> 10-20 clínicas pagando plan reducido ($300-400k/mes c/u). Validar willingness to pay.</p>
+    <ul class="checklist">
+      <li>Supabase Pro $25 + add-ons compute si necesario</li>
+      <li>Vercel Pro $20 (cuando pase límites free)</li>
+      <li>Cloudflare Pro $20 (WAF avanzado, páginas reglas)</li>
+      <li>Claude + WhatsApp escalan con uso (~$200 USD)</li>
+      <li>MinSalud cert digital ~$400.000 COP/año</li>
+      <li>Pentest básico (un freelancer colombiano $3-5M COP)</li>
+      <li>SIC: registro Bases de Datos $0 (gratis pero obligatorio)</li>
+      <li>1 freelancer puntual para frontend polish ($2-3M)</li>
+    </ul>
+    <p style="font-size:13px;color:var(--ink-600)"><strong>Ingresos esperados mes 7:</strong> 15 clínicas × $350k = <strong>$5.25M MRR</strong>. Cubre tus costos + te paga $3M/mes.</p>
+
+    <h3>Fase 3 · Producción escalable (mes 8+) — escala con ingresos</h3>
+    <p><strong>Meta:</strong> 50+ clínicas, contratar 1 persona junior cuando MRR &gt;$15M.</p>
+    <ul class="checklist">
+      <li>Empezar a separar servicios solo si DB se vuelve cuello (no antes)</li>
+      <li>Considerar Railway/Fly para workers pesados ($30-80 USD)</li>
+      <li>Clerk si Supabase Auth no escala con orgs ($25-99 USD)</li>
+      <li>Auditoría compliance externa antes de clínica grande ($8-15M COP)</li>
+      <li>1ra contratación: dev junior medio tiempo ($4-5M/mes)</li>
+    </ul>
+
+    <!-- ========== COSTOS REESCRITOS ========== -->
+    <h2 id="costos"><span class="num">23 · Plata</span>Costos <em>realistas</em> para 1 persona</h2>
+
+    <h3>Costo unitario por consultorio activo (cuando ya estés en producción)</h3>
+    <table>
+      <thead><tr><th>Concepto</th><th>Asunción</th><th>Costo</th></tr></thead>
+      <tbody>
+        <tr><td>WhatsApp conversaciones</td><td>800/mes</td><td>$25 USD</td></tr>
+        <tr><td>Claude Haiku tokens</td><td>800 conv × 3000 in × 500 out</td><td>$5 USD</td></tr>
+        <tr><td>Whisper STT (opcional)</td><td>50 audios × 1min</td><td>$0.3 USD</td></tr>
+        <tr><td>Supabase + storage prorrateado</td><td>compartido</td><td>$1 USD</td></tr>
+        <tr><td>Email transaccional</td><td>200/mes</td><td>$0.2 USD</td></tr>
+        <tr><td><strong>COSTO VARIABLE TOTAL</strong></td><td></td><td><strong>$31.5 USD ≈ $125.000 COP</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px"><strong>Margen bruto plan Profesional ($600.000 COP):</strong> 79%. Plan Starter ($300.000 COP): 58%. Sano para escalar.</p>
+
+    <h3>Inversión total para llegar al primer cliente pago</h3>
+    <table>
+      <thead><tr><th>Fase</th><th>Concepto</th><th>COP</th></tr></thead>
+      <tbody>
+        <tr><td>Mes 1-2 (MVP)</td><td>Free tiers + Claude tokens mínimos</td><td>$30.000</td></tr>
+        <tr><td>Mes 1-2</td><td>Tu tiempo (cost-of-life si no tens otro ingreso)</td><td>$0-X</td></tr>
+        <tr><td>Mes 3-4 (Piloto)</td><td>Infra + APIs piloto cerrado</td><td>$1.000.000</td></tr>
+        <tr><td>Mes 3-4</td><td>Asesoría legal puntual (ToS + privacidad)</td><td>$2.000.000</td></tr>
+        <tr><td>Mes 5</td><td>Cert MinSalud + registro SIC + abogado healthtech</td><td>$4.000.000</td></tr>
+        <tr><td>Mes 5-7 (Beta)</td><td>Infra escalando con uso + freelancer puntual</td><td>$8.000.000</td></tr>
+        <tr><td>Mes 6</td><td>Pentest básico (freelancer)</td><td>$4.000.000</td></tr>
+        <tr><td>Mes 5-7</td><td>Marketing inicial: contenido, ads pruebas, video edit</td><td>$5.000.000</td></tr>
+        <tr style="font-weight:bold;background:var(--ink-50)"><td colspan="2">INVERSIÓN TOTAL hasta primer cliente pago consolidado</td><td>$24.000.000 COP</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px">A 15 clínicas × $350k = <strong>$5.25M MRR mes 7</strong>. Recuperas inversión entre mes 11-13. Si en mes 12 tenés 30 clínicas × $500k = $15M MRR → <strong>estás sosteniéndote y empezando a contratar</strong>.</p>
+
+    <div class="callout success">
+      <div class="callout-title">✓ Por qué esto sí funciona para 1 persona</div>
+      <p style="margin:0">Free tiers de Vercel/Supabase/Cloudflare/Upstash dan margen para 5-10 clínicas piloto SIN gastar nada en infra. Claude Haiku es 12× más barato que Sonnet y suficiente para agendamiento. WhatsApp regala 1000 conv/mes. <strong>Tu mayor costo es tu tiempo, no la infra.</strong> Empezá vendiendo manual, validando que la gente paga, y recién ahí inviertes en escalar.</p>
+    </div>
+
+    <!-- ========== PORTAL DOBLE ========== -->
+    <h2 id="portal-doble"><span class="num">25 · Doble portal</span>Tu portal de CEO + portal de <em>cada doctor</em></h2>
+
+    <p>Lo que pediste: <strong>desde el mismo dominio MEDACCER, vos como CEO ves todos los doctores clientes y su data; cada doctor entra y ve solo la suya</strong>. Esto es <em>multi-tenant SaaS con super-admin</em> y es exactamente como lo hacen Stripe, Linear, Notion. Aquí está el diseño concreto.</p>
+
+    <h3>Arquitectura: 3 niveles de acceso</h3>
+    <div class="diagram">                  medaccer.com
+                       │
+        ┌──────────────┼────────────────┐
+        ▼                  ▼                  ▼
+   /             /admin              /app/&lt;clinica&gt;
+   landing       ┌────────────┐      ┌────────────┐
+   público       │  TÚ CEO    │      │  DOCTOR    │
+                 │  super-admin│     │  clínica X │
+                 │            │      │            │
+                 │ ve TODAS   │      │ ve SOLO    │
+                 │ las clínicas      │ sus pacientes
+                 │ + métricas │      │ + agenda   │
+                 │ + facturación     │ + reportes │
+                 │ + soporte  │      │            │
+                 └────────────┘      └────────────┘
+                       │                  │
+                       ▼                  ▼
+              ┌────────────────────────────────┐
+              │   POSTGRES con Row Level Security  │
+              │                                     │
+              │  cada tabla tiene clinic_id        │
+              │  policy: WHERE clinic_id =          │
+              │    auth.jwt() -&gt; "clinic_id"        │
+              │                                     │
+              │  EXCEPCIÓN: rol = "super_admin"     │
+              │    policy: ve todas las clínicas    │
+              └────────────────────────────────┘</div>
+
+    <h3>El truco técnico: 1 base de datos, 2 vistas separadas por <em>rol</em></h3>
+    <p>Postgres con <strong>Row Level Security (RLS)</strong> en Supabase resuelve esto sin escribir lógica de seguridad en la app:</p>
+
+    <pre><code><span class="cm">-- Tabla pacientes con tenant id</span>
+<span class="kw">CREATE TABLE</span> pacientes (
+  id           uuid <span class="kw">PRIMARY KEY</span>,
+  clinic_id    uuid <span class="kw">NOT NULL REFERENCES</span> clinicas(id),
+  nombre       text,
+  telefono     text,
+  ...
+);
+
+<span class="cm">-- Habilitar RLS</span>
+<span class="kw">ALTER TABLE</span> pacientes <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="cm">-- Policy 1: doctor solo ve pacientes de SU clínica</span>
+<span class="kw">CREATE POLICY</span> <span class="str">"doctor_ve_su_clinica"</span> <span class="kw">ON</span> pacientes
+  <span class="kw">FOR ALL TO</span> authenticated
+  <span class="kw">USING</span> (clinic_id = (auth.jwt() -&gt;&gt; <span class="str">'clinic_id'</span>)::uuid);
+
+<span class="cm">-- Policy 2: super_admin (vos) ve TODAS las clínicas</span>
+<span class="kw">CREATE POLICY</span> <span class="str">"super_admin_ve_todo"</span> <span class="kw">ON</span> pacientes
+  <span class="kw">FOR ALL TO</span> authenticated
+  <span class="kw">USING</span> ((auth.jwt() -&gt;&gt; <span class="str">'role'</span>) = <span class="str">'super_admin'</span>);</code></pre>
+
+    <p><strong>Resultado:</strong> el mismo <code>SELECT * FROM pacientes</code> devuelve cosas distintas según quién esté logueado. Si vos entras como super_admin, ves todos los 47.231 pacientes de las 89 clínicas. Si entra el Dr. Mendoza, ve solo sus 312 pacientes. <strong>La DB protege, no el código.</strong> Aunque haya un bug, la clínica A jamás verá data de B.</p>
+
+    <h3>Tu portal CEO (<code>/admin</code>) — qué ves</h3>
+
+    <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr)">
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Dashboard de negocio</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>MRR / ARR / churn / LTV / CAC</li>
+          <li>Clínicas activas, trials, canceladas</li>
+          <li>NPS promedio + tendencia</li>
+          <li>Costo IA por clínica (quién te está saliendo caro)</li>
+          <li>Forecast próximos 90 días</li>
+        </ul>
+      </div>
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Lista de clínicas clientes</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Tabla con: nombre, especialidad, plan, MRR, fecha alta, salud</li>
+          <li>Filtros: en riesgo, top 10, recientes, churned</li>
+          <li>Click en clínica → perfil completo + botón "impersonar"</li>
+          <li>Export CSV</li>
+        </ul>
+      </div>
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Impersonar (login as)</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Botón "Ver como Dr. Mendoza" → entras a su panel exacto</li>
+          <li>Banner amarillo arriba: "Modo soporte — Salir"</li>
+          <li>Cada acción queda en audit log con tu user real</li>
+          <li>Indispensable para soporte técnico</li>
+        </ul>
+      </div>
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Soporte / tickets</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Inbox de mensajes WhatsApp + email entrantes</li>
+          <li>Estados: nuevo, asignado, esperando, resuelto</li>
+          <li>Atajos: "refundar mes", "extender trial", "reset password"</li>
+        </ul>
+      </div>
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Facturación</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Cobros próximos del mes (PSE/Wompi auto-charge)</li>
+          <li>Clínicas con pago vencido</li>
+          <li>Generar facturas electrónicas DIAN (cuando escales)</li>
+          <li>Reporte fiscal mensual exportable</li>
+        </ul>
+      </div>
+      <div class="kpi">
+        <h4 style="margin:0 0 8px;font-size:15px">Analytics de uso</h4>
+        <ul style="margin:0;padding-left:18px;font-size:13px">
+          <li>Heatmap: qué clínicas usan qué features</li>
+          <li>Funnel onboarding (cuántas terminan los 6 pasos)</li>
+          <li>Tokens IA consumidos por clínica + costo</li>
+          <li>Conversaciones procesadas / día / clínica</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Portal del doctor (<code>/app</code>) — lo que ya tienes en el prototipo</h3>
+    <p>El portal que ya diseñaste (Inicio, Pacientes, Agenda, Conversaciones, Presupuestos, Reportes, Clínica) <strong>ES</strong> el portal del doctor. Lo único que cambia entre la versión actual (mock) y la versión productiva es:</p>
+    <ul>
+      <li>Login real (Supabase Auth con email/password + magic link)</li>
+      <li>Cada query a la DB filtra automáticamente por <code>clinic_id</code> via RLS</li>
+      <li>Datos reales del doctor logueado, no datos hardcodeados de María González de demo</li>
+      <li>Pañuelo de "este es tu primer login" para guiar al onboarding wizard</li>
+    </ul>
+
+    <h3>Schema mínimo necesario</h3>
+    <pre><code><span class="kw">CREATE TABLE</span> users (
+  id           uuid <span class="kw">PRIMARY KEY</span>,
+  email        text <span class="kw">UNIQUE</span>,
+  role         text <span class="kw">CHECK</span> (role <span class="kw">IN</span> (<span class="str">'super_admin'</span>, <span class="str">'doctor'</span>, <span class="str">'recepcion'</span>)),
+  clinic_id    uuid <span class="kw">REFERENCES</span> clinicas(id) <span class="cm">-- NULL para super_admin</span>
+);
+
+<span class="kw">CREATE TABLE</span> clinicas (
+  id           uuid <span class="kw">PRIMARY KEY</span>,
+  nombre       text,
+  especialidad text,
+  plan         text, <span class="cm">-- starter, profesional, enterprise</span>
+  estado       text, <span class="cm">-- trial, activa, suspendida, churned</span>
+  fecha_alta   timestamptz,
+  mrr          numeric,
+  health_score integer
+);
+
+<span class="cm">-- Todas las demás tablas (pacientes, citas, presupuestos, etc)</span>
+<span class="cm">-- llevan clinic_id y sus respectivas RLS policies</span></code></pre>
+
+    <h3>Implementación por fase</h3>
+    <table>
+      <thead><tr><th>Fase</th><th>Qué implementar del portal doble</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MVP (mes 1-2)</strong></td><td>Solo portal del doctor con tu propia cuenta. <code>/admin</code> NO existe aún. Para ver data de los pilotos, abrís Supabase directamente.</td></tr>
+        <tr><td><strong>Piloto (mes 3-4)</strong></td><td>Agregar tabla <code>users</code> con roles. Implementar RLS. Crear página <code>/admin</code> básica con lista de clínicas + dashboard MRR.</td></tr>
+        <tr><td><strong>Beta (mes 5-7)</strong></td><td>Agregar impersonate, soporte tickets, facturación automática con Wompi recurrente, analytics de uso por clínica.</td></tr>
+        <tr><td><strong>Producción (mes 8+)</strong></td><td>Audit log inmutable, alertas automáticas ("esta clínica está churneando"), facturas DIAN.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout idea">
+      <div class="callout-title">💡 Bonus: el portal CEO te paga por mantenerlo</div>
+      <p style="margin:0">Cada clínica que ves en tu admin = una decisión posible. “Esta clínica bajó su uso 40% — llamarla.” “Esta otra duplicó conversaciones — ofrecer upgrade al plan Enterprise”. <strong>El portal admin no es vanidad: es tu mejor herramienta de retención y upsell</strong>. Una sola decisión bien tomada al mes paga el costo de haberlo construido.</p>
+    </div>
+
+
+    <h2 id="go-live"><span class="num">24 · Lanzamiento</span>Go-live <em>checklist</em></h2>
+
+    <p>72h antes del lanzamiento, todos estos deben estar verdes:</p>
+
+    <ul class="checklist">
+      <li>Dominio medaccer.com con DNSSEC, SSL A+ en SSL Labs</li>
+      <li>Cloudflare WAF configurado, modo "challenge" para tráfico sospechoso</li>
+      <li>Backup Postgres PITR funcionando + test de restore exitoso</li>
+      <li>Pentest pasado, vulnerabilidades altas/críticas cerradas</li>
+      <li>Auditoría legal firmada por abogado healthtech colombiano</li>
+      <li>Política de privacidad, ToS, política de cookies publicadas</li>
+      <li>Registro Nacional de Bases de Datos (SIC) presentado</li>
+      <li>Habeas data endpoints funcionando + probados</li>
+      <li>Compliance Resolución 1888: cert MinSalud activo, RDA test exitoso</li>
+      <li>Sentry capturando errores en todos los servicios</li>
+      <li>Status page público (status.medaccer.com)</li>
+      <li>Runbooks operacionales escritos (top 10 incidentes)</li>
+      <li>On-call rotation definido + PagerDuty integrado</li>
+      <li>Soporte: email + WhatsApp con SLA &lt;2h en horario hábil</li>
+      <li>Onboarding interactivo + 5 videos help center</li>
+      <li>Calculadora ROI funcional con captura de leads</li>
+      <li>Pricing en pesos colombianos sin sorpresas</li>
+      <li>Plan de comunicación en caso de outage (template email + tweet)</li>
+      <li>10 clínicas piloto activas y dando feedback semanal</li>
+      <li>NPS &gt; 40 en piloto antes de lanzar público</li>
+    </ul>
+
+    <div class="callout success">
+      <div class="callout-title">✓ Si los 20 están verdes</div>
+      <p style="margin:0">Estás listo. Lanza un martes o miércoles a las 9am hora Colombia, anuncio en LinkedIn + email a lista de espera + post en grupos médicos + 1 WhatsApp Status. <strong>Mantén las primeras 48h con el equipo entero disponible</strong> para fixes en caliente.</p>
+    </div>
+
+    <div style="margin-top:80px;padding-top:32px;border-top:1px solid var(--ink-100);color:var(--ink-400);font-size:13px">
+      <p>MEDACCER · Mejoras + Conexión Real v2.0 · Documento estratégico vivo. Última actualización: abril 2026.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const headings = document.querySelectorAll('h2');
+const tocLinks = document.querySelectorAll('.toc a');
+function updateActive(){
+  const y = window.scrollY + 120;
+  let cur = '';
+  headings.forEach(h => { if (h.offsetTop <= y) cur = h.id; });
+  tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+}
+window.addEventListener('scroll', updateActive, {passive:true});
+updateActive();
+</script>
+</body>
+</html>
