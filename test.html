@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<title>Test React</title>
+</head>
+<body>
+<div id="out" style="font-family:monospace;padding:32px;background:#0B1220;color:#E2E7EE;min-height:100vh">
+  <div style="font-size:20px;color:#3B9EFF;margin-bottom:16px">Test básico React + Babel</div>
+  <div id="status">Cargando CDN…</div>
+  <div id="root" style="margin-top:20px;padding:16px;background:rgba(255,255,255,0.05);border-radius:8px"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"
+  onload="document.getElementById('status').textContent='✓ React OK'"
+  onerror="document.getElementById('status').textContent='✗ React FALLÓ'"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"
+  onload="document.getElementById('status').textContent='✓ ReactDOM OK'"
+  onerror="document.getElementById('status').textContent='✗ ReactDOM FALLÓ'"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.10/babel.min.js" crossorigin="anonymous"
+  onload="document.getElementById('status').textContent='✓ Babel OK — renderizando…'"
+  onerror="document.getElementById('status').textContent='✗ Babel FALLÓ'"></script>
+<script type="text/babel">
+function App() {
+  return (
+    <div style={{ color: '#10B981', fontWeight: 700, fontSize: 18 }}>
+      ✅ React + Babel funcionan correctamente en este dominio.
+    </div>
+  );
+}
+try {
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  document.getElementById('status').textContent = '✅ Todo OK — React renderizó correctamente';
+} catch(e) {
+  document.getElementById('status').textContent = '✗ Error al renderizar: ' + e.message;
+}
+</script>
+</body>
+</html>
