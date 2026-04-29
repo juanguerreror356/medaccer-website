@@ -1928,6 +1928,62 @@ function Landing() {
         </div>
       </section>
 
+      {/* TESTIMONIOS */}
+      <section className="section" id="testimonios">
+        <div className="section-label">Testimonios</div>
+        <h2 className="section-title">Lo que dicen los <em>primeros consultorios.</em></h2>
+        <p className="section-sub">Profesionales independientes que ya no responden WhatsApp manualmente.</p>
+        <div className="testimonials-grid">
+          {[
+            {
+              quote: 'Antes perdía casi 2 horas diarias contestando el mismo tipo de mensajes: horarios, precios, confirmaciones. Ahora el bot lo hace solo y mis pacientes dicen que la respuesta es más rápida que antes.',
+              name: 'Dra. Carolina Mejía',
+              role: 'Odontóloga · Bogotá',
+              metric: '−28 mensajes/día',
+              color: '#06B6D4',
+              initials: 'CM',
+              photo: null,
+            },
+            {
+              quote: 'Lo que más me sorprendió fue la nota clínica. Dicto 30 segundos de voz y sale la RDA completa. Eso antes me tomaba 10 minutos después de cada paciente.',
+              name: 'Dr. Andrés Salcedo',
+              role: 'Medicina General · Medellín',
+              metric: '−10 min por consulta',
+              color: '#2563EB',
+              initials: 'AS',
+              photo: null,
+            },
+            {
+              quote: 'Mis pacientes de psicología son muy específicos con la privacidad. El bot les informa del tratamiento de datos desde el primer mensaje y eso les da tranquilidad. Setup fue en un día.',
+              name: 'Psi. Valentina Torres',
+              role: 'Psicóloga · Cali',
+              metric: '+31% confirmaciones',
+              color: '#8B5CF6',
+              initials: 'VT',
+              photo: null,
+            },
+          ].map((t, i) => (
+            <div key={i} className="testimonial-card">
+              <div className="testimonial-stars">{'★★★★★'}</div>
+              <p className="testimonial-quote">"{t.quote}"</p>
+              <div className="testimonial-footer">
+                <div className="testimonial-avatar" style={{ background: `${t.color}20`, color: t.color, border: `1.5px solid ${t.color}40` }}>
+                  {t.photo
+                    ? <img src={t.photo} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                    : <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: 15 }}>{t.initials}</span>
+                  }
+                </div>
+                <div>
+                  <div className="testimonial-name">{t.name}</div>
+                  <div className="testimonial-role">{t.role}</div>
+                </div>
+                <div className="testimonial-metric" style={{ background: `${t.color}12`, color: t.color }}>{t.metric}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="section">
         <div className="section-label">Preguntas frecuentes</div>
@@ -1975,7 +2031,7 @@ function Landing() {
             <p style={{ color: 'var(--ink-400)', fontSize: 14, lineHeight: 1.6, maxWidth: 300 }}>Automatización con IA para consultorios médicos y odontológicos independientes en Colombia y LATAM.</p>
             <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
               <div style={{ padding: '6px 10px', background: 'var(--ink-800)', borderRadius: 6, fontSize: 12 }}>🇨🇴 Bogotá, Colombia</div>
-              <div style={{ padding: '6px 10px', background: 'var(--ink-800)', borderRadius: 6, fontSize: 12 }}>Colombia</div>
+              <div style={{ padding: '6px 10px', background: 'var(--ink-800)', borderRadius: 6, fontSize: 12 }}>🌎 LATAM</div>
             </div>
           </div>
           <div>
@@ -2000,23 +2056,22 @@ function Landing() {
             <ul>
               <li><a href="#blog">Blog</a></li>
               <li><a href="#res1888" onClick={(e) => { e.preventDefault(); setModal('res1888'); }}>Guía Resolución 1888</a></li>
-              <li><a href="#">Contacto</a></li>
+              <li><a href="mailto:hola@medaccer.com">Contacto</a></li>
             </ul>
           </div>
           <div>
             <h4>Legal</h4>
             <ul>
-              <li><a href="#">Términos</a></li>
-              <li><a href="#">Privacidad</a></li>
-              <li><a href="#">Ley 1581</a></li>
+              <li><a href="uploads/terminos.html" target="_blank" rel="noopener">Términos</a></li>
+              <li><a href="uploads/privacidad.html" target="_blank" rel="noopener">Privacidad</a></li>
+              <li><a href="uploads/ley-1581.html" target="_blank" rel="noopener">Ley 1581</a></li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
           <div>© 2026 MEDACCER SAS. Todos los derechos reservados.</div>
           <div style={{ display: 'flex', gap: 16 }}>
-            <span>NIT 901.XXX.XXX-X</span>
-            <span>hola@medaccer.com</span>
+            <a href="mailto:hola@medaccer.com" style={{ color: 'inherit', textDecoration: 'none' }}>hola@medaccer.com</a>
           </div>
         </div>
       </footer>
