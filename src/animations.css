@@ -1,0 +1,191 @@
+/* ═══════════════════════════════════════════════════════
+   MEDACCER — animations.css
+   Motion layer: purposeful, performance-conscious
+   ═══════════════════════════════════════════════════════ */
+
+/* 1 ─ Smooth scroll ───────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 2 ─ Page fade-in ────────────────────────────────────── */
+body {
+  animation: medaccer-page-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes medaccer-page-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 3 ─ Phone demo glow pulse ───────────────────────────── */
+/* The wrap already floats (float-a); add ambient glow to the phone shell */
+.chat-demo-phone {
+  animation: demo-shell-glow 5s ease-in-out infinite;
+  will-change: box-shadow;
+}
+@keyframes demo-shell-glow {
+  0%, 100% {
+    box-shadow:
+      var(--sh-xl),
+      0 0 36px rgba(37, 99, 235, 0.14),
+      0 0 80px rgba(6, 182, 212, 0.06);
+  }
+  50% {
+    box-shadow:
+      var(--sh-xl),
+      0 0 64px rgba(37, 99, 235, 0.28),
+      0 0 130px rgba(6, 182, 212, 0.12);
+  }
+}
+
+/* 4 ─ FAQ smooth accordion ────────────────────────────── */
+/* Override display:none so CSS transitions can work */
+.faq-a {
+  display: block !important;
+  max-height: 0 !important;
+  overflow: hidden;
+  opacity: 0;
+  padding-bottom: 0 !important;
+  transition:
+    max-height 0.44s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.32s ease,
+    padding-bottom 0.3s ease;
+}
+.faq-item.open .faq-a {
+  max-height: 500px !important;
+  opacity: 1;
+  padding-bottom: 20px !important;
+}
+/* Chevron rotation transition */
+.faq-q svg {
+  transition: transform 0.34s cubic-bezier(0.25, 1, 0.5, 1);
+  flex-shrink: 0;
+}
+
+/* 5 ─ Pricing card hover lift ─────────────────────────── */
+.price-card {
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s ease;
+  will-change: transform;
+}
+.price-card:not(.featured):hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+.price-card.featured:hover {
+  transform: translateY(-8px) scale(1.01);
+}
+
+/* 6 ─ Featured plan ambient glow ──────────────────────── */
+.price-card.featured {
+  animation: featured-card-glow 4.5s ease-in-out infinite;
+}
+@keyframes featured-card-glow {
+  0%, 100% { box-shadow: var(--sh-lg), 0 0 28px rgba(37, 99, 235, 0.10); }
+  50%       { box-shadow: var(--sh-lg), 0 0 52px rgba(37, 99, 235, 0.22); }
+}
+
+/* 7 ─ "Más elegido" badge shimmer ─────────────────────── */
+.price-card-badge {
+  position: absolute;
+  overflow: hidden;
+}
+.price-card-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  transform: translateX(-150%);
+  animation: badge-shimmer 3.5s 2s infinite;
+}
+@keyframes badge-shimmer {
+  0%   { transform: translateX(-150%); }
+  38%  { transform: translateX(200%); }
+  100% { transform: translateX(200%); }
+}
+
+/* 8 ─ Spec card 3D tilt (GSAP drives the transforms) ──── */
+.spec-card-big {
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* keep existing hover states; GSAP handles 3D on mousemove */
+}
+
+/* 9 ─ Footer link animated underline ──────────────────── */
+.footer-col ul li a,
+.footer-bottom a {
+  position: relative;
+  text-decoration: none;
+}
+.footer-col ul li a::after,
+.footer-bottom a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.footer-col ul li a:hover::after,
+.footer-bottom a:hover::after {
+  width: 100%;
+}
+
+/* 10 ─ CTA final button amber glow ────────────────────── */
+.cta-final .btn-coral,
+.cta-final button[class*="coral"] {
+  animation: cta-coral-pulse 3.5s ease-in-out infinite;
+}
+@keyframes cta-coral-pulse {
+  0%, 100% { box-shadow: none; }
+  50%       { box-shadow: 0 0 22px 4px rgba(245, 158, 11, 0.28); }
+}
+
+/* 11 ─ Early access counter urgency pulse ─────────────── */
+.early-counter-num {
+  animation: counter-urgency 3s ease-in-out infinite;
+}
+@keyframes counter-urgency {
+  0%, 85%, 100% { opacity: 1; }
+  92%            { opacity: 0.75; }
+}
+
+/* 12 ─ ROI headline flash (set via GSAP, keep CSS transition) */
+.roi-headline-num {
+  transition: color 0.3s ease;
+}
+
+/* 13 ─ Spec case card entrance micro-transition ───────── */
+.spec-case-card {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 14 ─ Early access perks hover ───────────────────────── */
+.early-perk {
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.early-perk:hover {
+  transform: translateX(4px);
+}
+
+/* 15 ─ Reduced motion override ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
