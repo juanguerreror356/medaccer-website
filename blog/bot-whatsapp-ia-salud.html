@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Qué es un bot de WhatsApp con IA y cómo funciona en salud · MEDACCER</title>
+<meta name="description" content="Explicación clara de la tecnología detrás de los asistentes virtuales para consultorios médicos y dentales. Cómo funcionan, qué pueden hacer y qué no deben hacer." />
+<meta name="robots" content="index, follow" />
+<meta property="og:title" content="Qué es un bot de WhatsApp con IA y cómo funciona en salud" />
+<meta property="og:description" content="Explicación sencilla de la tecnología detrás de los asistentes virtuales para consultorios médicos y dentales." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://medaccer.com/blog/bot-whatsapp-ia-salud.html" />
+<meta property="og:site_name" content="MEDACCER" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="blog.css" />
+</head>
+<body>
+<nav class="blog-nav">
+  <a href="/" class="blog-nav-logo">MED<span>ACCER</span></a>
+  <div class="blog-nav-links">
+    <a href="/">Inicio</a>
+    <a href="/blog/">Blog</a>
+    <a href="/#precios">Precios</a>
+    <a href="/#signup" class="blog-nav-cta">Prueba gratis 7 días</a>
+  </div>
+</nav>
+
+<div class="article-hero">
+  <div class="article-tag">IA para Salud</div>
+  <h1 class="article-h1">Qué es un bot de WhatsApp con IA y cómo funciona en salud</h1>
+  <div class="article-meta">
+    <strong>Equipo MEDACCER</strong><span class="article-meta-sep">·</span>
+    <span>Abril 2026</span><span class="article-meta-sep">·</span>
+    <span>Última revisión: abril 2026</span><span class="article-meta-sep">·</span>
+    <span>5 min de lectura</span>
+  </div>
+  <div class="article-toc">
+    <h3>En este artículo</h3>
+    <ol>
+      <li><a href="#tipos">Tipos de bots: árbol vs. IA</a></li>
+      <li><a href="#como-funciona">Cómo funciona un agente de IA en WhatsApp</a></li>
+      <li><a href="#tecnologia">La tecnología detrás</a></li>
+      <li><a href="#salud">Aplicaciones en salud</a></li>
+      <li><a href="#limites">Límites importantes</a></li>
+    </ol>
+  </div>
+</div>
+
+<article class="article-body">
+
+  <p>Cuando un paciente escribe "quiero una cita para el próximo martes" a las 11 pm y recibe una respuesta inmediata que confirma disponibilidad y agenda la cita — ¿cómo funciona eso exactamente?</p>
+
+  <p>Este artículo explica la tecnología de forma clara, sin jerga innecesaria.</p>
+
+  <h2 id="tipos">Tipos de bots: árbol vs. IA</h2>
+
+  <p>Hay dos tipos radicalmente distintos de bots de WhatsApp:</p>
+
+  <p><strong>Bot de árbol de decisiones:</strong> Funciona con opciones predefinidas. El paciente recibe un menú ("1. Agendar cita, 2. Ver horarios, 3. Hablar con agente") y el bot sigue un guión fijo. Si el paciente escribe algo que no está en el guión, el bot falla.</p>
+
+  <p><strong>Agente de IA conversacional:</strong> Entiende lenguaje natural. El paciente puede escribir "tengo una reunión el martes en la mañana, ¿hay algo para el miércoles por la tarde?" y el bot entiende la solicitud, consulta la disponibilidad y responde de forma coherente.</p>
+
+  <p>La diferencia no es cosmética — es fundamental para la experiencia del paciente en salud, donde las conversaciones son menos predecibles que en otros sectores.</p>
+
+  <h2 id="como-funciona">Cómo funciona un agente de IA en WhatsApp</h2>
+
+  <p>El proceso tiene 5 pasos que ocurren en milisegundos:</p>
+
+  <ol>
+    <li><strong>El paciente escribe en WhatsApp.</strong> El mensaje llega al número de WhatsApp Business del consultorio.</li>
+    <li><strong>La API de WhatsApp envía el mensaje al servidor.</strong> Meta (dueña de WhatsApp) reenvía el mensaje al sistema de gestión del consultorio a través de su API oficial.</li>
+    <li><strong>El modelo de lenguaje procesa el mensaje.</strong> Un LLM (Large Language Model) — como los modelos de Google Gemini o Anthropic Claude — analiza el mensaje, entiende la intención del paciente y decide qué hacer.</li>
+    <li><strong>El sistema ejecuta la acción.</strong> Si el paciente quiere agendar, el sistema consulta el calendario en tiempo real y busca disponibilidad. Si quiere cancelar, actualiza la agenda. Si tiene una pregunta, busca la respuesta en la base de conocimiento del consultorio.</li>
+    <li><strong>Se envía la respuesta por WhatsApp.</strong> El sistema redacta la respuesta y la envía de vuelta al paciente a través de la API.</li>
+  </ol>
+
+  <h2 id="tecnologia">La tecnología detrás</h2>
+
+  <p>Los componentes técnicos de un agente de IA para consultorios:</p>
+
+  <div class="compare-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Qué hace</th>
+          <th>Ejemplo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>WhatsApp Business API</td>
+          <td>Canal de comunicación oficial</td>
+          <td>Meta / 360dialog / Twilio</td>
+        </tr>
+        <tr>
+          <td>LLM (Modelo de Lenguaje)</td>
+          <td>Entiende y genera texto natural</td>
+          <td>Google Gemini, Anthropic Claude</td>
+        </tr>
+        <tr>
+          <td>Base de datos del consultorio</td>
+          <td>Pacientes, citas, historial</td>
+          <td>Supabase, PostgreSQL</td>
+        </tr>
+        <tr>
+          <td>Calendario</td>
+          <td>Disponibilidad en tiempo real</td>
+          <td>Google Calendar</td>
+        </tr>
+        <tr>
+          <td>Motor de transcripción</td>
+          <td>Convierte audios a texto</td>
+          <td>Whisper (OpenAI), Groq</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="salud">Aplicaciones en salud</h2>
+
+  <p>En un consultorio médico o dental, un agente de IA puede gestionar:</p>
+
+  <ul>
+    <li><strong>Agendamiento:</strong> El paciente describe cuándo quiere, el agente busca disponibilidad y confirma</li>
+    <li><strong>Cancelaciones y reagendamientos:</strong> Sin que nadie tenga que contestar el teléfono</li>
+    <li><strong>Recordatorios automáticos:</strong> Programados con días de anticipación</li>
+    <li><strong>Preguntas frecuentes:</strong> Horarios, dirección, precio de consulta, qué traer, cómo prepararse</li>
+    <li><strong>Instrucciones post-consulta:</strong> Enviadas automáticamente después de procedimientos</li>
+    <li><strong>Seguimiento de síntomas:</strong> Preguntas de control días después de procedimientos</li>
+  </ul>
+
+  <h2 id="limites">Límites importantes</h2>
+
+  <p>Un agente de IA en salud tiene límites que no deben cruzarse:</p>
+
+  <div class="callout callout-warning">
+    <strong>Lo que un agente de IA NO debe hacer en salud:</strong>
+    <ul style="margin-top: 8px; margin-bottom: 0;">
+      <li>Dar diagnósticos médicos o interpretar síntomas</li>
+      <li>Recomendar medicamentos o dosis</li>
+      <li>Reemplazar el criterio clínico del médico</li>
+      <li>Manejar emergencias médicas sin escalar a humano</li>
+      <li>Responder preguntas sobre resultados de exámenes sin autorización del médico</li>
+    </ul>
+  </div>
+
+  <p>Un agente bien configurado sabe sus límites. Cuando un paciente describe síntomas de urgencia, la respuesta correcta es escalar inmediatamente: "Esto requiere atención inmediata. Te estoy conectando con el Dr. López ahora mismo."</p>
+
+  <p>La IA es una herramienta de gestión y comunicación — no de diagnóstico. Usada correctamente, libera al médico para hacer lo que solo un médico puede hacer.</p>
+
+</article>
+
+<div class="article-cta">
+  <div class="article-cta-inner">
+    <h3>El agente de IA diseñado para tu consultorio</h3>
+    <p>MEDACCER configura un agente personalizado con el nombre, horarios y conocimiento de tu consultorio. Disponible 24/7, con escalación inteligente a humano.</p>
+    <a href="/#signup" class="article-cta-btn">Prueba gratis 7 días</a>
+    <div class="article-cta-sub">Sin tarjeta de crédito · Configuración en 15 minutos</div>
+  </div>
+</div>
+
+<footer class="blog-footer">
+  <div class="blog-footer-links">
+    <a href="/">Inicio</a>
+    <a href="/blog/">Blog</a>
+    <a href="/terminos.html">Términos</a>
+    <a href="/privacidad.html">Privacidad</a>
+    <a href="/ley-1581.html">Ley 1581</a>
+    <a href="mailto:hola@medaccer.com">Contacto</a>
+  </div>
+  <p>© 2026 MEDACCER · Juan Sebastián Guerrero · Bogotá, Colombia</p>
+</footer>
+
+</body>
+</html>
