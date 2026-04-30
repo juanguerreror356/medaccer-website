@@ -216,6 +216,12 @@ body {
 .callout-green .callout-label { color: #34D399; }
 .callout-red   .callout-label { color: #FCA5A5; }
 .callout p { margin-bottom: 0; color: inherit; }
+.callout ul { margin-bottom: 0; }
+
+/* Semantic callout aliases */
+.callout-info    { background: rgba(37,99,235,0.09);  border-color: #3B82F6; }
+.callout-warning { background: rgba(245,158,11,0.08); border-color: #F59E0B; }
+.callout-success { background: rgba(16,185,129,0.08); border-color: #10B981; }
 
 /* ── Stat highlight ──────────────────────────────────── */
 .stat-block {
@@ -224,17 +230,25 @@ body {
   border-radius: 16px;
   padding: 32px;
   margin: 32px 0;
-  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px;
 }
+.stat-item { text-align: center; }
 .stat-num {
   font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 64px;
+  font-size: 52px;
   font-weight: 400;
   letter-spacing: -0.03em;
   color: #2563EB;
   line-height: 1;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.45;
 }
 .stat-desc {
   font-size: 15px;
@@ -295,41 +309,48 @@ body {
   max-width: 480px;
 }
 .wa-demo-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: 16px;
-}
-.wa-demo-avatar {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2563EB, #06B6D4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 700;
-  color: white;
-  flex-shrink: 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.wa-demo-name { font-size: 15px; font-weight: 600; color: #F1F5F9; }
-.wa-demo-status { font-size: 12px; color: #34D399; }
-.wa-msg { margin-bottom: 10px; display: flex; flex-direction: column; }
-.wa-msg-patient { align-items: flex-end; }
-.wa-msg-bot { align-items: flex-start; }
-.wa-bubble {
-  max-width: 85%;
+.wa-out {
+  align-self: flex-end;
+  margin-left: auto;
+  background: #2563EB;
+  color: #fff;
+  border-radius: 14px 14px 4px 14px;
   padding: 10px 14px;
-  border-radius: 14px;
   font-size: 14px;
-  line-height: 1.5;
-  white-space: pre-line;
+  line-height: 1.55;
+  max-width: 88%;
+  margin-bottom: 8px;
+  display: block;
 }
-.wa-msg-patient .wa-bubble { background: #2563EB; color: white; border-bottom-right-radius: 4px; }
-.wa-msg-bot .wa-bubble { background: rgba(255,255,255,0.07); color: #E2E8F0; border-bottom-left-radius: 4px; }
-.wa-time { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px; padding: 0 4px; }
+.wa-in {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.07);
+  color: #E2E8F0;
+  border-radius: 14px 14px 14px 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 88%;
+  margin-bottom: 8px;
+  display: block;
+}
+.wa-demo-footer {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 8px;
+}
 
 /* ── CTA card ────────────────────────────────────────── */
 .article-cta {
@@ -383,6 +404,53 @@ body {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.4);
   margin-top: 14px;
+}
+
+/* article-cta variants used in articles */
+.article-cta-inner {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.article-cta-inner h3 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #F8FAFC;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+.article-cta-inner p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+.article-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  background: #2563EB;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 15px 36px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+  box-shadow: 0 4px 22px rgba(37,99,235,0.32);
+}
+.article-cta-btn:hover {
+  background: #1D4ED8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(37,99,235,0.42);
+  color: #fff;
+  text-decoration: none;
+}
+.article-cta-sub {
+  display: block;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 12px;
 }
 
 /* ── Footer ──────────────────────────────────────────── */
