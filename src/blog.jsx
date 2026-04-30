@@ -532,7 +532,7 @@ function BlogReader({ post, onClose }) {
             <div className="reader-cta">
               <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 400, letterSpacing: '-0.02em', margin: '0 0 10px' }}>¿Quieres automatizar esto hoy?</h4>
               <p style={{ fontSize: 15, color: 'var(--ink-600)', lineHeight: 1.55, margin: '0 0 18px' }}>
-                MEDACCER hace todo esto por defecto. Empieza gratis por 14 días, sin tarjeta.
+                MEDACCER hace todo esto por defecto. Empieza gratis por 7 días, sin tarjeta.
               </p>
               <button className="btn btn-primary btn-lg" onClick={() => { onClose(); window.location.hash = 'signup'; }}>
                 Empezar prueba gratis <Icons.ArrowRight size={14} stroke="white" />
@@ -565,7 +565,7 @@ function getArticleContent(id) {
       <h2>3. Cuándo escalar a humano</h2>
       <p>La regla: cualquier cosa fuera de agenda, pago, info básica o recordatorio — escala. Siempre. Un bot que intenta "resolver" dolor agudo o dudas clínicas genera más problemas que valor.</p>
       <h2>Siguiente paso</h2>
-      <p>Si quieres ver esto funcionando con los datos de tu propio consultorio, puedes empezar una prueba gratuita de 14 días sin tarjeta. Al final del periodo te entregamos un reporte con tus números reales y te dejamos decidir.</p>
+      <p>Si quieres ver esto funcionando con los datos de tu propio consultorio, puedes empezar una prueba gratuita de 7 días sin tarjeta. Al final del periodo te entregamos un reporte con tus números reales y te dejamos decidir.</p>
     </>
   );
 

@@ -112,14 +112,14 @@ function Checkout() {
           {step === 0 && (
             <>
               <h1 className="checkout-title">Elige tu plan</h1>
-              <p className="checkout-sub">Puedes cambiar o cancelar cuando quieras. 14 días de prueba sin tarjeta — solo se te cobra si decides continuar.</p>
+              <p className="checkout-sub">Puedes cambiar o cancelar cuando quieras. 7 días de prueba sin tarjeta — solo se te cobra si decides continuar.</p>
 
               {/* Prueba gratis toggle */}
               <div className={`beta-card ${beta ? 'active' : ''}`} onClick={() => setBeta(!beta)}>
                 <div className="beta-card-check">{beta ? <Icons.Check size={18} stroke="white" /> : null}</div>
                 <div style={{ flex: 1 }}>
                   <div className="beta-card-title">
-                    <b>Prueba 14 días</b>
+                    <b>Prueba 7 días</b>
                     <span className="chip chip-teal" style={{ marginLeft: 10 }}>Sin tarjeta</span>
                   </div>
                   <div className="beta-card-sub">Configura tu bot, responde pacientes reales, cancela cuando quieras. Solo cobramos si decides continuar.</div>
@@ -161,7 +161,7 @@ function Checkout() {
                 Continuar {beta ? 'con prueba gratis' : 'al pago'} <Icons.ArrowRight size={16} stroke="white" />
               </button>
               <div style={{ fontSize: 12, color: 'var(--ink-500)', textAlign: 'center', marginTop: 12 }}>
-                {beta ? 'No se te cobrará nada durante los primeros 14 días' : 'Pago seguro procesado por Stripe'}
+                {beta ? 'No se te cobrará nada durante los primeros 7 días' : 'Pago seguro procesado por Stripe'}
               </div>
             </>
           )}
@@ -170,7 +170,7 @@ function Checkout() {
             <>
               <button className="ck-back" onClick={() => setStep(0)}>← Cambiar plan</button>
               <h1 className="checkout-title">
-                {beta ? 'Activa tu prueba de 14 días' : 'Método de pago'}
+                {beta ? 'Activa tu prueba de 7 días' : 'Método de pago'}
               </h1>
               <p className="checkout-sub">
                 {beta
@@ -273,7 +273,7 @@ function Checkout() {
             {beta && (
               <div className="ck-summary-row ck-summary-discount">
                 <div>
-                  <div style={{ fontSize: 13, color: 'var(--m-teal-700)', fontWeight: 600 }}>Prueba gratis 14 días</div>
+                  <div style={{ fontSize: 13, color: 'var(--m-teal-700)', fontWeight: 600 }}>Prueba gratis 7 días</div>
                   <div style={{ fontSize: 12, color: 'var(--m-teal-700)' }}>Sin cargos durante el período de prueba</div>
                 </div>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, color: 'var(--m-teal-700)', fontWeight: 400 }}>
@@ -293,7 +293,7 @@ function Checkout() {
 
             {beta && (
               <div style={{ padding: 12, background: 'var(--m-teal-50)', border: '1px solid var(--m-teal-100)', borderRadius: 10, fontSize: 12, color: 'var(--m-teal-700)', lineHeight: 1.5, marginTop: 14 }}>
-                <b>Próximo cargo:</b> {period === 'yearly' ? fmtCOP(plan.yearly) : fmtCOP(plan.monthly)} — al finalizar tus 14 días de prueba. Te avisamos 48h antes.
+                <b>Próximo cargo:</b> {period === 'yearly' ? fmtCOP(plan.yearly) : fmtCOP(plan.monthly)} — al finalizar tus 7 días de prueba. Te avisamos 48h antes.
               </div>
             )}
 

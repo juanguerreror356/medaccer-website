@@ -78,6 +78,7 @@
 <link rel="stylesheet" href="src/checkout.css?v=45" />
 <link rel="stylesheet" href="src/panel.css?v=45" />
 <link rel="stylesheet" href="src/app.css?v=45" />
+<link rel="stylesheet" href="src/animations.css?v=1" />
 
 <template id="__bundler_thumbnail">
   <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
@@ -95,6 +96,10 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{"theme":"dark","density":"spacious"
 (function(){var t=window.__medaccerTweaks;document.body.dataset.theme=t.theme;document.body.dataset.density=t.density;document.body.dataset.accent=t.accent;})();
 </script>
 
+<!-- GSAP + ScrollTrigger — loaded before React scripts, initialized after React renders -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.10/babel.min.js" crossorigin="anonymous"></script>
@@ -103,11 +108,11 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{"theme":"dark","density":"spacious"
 <script type="text/babel" src="src/illustrations/ProblemVisual.jsx?v=1"></script>
 <script type="text/babel" src="src/illustrations/EcosystemDiagram.jsx?v=1"></script>
 <script type="text/babel" src="src/landing.jsx?v=46"></script>
-<script type="text/babel" src="src/blog.jsx?v=46"></script>
-<script type="text/babel" src="src/checkout.jsx?v=46"></script>
+<script type="text/babel" src="src/blog.jsx?v=47"></script>
+<script type="text/babel" src="src/checkout.jsx?v=47"></script>
 <script type="text/babel" src="src/panel-1.jsx?v=46"></script>
 <script type="text/babel" src="src/panel-2.jsx?v=46"></script>
-<script type="text/babel" src="src/panel-3.jsx?v=46"></script>
+<script type="text/babel" src="src/panel-3.jsx?v=47"></script>
 <script type="text/babel" src="src/panel-4.jsx?v=46"></script>
 <script type="text/babel" src="src/app.jsx?v=46"></script>
 
@@ -120,5 +125,6 @@ window.__medaccerTweaks = /*EDITMODE-BEGIN*/{"theme":"dark","density":"spacious"
 })();
 </script>
 
+<script src="src/animations.js?v=1" defer></script>
 </body>
 </html>

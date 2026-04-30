@@ -8,7 +8,7 @@ function Signup() {
       <div style={{ padding: '72px 80px', display: 'flex', flexDirection: 'column', justifyContent: 'center', maxWidth: 560 }}>
         <div className="m-logo" style={{ marginBottom: 40 }}><div className="m-logo-mark">M</div> MEDACCER</div>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 48, lineHeight: 1.05, letterSpacing: '-0.02em', fontWeight: 400, margin: '0 0 12px' }}>
-          Crea tu cuenta.<br/><em style={{ color: 'var(--m-blue)', fontStyle: 'italic' }}>14 días gratis.</em>
+          Crea tu cuenta.<br/><em style={{ color: 'var(--m-blue)', fontStyle: 'italic' }}>7 días gratis.</em>
         </h1>
         <p style={{ color: 'var(--ink-600)', fontSize: 15, marginBottom: 32 }}>Sin tarjeta de crédito. Tu bot respondiendo en 48h.</p>
 
