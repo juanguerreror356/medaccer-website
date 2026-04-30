@@ -2057,7 +2057,7 @@ function Landing() {
             <ul>
               <li><a href="#blog">Blog</a></li>
               <li><a href="#res1888" onClick={(e) => { e.preventDefault(); setModal('res1888'); }}>Guía Resolución 1888</a></li>
-              <li><a href="mailto:medaccer@gmail.com">Contacto</a></li>
+              <li><a href="mailto:hola@medaccer.com">Contacto</a></li>
             </ul>
           </div>
           <div>
@@ -2072,7 +2072,7 @@ function Landing() {
         <div className="footer-bottom">
           <div>© 2026 MEDACCER SAS. Todos los derechos reservados.</div>
           <div style={{ display: 'flex', gap: 16 }}>
-            <a href="mailto:medaccer@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>medaccer@gmail.com</a>
+            <a href="mailto:hola@medaccer.com" style={{ color: 'inherit', textDecoration: 'none' }}>hola@medaccer.com</a>
           </div>
         </div>
       </footer>
